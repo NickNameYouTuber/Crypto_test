@@ -1,5 +1,8 @@
 package com.nicorp.crypto_test;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +16,11 @@ import java.util.List;
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHolder> {
 
     private List<AccountItem> accountList;
+    private Context context;
+    private int selectedPosition = -1;
 
-    public AccountAdapter(List<AccountItem> accountList) {
+    public AccountAdapter(Context context, List<AccountItem> accountList) {
+        this.context = context;
         this.accountList = accountList;
     }
 
@@ -31,6 +37,23 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
         holder.accountName.setText(accountItem.getName());
         holder.accountBalance.setText(accountItem.getBalance());
         holder.accountExchange.setText(accountItem.getExchange());
+
+        holder.itemView.setBackgroundColor(selectedPosition == position ? Color.LTGRAY : Color.WHITE);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedPosition = holder.getAdapterPosition();
+                notifyDataSetChanged();
+                // Сохранение выбранного счета в SharedPreferences
+                SharedPreferences sharedPreferences = context.getSharedPreferences("CryptoPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("selected_account", selectedPosition);
+                editor.apply();
+                // Обновление информации о счете
+                ((BalanceActivity) context).updateSelectedAccount(accountItem);
+            }
+        });
     }
 
     @Override

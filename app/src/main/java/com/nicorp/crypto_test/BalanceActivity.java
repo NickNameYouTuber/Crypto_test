@@ -1,8 +1,12 @@
 package com.nicorp.crypto_test;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +43,10 @@ public class BalanceActivity extends AppCompatActivity {
     private String walletAddress;
     private RecyclerView cryptoRecyclerView;
     private CryptoAdapter cryptoAdapter;
+    private RecyclerView accountsRecyclerView;
+    private AccountAdapter accountAdapter;
+    private List<AccountItem> accountList;
+    private Button addAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,8 @@ public class BalanceActivity extends AppCompatActivity {
         balanceTextView = findViewById(R.id.balanceTextView);
         balanceValueTextView = findViewById(R.id.balanceValueTextView);
         cryptoRecyclerView = findViewById(R.id.cryptoRecyclerView);
+        accountsRecyclerView = findViewById(R.id.accountsRecyclerView);
+        addAccountButton = findViewById(R.id.addAccountButton);
 
         // Установка LayoutManager'а для RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -62,10 +72,83 @@ public class BalanceActivity extends AppCompatActivity {
 
         walletAddress = getIntent().getStringExtra("walletAddress");
 
+        SharedPreferences sharedPreferences = getSharedPreferences("CryptoPrefs", Context.MODE_PRIVATE);
+        int selectedAccountPosition = sharedPreferences.getInt("selected_account", -1);
+
+        accountList = loadAccountsFromPreferences(sharedPreferences);
+        if (accountList.isEmpty()) {
+            // Добавляем основной счет при первом запуске
+            walletAddress = getIntent().getStringExtra("walletAddress");
+            accountList.add(new AccountItem("Main Account", "Balance: 0 $", "Main Exchange"));
+        }
+
+        accountAdapter = new AccountAdapter(this, accountList);
+        accountsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        accountsRecyclerView.setAdapter(accountAdapter);
+
+        if (selectedAccountPosition != -1) {
+            accountAdapter.notifyItemChanged(selectedAccountPosition);
+        }
+
+        addAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Логика для добавления нового счета
+                showAddAccountDialog();
+            }
+        });
+
+
         new FetchBalanceTask().execute(walletAddress);
 //        new GetPriceTask().execute();
         new FetchCryptoDataTask().execute();
     }
+
+    private void showAddAccountDialog() {
+        AddAccountDialog dialog = new AddAccountDialog();
+        dialog.setOnAccountAddedListener(new AddAccountDialog.OnAccountAddedListener() {
+            @Override
+            public void onAccountAdded(AccountItem accountItem) {
+                accountList.add(accountItem);
+                accountAdapter.notifyItemInserted(accountList.size() - 1);
+                SharedPreferences sharedPreferences = getSharedPreferences("CryptoPrefs", Context.MODE_PRIVATE);
+                saveAccountsToPreferences(sharedPreferences, accountList);
+            }
+        });
+        dialog.show(getSupportFragmentManager(), "AddAccountDialog");
+    }
+
+    private List<AccountItem> loadAccountsFromPreferences(SharedPreferences sharedPreferences) {
+        List<AccountItem> accounts = new ArrayList<>();
+        int accountCount = sharedPreferences.getInt("account_count", 0);
+        for (int i = 0; i < accountCount; i++) {
+            String name = sharedPreferences.getString("account_" + i + "_name", "");
+            String balance = sharedPreferences.getString("account_" + i + "_balance", "");
+            String exchange = sharedPreferences.getString("account_" + i + "_exchange", "");
+            accounts.add(new AccountItem(name, balance, exchange));
+        }
+        return accounts;
+    }
+
+    private void saveAccountsToPreferences(SharedPreferences sharedPreferences, List<AccountItem> accounts) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("account_count", accounts.size());
+        for (int i = 0; i < accounts.size(); i++) {
+            AccountItem account = accounts.get(i);
+            editor.putString("account_" + i + "_name", account.getName());
+            editor.putString("account_" + i + "_balance", account.getBalance());
+            editor.putString("account_" + i + "_exchange", account.getExchange());
+        }
+        editor.apply();
+    }
+
+    public void updateSelectedAccount(AccountItem accountItem) {
+        balanceTextView.setText(accountItem.getBalance());
+        // Обновляем информацию о криптовалютах на основе нового счета
+        new FetchBalanceTask().execute(accountItem.getName());
+        new FetchCryptoDataTask().execute();
+    }
+
 
     private class FetchBalanceTask extends AsyncTask<String, Void, BigDecimal> {
         @Override

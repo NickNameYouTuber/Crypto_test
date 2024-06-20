@@ -31,6 +31,8 @@ import java.io.File;
 import java.io.IOException;
 import java.security.Provider;
 import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -93,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 String walletAddress = walletAddressEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 if (!walletAddress.isEmpty() && !password.isEmpty()) {
+                    saveMainAccount(walletAddress);
                     new LoadWalletTask(walletAddress, password).execute();
                 } else {
                     Toast.makeText(LoginActivity.this, "Please enter wallet address and password", Toast.LENGTH_SHORT).show();
@@ -121,6 +124,23 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void saveMainAccount(String walletAddress) {
+        SharedPreferences sharedPreferences = getSharedPreferences("CryptoPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        List<AccountItem> accountList = new ArrayList<>();
+        accountList.add(new AccountItem("Main Account", "Balance: 0 $", "Main Exchange"));
+
+        editor.putInt("account_count", accountList.size());
+        for (int i = 0; i < accountList.size(); i++) {
+            AccountItem account = accountList.get(i);
+            editor.putString("account_" + i + "_name", account.getName());
+            editor.putString("account_" + i + "_balance", account.getBalance());
+            editor.putString("account_" + i + "_exchange", account.getExchange());
+        }
+        editor.apply();
+    }
+
     private void setupBouncyCastle() {
         final Provider provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
         if (provider == null) {
@@ -142,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 // Создаем кошелек и получаем адрес
                 File destinationDirectory = getFilesDir();
-                String walletFileName = generateLightWalletFile("your_password", destinationDirectory);
+                    String walletFileName = generateLightWalletFile("your_password", destinationDirectory);
                 walletAddress = getAddressFromWalletFile(new File(destinationDirectory, walletFileName));
                 return walletFileName;
             } catch (Exception e) {
