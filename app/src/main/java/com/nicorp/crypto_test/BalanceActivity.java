@@ -1,5 +1,6 @@
 package com.nicorp.crypto_test;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class BalanceActivity extends AppCompatActivity {
 
     private Web3j web3j;
     private TextView balanceTextView;
+    private TextView balanceValueTextView;
     private String walletAddress;
     private RecyclerView cryptoRecyclerView;
     private CryptoAdapter cryptoAdapter;
@@ -41,9 +43,11 @@ public class BalanceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeHelper.applyTheme(this);
         setContentView(R.layout.activity_balance);
 
         balanceTextView = findViewById(R.id.balanceTextView);
+        balanceValueTextView = findViewById(R.id.balanceValueTextView);
         cryptoRecyclerView = findViewById(R.id.cryptoRecyclerView);
 
         // Установка LayoutManager'а для RecyclerView
@@ -76,9 +80,11 @@ public class BalanceActivity extends AppCompatActivity {
             }
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(BigDecimal balance) {
-            balanceTextView.setText("Balance: \n" + balance.toString() + " $    ("  + (balance.divide(BigDecimal.TEN.pow(100))) +" QC)");
+            balanceTextView.setText("Balance:");
+            balanceValueTextView.setText(balance.toString() + " $    ("  + (balance.divide(BigDecimal.TEN.pow(100))) +" QC)");
         }
     }
 //    private class GetPriceTask extends AsyncTask<Void, Void, JSONObject> {
@@ -139,6 +145,7 @@ public class BalanceActivity extends AppCompatActivity {
                     CryptoData cryptoData = response.body();
                     List<CryptoItem> cryptoItems = new ArrayList<>();
 
+                    cryptoItems.add(new CryptoItem(R.drawable.qcoin, "QCoin", "$0.10"));
                     cryptoItems.add(new CryptoItem(R.drawable.bitcoin, "Bitcoin", String.format("$%,.2f", cryptoData.getBitcoin().getPrice())));
                     cryptoItems.add(new CryptoItem(R.drawable.ethereum, "Ethereum", String.format("$%,.2f", cryptoData.getEthereum().getPrice())));
                     cryptoItems.add(new CryptoItem(R.drawable.tether, "Tether", String.format("$%,.2f", cryptoData.getTether().getPrice())));

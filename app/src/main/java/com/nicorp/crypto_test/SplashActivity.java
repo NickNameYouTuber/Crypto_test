@@ -22,26 +22,26 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Установка темы в зависимости от системной темы устройства
-        int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode) {
-            case android.content.res.Configuration.UI_MODE_NIGHT_NO:
-                // Нет ночного режима, используем светлую тему
-                setTheme(R.style.AppTheme_Light);
-                System.out.println("No night mode");
-                break;
-            case android.content.res.Configuration.UI_MODE_NIGHT_YES:
-                // Есть ночной режим, используем темную тему
-                setTheme(R.style.AppTheme_Dark);
-                System.out.println("Yes night mode");
-                break;
-            default:
-                // Используем светлую тему по умолчанию
-                setTheme(R.style.AppTheme_Dark);
-                System.out.println("Default night mode");
-                break;
-        }
+        ThemeHelper.applyTheme(this);
+//        // Установка темы в зависимости от системной темы устройства
+//        int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+//        switch (currentNightMode) {
+//            case android.content.res.Configuration.UI_MODE_NIGHT_NO:
+//                // Нет ночного режима, используем светлую тему
+//                setTheme(R.style.AppTheme_Light);
+//                System.out.println("No night mode");
+//                break;
+//            case android.content.res.Configuration.UI_MODE_NIGHT_YES:
+//                // Есть ночной режим, используем темную тему
+//                setTheme(R.style.AppTheme_Dark);
+//                System.out.println("Yes night mode");
+//                break;
+//            default:
+//                // Используем светлую тему по умолчанию
+//                setTheme(R.style.AppTheme_Dark);
+//                System.out.println("Default night mode");
+//                break;
+//        }
 
         // Определение логотипа в зависимости от текущей темы
         int logoResId;
