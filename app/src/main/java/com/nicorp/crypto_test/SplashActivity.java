@@ -24,7 +24,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         ImageView logo = findViewById(R.id.logoImageView);
-        logo.setVisibility(View.INVISIBLE); // Скрыть логотип по умолчанию
+        logo.setVisibility(View.GONE); // Скрыть логотип по умолчанию
 
         new Handler().postDelayed(() -> startLogoAnimation(logo), START_DELAY);
     }
