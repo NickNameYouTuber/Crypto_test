@@ -34,9 +34,6 @@ public class BalanceActivity extends AppCompatActivity {
 
     private Web3j web3j;
     private TextView balanceTextView;
-    private TextView btcRateTextView;
-    private TextView ethRateTextView;
-    private TextView usdtRateTextView;
     private String walletAddress;
     private RecyclerView cryptoRecyclerView;
     private CryptoAdapter cryptoAdapter;
@@ -47,9 +44,6 @@ public class BalanceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_balance);
 
         balanceTextView = findViewById(R.id.balanceTextView);
-        btcRateTextView = findViewById(R.id.btcRateTextView);
-        ethRateTextView = findViewById(R.id.ethRateTextView);
-        usdtRateTextView = findViewById(R.id.usdtRateTextView);
         cryptoRecyclerView = findViewById(R.id.cryptoRecyclerView);
 
         // Установка LayoutManager'а для RecyclerView
@@ -65,7 +59,7 @@ public class BalanceActivity extends AppCompatActivity {
         walletAddress = getIntent().getStringExtra("walletAddress");
 
         new FetchBalanceTask().execute(walletAddress);
-        new GetPriceTask().execute();
+//        new GetPriceTask().execute();
         new FetchCryptoDataTask().execute();
     }
 
@@ -87,45 +81,42 @@ public class BalanceActivity extends AppCompatActivity {
             balanceTextView.setText("Balance: \n" + balance.toString() + " $    ("  + (balance.divide(BigDecimal.TEN.pow(100))) +" QC)");
         }
     }
-    private class GetPriceTask extends AsyncTask<Void, Void, JSONObject> {
-        @Override
-        protected JSONObject doInBackground(Void... voids) {
-            try {
-                URL url = new URL("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=usd");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                Scanner scanner = new Scanner(url.openStream());
-                StringBuilder response = new StringBuilder();
-                while (scanner.hasNext()) {
-                    response.append(scanner.nextLine());
-                }
-                scanner.close();
-                return new JSONObject(response.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject jsonObject) {
-            if (jsonObject != null) {
-                try {
-                    JSONObject bitcoin = jsonObject.getJSONObject("bitcoin");
-                    JSONObject ethereum = jsonObject.getJSONObject("ethereum");
-                    JSONObject tether = jsonObject.getJSONObject("tether");
-
-                    btcRateTextView.setText("BTC Price: $" + bitcoin.getString("usd"));
-                    ethRateTextView.setText("ETH Price: $" + ethereum.getString("usd"));
-                    usdtRateTextView.setText("USDT Price: $" + tether.getString("usd"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+//    private class GetPriceTask extends AsyncTask<Void, Void, JSONObject> {
+//        @Override
+//        protected JSONObject doInBackground(Void... voids) {
+//            try {
+//                URL url = new URL("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=usd");
+//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+//                urlConnection.setRequestMethod("GET");
+//                urlConnection.connect();
+//
+//                Scanner scanner = new Scanner(url.openStream());
+//                StringBuilder response = new StringBuilder();
+//                while (scanner.hasNext()) {
+//                    response.append(scanner.nextLine());
+//                }
+//                scanner.close();
+//                return new JSONObject(response.toString());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(JSONObject jsonObject) {
+//            if (jsonObject != null) {
+//                try {
+//                    JSONObject bitcoin = jsonObject.getJSONObject("bitcoin");
+//                    JSONObject ethereum = jsonObject.getJSONObject("ethereum");
+//                    JSONObject tether = jsonObject.getJSONObject("tether");
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
     private class FetchCryptoDataTask extends AsyncTask<Void, Void, List<CryptoItem>> {
         @Override

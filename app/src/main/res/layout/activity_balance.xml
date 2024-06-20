@@ -55,32 +55,6 @@
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/btcRateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BTC: "
-        android:textSize="16sp"
-        android:textColor="?android:textColorSecondary"
-        android:layout_marginBottom="16dp"/>
-
-    <TextView
-        android:id="@+id/ethRateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ETH: "
-        android:textSize="16sp"
-        android:textColor="?android:textColorSecondary"
-        android:layout_marginBottom="16dp"/>
-
-    <TextView
-        android:id="@+id/usdtRateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="USDT: "
-        android:textSize="16sp"
-        android:textColor="?android:textColorSecondary"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cryptoRecyclerView"
         android:layout_width="match_parent"
