@@ -35,14 +35,17 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
     public void onBindViewHolder(@NonNull AccountViewHolder holder, int position) {
         AccountItem accountItem = accountList.get(position);
         holder.accountName.setText(accountItem.getName());
-        holder.accountBalance.setText(accountItem.getBalance());
-        holder.accountExchange.setText(accountItem.getExchange());
+//        holder.accountBalance.setText("Balance: " + accountItem.getBalance());
+        holder.accountCurrency.setText("Currency: " + accountItem.getCurrency());
 
         holder.itemView.setBackgroundColor(selectedPosition == position ? Color.LTGRAY : Color.WHITE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("Selected account: " + accountItem.getAddress());
+                System.out.println("Selected account: " + accountItem.getAddress());
+
                 selectedPosition = holder.getAdapterPosition();
                 notifyDataSetChanged();
                 // Сохранение выбранного счета в SharedPreferences
@@ -62,13 +65,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
     }
 
     public static class AccountViewHolder extends RecyclerView.ViewHolder {
-        TextView accountName, accountBalance, accountExchange;
+        TextView accountName, accountBalance, accountCurrency;
 
         public AccountViewHolder(@NonNull View itemView) {
             super(itemView);
             accountName = itemView.findViewById(R.id.accountName);
             accountBalance = itemView.findViewById(R.id.accountBalance);
-            accountExchange = itemView.findViewById(R.id.accountExchange);
+            accountCurrency = itemView.findViewById(R.id.accountCurrency);
         }
     }
 }

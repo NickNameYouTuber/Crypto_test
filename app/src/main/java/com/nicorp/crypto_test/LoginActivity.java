@@ -129,14 +129,14 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         List<AccountItem> accountList = new ArrayList<>();
-        accountList.add(new AccountItem("Main Account", "Balance: 0 $", "Main Exchange"));
+        accountList.add(new AccountItem("Main Account", "USD", walletAddress));
 
         editor.putInt("account_count", accountList.size());
         for (int i = 0; i < accountList.size(); i++) {
             AccountItem account = accountList.get(i);
             editor.putString("account_" + i + "_name", account.getName());
-            editor.putString("account_" + i + "_balance", account.getBalance());
-            editor.putString("account_" + i + "_exchange", account.getExchange());
+            editor.putString("account_" + i + "_address", account.getAddress());
+            editor.putString("account_" + i + "_currency", account.getCurrency());
         }
         editor.apply();
     }

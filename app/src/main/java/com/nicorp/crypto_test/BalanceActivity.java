@@ -68,7 +68,7 @@ public class BalanceActivity extends AppCompatActivity {
         cryptoAdapter = new CryptoAdapter(new ArrayList<>());
         cryptoRecyclerView.setAdapter(cryptoAdapter);
 
-        web3j = Web3j.build(new HttpService("https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"));
+        web3j = Web3j.build(new HttpService("https://mainnet.infura.io/v3/89a9b4cb3f984f06855aeb49aafb0c57"));
 
         walletAddress = getIntent().getStringExtra("walletAddress");
 
@@ -79,7 +79,7 @@ public class BalanceActivity extends AppCompatActivity {
         if (accountList.isEmpty()) {
             // Добавляем основной счет при первом запуске
             walletAddress = getIntent().getStringExtra("walletAddress");
-            accountList.add(new AccountItem("Main Account", "Balance: 0 $", "Main Exchange"));
+            accountList.add(new AccountItem("Main Account", "Balance: 0 $", "Main Currency"));
         }
 
         accountAdapter = new AccountAdapter(this, accountList);
@@ -124,8 +124,8 @@ public class BalanceActivity extends AppCompatActivity {
         for (int i = 0; i < accountCount; i++) {
             String name = sharedPreferences.getString("account_" + i + "_name", "");
             String balance = sharedPreferences.getString("account_" + i + "_balance", "");
-            String exchange = sharedPreferences.getString("account_" + i + "_exchange", "");
-            accounts.add(new AccountItem(name, balance, exchange));
+            String currency = sharedPreferences.getString("account_" + i + "_currency", "");
+            accounts.add(new AccountItem(name, currency, balance));
         }
         return accounts;
     }
@@ -136,38 +136,55 @@ public class BalanceActivity extends AppCompatActivity {
         for (int i = 0; i < accounts.size(); i++) {
             AccountItem account = accounts.get(i);
             editor.putString("account_" + i + "_name", account.getName());
-            editor.putString("account_" + i + "_balance", account.getBalance());
-            editor.putString("account_" + i + "_exchange", account.getExchange());
+            editor.putString("account_" + i + "_address", account.getAddress());
+            editor.putString("account_" + i + "_currency", account.getCurrency());
         }
         editor.apply();
     }
 
+    private void onAccountSelected(AccountItem accountItem) {
+        updateSelectedAccount(accountItem);
+    }
+
     public void updateSelectedAccount(AccountItem accountItem) {
-        balanceTextView.setText(accountItem.getBalance());
-        // Обновляем информацию о криптовалютах на основе нового счета
-        new FetchBalanceTask().execute(accountItem.getName());
+        balanceTextView.setText("Balance:");
+        new FetchBalanceTask().execute(accountItem.getAddress());
         new FetchCryptoDataTask().execute();
     }
 
-
     private class FetchBalanceTask extends AsyncTask<String, Void, BigDecimal> {
+        private String currency = "USD";
         @Override
         protected BigDecimal doInBackground(String... addresses) {
             try {
+                System.out.println(addresses[0]);
                 EthGetBalance ethGetBalance = web3j.ethGetBalance(addresses[0], DefaultBlockParameterName.LATEST).send();
                 BigInteger wei = ethGetBalance.getBalance();
+                currency = getCurrencyFromAddress(addresses[0]);
                 return Convert.fromWei(new BigDecimal(wei), Convert.Unit.ETHER);
             } catch (Exception e) {
                 e.printStackTrace();
                 return BigDecimal.ZERO;
             }
         }
-
         @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(BigDecimal balance) {
             balanceTextView.setText("Balance:");
-            balanceValueTextView.setText(balance.toString() + " $    ("  + (balance.divide(BigDecimal.TEN.pow(100))) +" QC)");
+            balanceValueTextView.setText(balance.toString() + " " + currency + "    ("  + (balance.divide(BigDecimal.TEN.pow(100))) +" QC)");
+        }
+    }
+
+    private String getCurrencyFromAddress(String address) {
+        // Пример логики для определения валюты на основе адреса
+        if (address.startsWith("0x")) {
+            return "ETH"; // Все Ethereum-адреса начинаются с '0x'
+        } else if (address.startsWith("1") || address.startsWith("3")) {
+            return "BTC"; // Bitcoin-адреса начинаются с '1' или '3'
+        } else if (address.startsWith("t")) {
+            return "USDT"; // Пример для Tether
+        } else {
+            return "Unknown"; // Неизвестная валюта
         }
     }
 //    private class GetPriceTask extends AsyncTask<Void, Void, JSONObject> {

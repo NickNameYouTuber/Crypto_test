@@ -12,16 +12,16 @@
         android:hint="Account Name" />
 
     <EditText
-        android:id="@+id/accountBalanceEditText"
+        android:id="@+id/accountCurrencyEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Balance" />
+        android:hint="Currency" />
 
     <EditText
-        android:id="@+id/accountExchangeEditText"
+        android:id="@+id/accountAddressEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Exchange" />
+        android:hint="Wallet Address" /> <!-- Новое поле для адреса кошелька -->
 
     <Button
         android:id="@+id/addAccountButton"

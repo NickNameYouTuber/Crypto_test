@@ -13,8 +13,8 @@ import androidx.fragment.app.DialogFragment;
 public class AddAccountDialog extends DialogFragment {
 
     private EditText accountNameEditText;
-    private EditText accountBalanceEditText;
-    private EditText accountExchangeEditText;
+    private EditText accountCurrencyEditText;
+    private EditText accountAddressEditText; // Новое поле для адреса кошелька
     private Button addAccountButton;
     private OnAccountAddedListener listener;
 
@@ -26,19 +26,19 @@ public class AddAccountDialog extends DialogFragment {
         dialog.setContentView(view);
 
         accountNameEditText = view.findViewById(R.id.accountNameEditText);
-        accountBalanceEditText = view.findViewById(R.id.accountBalanceEditText);
-        accountExchangeEditText = view.findViewById(R.id.accountExchangeEditText);
+        accountCurrencyEditText = view.findViewById(R.id.accountCurrencyEditText);
+        accountAddressEditText = view.findViewById(R.id.accountAddressEditText); // Инициализация нового поля
         addAccountButton = view.findViewById(R.id.addAccountButton);
 
         addAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = accountNameEditText.getText().toString().trim();
-                String balance = accountBalanceEditText.getText().toString().trim();
-                String exchange = accountExchangeEditText.getText().toString().trim();
+                String currency = accountCurrencyEditText.getText().toString().trim();
+                String address = accountAddressEditText.getText().toString().trim(); // Получение адреса кошелька
 
-                if (!name.isEmpty() && !balance.isEmpty() && !exchange.isEmpty()) {
-                    AccountItem accountItem = new AccountItem(name, balance, exchange);
+                if (!name.isEmpty() && !currency.isEmpty() && !address.isEmpty()) {
+                    AccountItem accountItem = new AccountItem(name, currency, address);
                     if (listener != null) {
                         listener.onAccountAdded(accountItem);
                     }
