@@ -1,20 +1,14 @@
-<resources>
-
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Theme.CryptoTest" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary branding color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/backgroundDark</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:buttonStyle">@style/ButtonStyle</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/darkOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/darkOnSecondary</item>
+        <item name="android:colorBackground">@color/darkBackground</item>
+        <item name="android:textColor">@color/darkText</item>
     </style>
-
-    <!-- Button style -->
-    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:textColor">@color/buttonTextColor</item>
-    </style>
-
 </resources>

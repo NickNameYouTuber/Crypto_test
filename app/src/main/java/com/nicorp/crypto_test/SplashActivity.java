@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -21,6 +22,24 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Установка темы в зависимости от системной темы устройства
+        int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case android.content.res.Configuration.UI_MODE_NIGHT_NO:
+                // Нет ночного режима, используем светлую тему
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case android.content.res.Configuration.UI_MODE_NIGHT_YES:
+                // Есть ночной режим, используем темную тему
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            default:
+                // Используем светлую тему по умолчанию
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+        }
+
         setContentView(R.layout.activity_splash);
 
         ImageView logo = findViewById(R.id.logoImageView);
