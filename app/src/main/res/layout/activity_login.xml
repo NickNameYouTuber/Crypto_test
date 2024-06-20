@@ -1,0 +1,90 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/backgroundDark">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/test_logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wallet Login"
+        android:textSize="24sp"
+        android:textColor="@color/textColorPrimary"
+        android:layout_gravity="center"
+        android:layout_marginBottom="32dp"/>
+
+    <EditText
+        android:id="@+id/walletAddressEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Wallet Address"
+        android:backgroundTint="@color/textColorSecondary"
+        android:textColor="@color/textColorPrimary"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:backgroundTint="@color/textColorSecondary"
+        android:textColor="@color/textColorPrimary"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/connectWalletButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect Wallet"
+        android:background="@color/buttonColor"
+        android:textColor="@color/buttonTextColor"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/createWalletButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create New Wallet"
+        android:background="@color/buttonColor"
+        android:textColor="@color/buttonTextColor"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:id="@+id/walletAddressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wallet Address:"
+        android:textSize="18sp"
+        android:textColor="@color/textColorPrimary"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/addressTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="@color/textColorPrimary"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/copyAddressButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/buttonColor"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Copy Address"
+        android:textColor="@color/buttonTextColor" />
+</LinearLayout>
