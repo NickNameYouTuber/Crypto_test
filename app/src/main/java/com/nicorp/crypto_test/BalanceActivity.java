@@ -25,6 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class BalanceActivity extends AppCompatActivity {
 
     private Web3j web3j;
@@ -52,7 +57,7 @@ public class BalanceActivity extends AppCompatActivity {
         cryptoRecyclerView.setLayoutManager(layoutManager);
 
         // Установка адаптера для RecyclerView
-        cryptoAdapter = new CryptoAdapter();
+        cryptoAdapter = new CryptoAdapter(new ArrayList<>());
         cryptoRecyclerView.setAdapter(cryptoAdapter);
 
         web3j = Web3j.build(new HttpService("https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"));
@@ -125,23 +130,41 @@ public class BalanceActivity extends AppCompatActivity {
     private class FetchCryptoDataTask extends AsyncTask<Void, Void, List<CryptoItem>> {
         @Override
         protected List<CryptoItem> doInBackground(Void... voids) {
-            List<CryptoItem> cryptoItems = new ArrayList<>();
+            try {
+                // Создание объекта Retrofit
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://api.coingecko.com/api/v3/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-            // Здесь можно добавить данные для криптовалют
-            cryptoItems.add(new CryptoItem(R.drawable.bitcoin, "Bitcoin", "$50,000"));
-            cryptoItems.add(new CryptoItem(R.drawable.ethereum, "Ethereum", "$3,500"));
-            cryptoItems.add(new CryptoItem(R.drawable.tether, "Tether", "$1.00"));
-            cryptoItems.add(new CryptoItem(R.drawable.bitcoin, "Bitcoin", "$50,000"));
-            cryptoItems.add(new CryptoItem(R.drawable.ethereum, "Ethereum", "$3,500"));
-            cryptoItems.add(new CryptoItem(R.drawable.tether, "Tether", "$1.00"));
+                // Создание экземпляра сервиса
+                CryptoService service = retrofit.create(CryptoService.class);
 
-            return cryptoItems;
+                // Выполнение запроса к API
+                Call<CryptoData> call = service.getCryptoData();
+                Response<CryptoData> response = call.execute();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    CryptoData cryptoData = response.body();
+                    List<CryptoItem> cryptoItems = new ArrayList<>();
+
+                    cryptoItems.add(new CryptoItem(R.drawable.bitcoin, "Bitcoin", String.format("$%,.2f", cryptoData.getBitcoin().getPrice())));
+                    cryptoItems.add(new CryptoItem(R.drawable.ethereum, "Ethereum", String.format("$%,.2f", cryptoData.getEthereum().getPrice())));
+                    cryptoItems.add(new CryptoItem(R.drawable.tether, "Tether", String.format("$%,.2f", cryptoData.getTether().getPrice())));
+
+                    return cryptoItems;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         @Override
         protected void onPostExecute(List<CryptoItem> cryptoItems) {
-            // Передача данных в адаптер RecyclerView
-            cryptoAdapter.setCryptoItems(cryptoItems);
+            if (cryptoItems != null) {
+                cryptoAdapter.setCryptoItems(cryptoItems);
+            }
         }
     }
 }

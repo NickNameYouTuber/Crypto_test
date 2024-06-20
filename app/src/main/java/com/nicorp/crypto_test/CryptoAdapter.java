@@ -13,6 +13,10 @@ public class CryptoAdapter extends RecyclerView.Adapter<CryptoAdapter.CryptoView
 
     private List<CryptoItem> cryptoItems;
 
+    public CryptoAdapter(List<CryptoItem> cryptoItems) {
+        this.cryptoItems = cryptoItems;
+    }
+
     public void setCryptoItems(List<CryptoItem> cryptoItems) {
         this.cryptoItems = cryptoItems;
         notifyDataSetChanged();
