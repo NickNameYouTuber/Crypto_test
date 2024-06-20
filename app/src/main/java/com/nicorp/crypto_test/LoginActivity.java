@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,10 +40,30 @@ public class LoginActivity extends AppCompatActivity {
     private Button createWalletButton;
     private TextView addressTextView;
     private Button copyAddressButton;
+    private ImageView logoImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Установка темы в зависимости от системной темы устройства
+        int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case android.content.res.Configuration.UI_MODE_NIGHT_NO:
+                // Нет ночного режима, используем светлую тему
+                setTheme(R.style.AppTheme_Light);
+                System.out.println("No night mode");
+                break;
+            case android.content.res.Configuration.UI_MODE_NIGHT_YES:
+                // Есть ночной режим, используем темную тему
+                setTheme(R.style.AppTheme_Dark);
+                System.out.println("Yes night mode");
+                break;
+            default:
+                // Используем светлую тему по умолчанию
+                setTheme(R.style.AppTheme_Dark);
+                System.out.println("Default night mode");
+                break;
+        }
         setContentView(R.layout.activity_login);
 
         setupBouncyCastle();
@@ -53,6 +74,17 @@ public class LoginActivity extends AppCompatActivity {
         createWalletButton = findViewById(R.id.createWalletButton);
         addressTextView = findViewById(R.id.addressTextView);
         copyAddressButton = findViewById(R.id.copyAddressButton);
+        logoImageView = findViewById(R.id.logoImageView);
+
+        // Определение логотипа в зависимости от текущей темы
+        int logoResId;
+        if (isDarkThemeSelected()) {
+            logoResId = R.drawable.test_logo_b; // Логотип для темной темы
+        } else {
+            logoResId = R.drawable.test_logo_w; // Логотип для светлой темы
+        }
+
+        logoImageView.setImageResource(logoResId);
 
         connectWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,5 +227,10 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("isLoggedIn", true);
         editor.apply();
+    }
+
+    private boolean isDarkThemeSelected() {
+        int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES;
     }
 }

@@ -8,7 +8,7 @@
     android:background="?android:attr/windowBackground">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/logoImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"

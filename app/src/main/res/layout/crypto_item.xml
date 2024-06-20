@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- crypto_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    android:background="@drawable/rounded_background">
+
+    <ImageView
+        android:id="@+id/cryptoImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bitcoin" />
+
+    <TextView
+        android:id="@+id/cryptoNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bitcoin"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/cryptoPriceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="$50,000"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="14sp"
+        android:gravity="center"/>
+</LinearLayout>
+

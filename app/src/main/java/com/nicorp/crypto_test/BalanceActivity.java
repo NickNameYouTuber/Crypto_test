@@ -1,10 +1,15 @@
 package com.nicorp.crypto_test;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.nicorp.crypto_test.CryptoAdapter;
+import com.nicorp.crypto_test.CryptoItem;
+import com.nicorp.crypto_test.R;
 
 import org.json.JSONObject;
 import org.web3j.protocol.Web3j;
@@ -12,11 +17,12 @@ import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Convert;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class BalanceActivity extends AppCompatActivity {
@@ -27,6 +33,8 @@ public class BalanceActivity extends AppCompatActivity {
     private TextView ethRateTextView;
     private TextView usdtRateTextView;
     private String walletAddress;
+    private RecyclerView cryptoRecyclerView;
+    private CryptoAdapter cryptoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,15 @@ public class BalanceActivity extends AppCompatActivity {
         btcRateTextView = findViewById(R.id.btcRateTextView);
         ethRateTextView = findViewById(R.id.ethRateTextView);
         usdtRateTextView = findViewById(R.id.usdtRateTextView);
+        cryptoRecyclerView = findViewById(R.id.cryptoRecyclerView);
+
+        // Установка LayoutManager'а для RecyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        cryptoRecyclerView.setLayoutManager(layoutManager);
+
+        // Установка адаптера для RecyclerView
+        cryptoAdapter = new CryptoAdapter();
+        cryptoRecyclerView.setAdapter(cryptoAdapter);
 
         web3j = Web3j.build(new HttpService("https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID"));
 
@@ -44,6 +61,7 @@ public class BalanceActivity extends AppCompatActivity {
 
         new FetchBalanceTask().execute(walletAddress);
         new GetPriceTask().execute();
+        new FetchCryptoDataTask().execute();
     }
 
     private class FetchBalanceTask extends AsyncTask<String, Void, BigDecimal> {
@@ -61,7 +79,7 @@ public class BalanceActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(BigDecimal balance) {
-            balanceTextView.setText("Balance: " + balance.toString() + " ETH");
+            balanceTextView.setText("Balance: \n" + balance.toString() + " $    ("  + (balance.divide(BigDecimal.TEN.pow(100))) +" QC)");
         }
     }
     private class GetPriceTask extends AsyncTask<Void, Void, JSONObject> {
@@ -101,6 +119,29 @@ public class BalanceActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private class FetchCryptoDataTask extends AsyncTask<Void, Void, List<CryptoItem>> {
+        @Override
+        protected List<CryptoItem> doInBackground(Void... voids) {
+            List<CryptoItem> cryptoItems = new ArrayList<>();
+
+            // Здесь можно добавить данные для криптовалют
+            cryptoItems.add(new CryptoItem(R.drawable.bitcoin, "Bitcoin", "$50,000"));
+            cryptoItems.add(new CryptoItem(R.drawable.ethereum, "Ethereum", "$3,500"));
+            cryptoItems.add(new CryptoItem(R.drawable.tether, "Tether", "$1.00"));
+            cryptoItems.add(new CryptoItem(R.drawable.bitcoin, "Bitcoin", "$50,000"));
+            cryptoItems.add(new CryptoItem(R.drawable.ethereum, "Ethereum", "$3,500"));
+            cryptoItems.add(new CryptoItem(R.drawable.tether, "Tether", "$1.00"));
+
+            return cryptoItems;
+        }
+
+        @Override
+        protected void onPostExecute(List<CryptoItem> cryptoItems) {
+            // Передача данных в адаптер RecyclerView
+            cryptoAdapter.setCryptoItems(cryptoItems);
         }
     }
 }
