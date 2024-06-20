@@ -1,14 +1,3 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.CryptoTest" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary branding color. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
-        <item name="colorOnPrimary">@color/darkOnPrimary</item>
-        <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
-        <item name="colorOnSecondary">@color/darkOnSecondary</item>
-        <item name="android:colorBackground">@color/darkBackground</item>
-        <item name="android:textColor">@color/darkText</item>
-    </style>
+
 </resources>

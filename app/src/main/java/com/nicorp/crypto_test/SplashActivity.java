@@ -28,24 +28,43 @@ public class SplashActivity extends AppCompatActivity {
         switch (currentNightMode) {
             case android.content.res.Configuration.UI_MODE_NIGHT_NO:
                 // Нет ночного режима, используем светлую тему
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                setTheme(R.style.AppTheme_Light);
+                System.out.println("No night mode");
                 break;
             case android.content.res.Configuration.UI_MODE_NIGHT_YES:
                 // Есть ночной режим, используем темную тему
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                setTheme(R.style.AppTheme_Dark);
+                System.out.println("Yes night mode");
                 break;
             default:
                 // Используем светлую тему по умолчанию
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                setTheme(R.style.AppTheme_Dark);
+                System.out.println("Default night mode");
                 break;
         }
+
+        // Определение логотипа в зависимости от текущей темы
+        int logoResId;
+        if (isDarkThemeSelected()) {
+            logoResId = R.drawable.test_logo_b; // Логотип для темной темы
+        } else {
+            logoResId = R.drawable.test_logo_w; // Логотип для светлой темы
+        }
+
 
         setContentView(R.layout.activity_splash);
 
         ImageView logo = findViewById(R.id.logoImageView);
         logo.setVisibility(View.GONE); // Скрыть логотип по умолчанию
+        logo.setImageResource(logoResId); // Установка логотипа
+
 
         new Handler().postDelayed(() -> startLogoAnimation(logo), START_DELAY);
+    }
+
+    private boolean isDarkThemeSelected() {
+        int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+        return currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES;
     }
 
     private void startLogoAnimation(ImageView logo) {
