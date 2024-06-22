@@ -125,7 +125,7 @@ public class BalanceActivity extends AppCompatActivity {
             String name = sharedPreferences.getString("account_" + i + "_name", "");
             String balance = sharedPreferences.getString("account_" + i + "_balance", "");
             String currency = sharedPreferences.getString("account_" + i + "_currency", "");
-            accounts.add(new AccountItem(name, currency, balance));
+            accounts.add(new AccountItem(name, currency, balance ));
         }
         return accounts;
     }

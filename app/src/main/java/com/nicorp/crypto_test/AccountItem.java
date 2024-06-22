@@ -3,7 +3,7 @@ package com.nicorp.crypto_test;
 public class AccountItem {
     private String name;
     private String currency;
-    private String address; // Новое поле для адреса кошелька
+    private String address;
 
     public AccountItem(String name, String currency, String address) {
         this.name = name;

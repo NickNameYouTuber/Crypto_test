@@ -80,7 +80,14 @@
         android:background="?attr/selectableItemBackground"
         android:layout_marginTop="20dp"
         android:textColor="?android:attr/colorAccent"/>
-
+    <Button
+        android:id="@+id/importMetaMaskButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Импорт MetaMask"
+        android:background="?attr/colorPrimary"
+        android:textColor="?android:textColorPrimary"
+        android:layout_marginBottom="16dp"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cryptoRecyclerView"
         android:layout_width="match_parent"
