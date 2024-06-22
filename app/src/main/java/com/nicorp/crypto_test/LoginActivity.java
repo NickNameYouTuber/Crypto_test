@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView addressTextView;
     private Button copyAddressButton;
     private ImageView logoImageView;
+    private Button importBTCWalletButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +106,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        importBTCWalletButton = findViewById(R.id.importBTCWalletButton);
+
+        importBTCWalletButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ImportBTCWalletActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
     }
 
 
@@ -236,5 +247,17 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isDarkThemeSelected() {
         int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
         return currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String walletAddress = data.getStringExtra("walletAddress");
+            Intent intent = new Intent(LoginActivity.this, BalanceActivity.class);
+            intent.putExtra("walletAddress", walletAddress);
+            intent.putExtra("currency", "BTC");
+            startActivity(intent);
+        }
     }
 }

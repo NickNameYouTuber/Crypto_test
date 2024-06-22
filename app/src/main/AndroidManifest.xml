@@ -25,6 +25,9 @@
             android:name=".AddAccountDialog"
             android:exported="false" />
         <activity
+            android:name=".ImportBTCWalletActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="false" />
         <activity

@@ -2,6 +2,7 @@ package com.nicorp.crypto_test;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,7 +17,9 @@ import com.nicorp.crypto_test.CryptoAdapter;
 import com.nicorp.crypto_test.CryptoItem;
 import com.nicorp.crypto_test.R;
 
+import org.bitcoinj.core.Address;
 import org.json.JSONObject;
+import org.web3j.crypto.Wallet;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -47,6 +50,7 @@ public class BalanceActivity extends AppCompatActivity {
     private AccountAdapter accountAdapter;
     private List<AccountItem> accountList;
     private Button addAccountButton;
+    private String currency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +103,52 @@ public class BalanceActivity extends AppCompatActivity {
         });
 
 
-        new FetchBalanceTask().execute(walletAddress);
-//        new GetPriceTask().execute();
+        if ("BTC".equals(currency)) {
+            new FetchBTCBalanceTask().execute(walletAddress);
+        } else {
+            new FetchBalanceTask().execute(walletAddress);
+        }
         new FetchCryptoDataTask().execute();
+    }
+
+    private class FetchBTCBalanceTask extends AsyncTask<String, Void, BigDecimal> {
+        @Override
+        protected BigDecimal doInBackground(String... addresses) {
+            try {
+                // Используем BlockCypher API для получения баланса
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://api.blockcypher.com/v1/btc/main/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                BlockCypherService service = retrofit.create(BlockCypherService.class);
+                Call<BlockCypherBalance> call = service.getBalance(addresses[0]);
+                Response<BlockCypherBalance> response = call.execute();
+
+                if (response.isSuccessful() && response.body() != null) {
+                    return new BigDecimal(response.body().getBalance()).divide(BigDecimal.valueOf(1e8));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return BigDecimal.ZERO;
+        }
+        @SuppressLint("SetTextI18n")
+        @Override
+        protected void onPostExecute(BigDecimal balance) {
+            balanceTextView.setText("Balance:");
+            balanceValueTextView.setText(balance.toString() + " BTC");
+        }
+    }
+
+    private String getCurrencyFromAddress(String address) {
+        if (address.startsWith("0x")) {
+            return "ETH";
+        } else if (address.startsWith("1") || address.startsWith("3") || address.startsWith("b")) {
+            return "BTC";
+        } else {
+            return "Unknown";
+        }
     }
 
     private void showAddAccountDialog() {
@@ -153,7 +200,6 @@ public class BalanceActivity extends AppCompatActivity {
     }
 
     private class FetchBalanceTask extends AsyncTask<String, Void, BigDecimal> {
-        private String currency = "USD";
         @Override
         protected BigDecimal doInBackground(String... addresses) {
             try {
@@ -175,18 +221,18 @@ public class BalanceActivity extends AppCompatActivity {
         }
     }
 
-    private String getCurrencyFromAddress(String address) {
-        // Пример логики для определения валюты на основе адреса
-        if (address.startsWith("0x")) {
-            return "ETH"; // Все Ethereum-адреса начинаются с '0x'
-        } else if (address.startsWith("1") || address.startsWith("3")) {
-            return "BTC"; // Bitcoin-адреса начинаются с '1' или '3'
-        } else if (address.startsWith("t")) {
-            return "USDT"; // Пример для Tether
-        } else {
-            return "Unknown"; // Неизвестная валюта
-        }
-    }
+//    private String getCurrencyFromAddress(String address) {
+//        // Пример логики для определения валюты на основе адреса
+//        if (address.startsWith("0x")) {
+//            return "ETH"; // Все Ethereum-адреса начинаются с '0x'
+//        } else if (address.startsWith("1") || address.startsWith("3")) {
+//            return "BTC"; // Bitcoin-адреса начинаются с '1' или '3'
+//        } else if (address.startsWith("t")) {
+//            return "USDT"; // Пример для Tether
+//        } else {
+//            return "Unknown"; // Неизвестная валюта
+//        }
+//    }
 //    private class GetPriceTask extends AsyncTask<Void, Void, JSONObject> {
 //        @Override
 //        protected JSONObject doInBackground(Void... voids) {
@@ -263,6 +309,20 @@ public class BalanceActivity extends AppCompatActivity {
             if (cryptoItems != null) {
                 cryptoAdapter.setCryptoItems(cryptoItems);
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2 && resultCode == RESULT_OK) {
+            String walletAddress = data.getStringExtra("walletAddress");
+            AccountItem accountItem = new AccountItem("BTC Wallet", walletAddress, "BTC");
+            accountList.add(accountItem);
+            accountAdapter.notifyItemInserted(accountList.size() - 1);
+            SharedPreferences sharedPreferences = getSharedPreferences("CryptoPrefs", Context.MODE_PRIVATE);
+            saveAccountsToPreferences(sharedPreferences, accountList);
+            updateSelectedAccount(accountItem);
         }
     }
 }

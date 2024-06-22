@@ -26,20 +26,25 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    configurations{
+        all*.exclude module: 'bcprov-jdk15on'
+    }
 }
 
 dependencies {
-// Retrofit for API calls
+    // Укажите зависимость от bcprov-jdk15to18, исключив bcprov-jdk15on
+//    implementation ('org.bouncycastle:bcprov-jdk15to18:1.69') {
+//        exclude group: 'org.bouncycastle', module: 'bcprov-jdk15on'
+//    }
+
+    // Другие зависимости вашего проекта
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-
-
-// Web3j for Ethereum interaction
     implementation 'org.web3j:core:4.8.7'
     implementation 'org.web3j:crypto:4.8.7'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.68'
-    implementation 'com.trustwallet:trust-core:2.7.5'
+    implementation 'org.bitcoinj:bitcoinj-core:0.16.2'
+
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity
@@ -48,3 +53,4 @@ dependencies {
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 }
+

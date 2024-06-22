@@ -52,10 +52,10 @@
         android:layout_marginBottom="16dp"/>
 
     <Button
-        android:id="@+id/importMetaMaskButton"
+        android:id="@+id/importBTCWalletButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Импорт MetaMask"
+        android:text="Импорт BTC Wallet"
         android:background="?attr/colorPrimary"
         android:textColor="?android:textColorPrimary"
         android:layout_marginBottom="16dp"/>
