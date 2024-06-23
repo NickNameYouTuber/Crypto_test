@@ -1,6 +1,8 @@
 package com.nicorp.crypto_test;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,7 @@ import org.bitcoinj.wallet.KeyChainGroup;
 import org.bitcoinj.wallet.Wallet;
 import org.web3j.crypto.Keys;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,7 +62,7 @@ public class ImportBTCWalletActivity extends AppCompatActivity {
 
                     // Получаем адрес Ethereum из публичного ключа
                     String ethereumAddress = Keys.toChecksumAddress(Keys.getAddress(accountKey.getPublicKeyAsHex()));
-
+                    saveMainAccount(ethereumAddress);
                     // Передача адреса в другую активность
                     Intent intent = new Intent(ImportBTCWalletActivity.this, BalanceActivity.class);
                     intent.putExtra("walletAddress", ethereumAddress);
@@ -73,5 +76,22 @@ public class ImportBTCWalletActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void saveMainAccount(String walletAddress) {
+        SharedPreferences sharedPreferences = getSharedPreferences("CryptoPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        List<AccountItem> accountList = new ArrayList<>();
+        accountList.add(new AccountItem("Main Account", "USD", walletAddress));
+
+        editor.putInt("account_count", accountList.size());
+        for (int i = 0; i < accountList.size(); i++) {
+            AccountItem account = accountList.get(i);
+            editor.putString("account_" + i + "_name", account.getName());
+            editor.putString("account_" + i + "_address", account.getAddress());
+            editor.putString("account_" + i + "_currency", account.getCurrency());
+        }
+        editor.apply();
     }
 }
