@@ -8,5 +8,10 @@
     <color name="textColorSecondary">#B0B0B0</color>
     <color name="buttonColor">#1F1B24</color>
     <color name="buttonTextColor">#BB86FC</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="dark_gray">#1E1E1E</color>
+    <color name="light_gray">#CCCCCC</color>
 </resources>
 

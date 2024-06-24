@@ -2,4 +2,7 @@
 <resources>
     <attr name="buttonColor" format="color" />
     <attr name="buttonTextColor" format="color" />
+    <attr name="backgroundColor" format="color" />
+    <attr name="textColor" format="color" />
+    <attr name="dotColor" format="color" />
 </resources>
