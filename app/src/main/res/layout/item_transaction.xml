@@ -10,22 +10,35 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvTransactionName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_color_light"
-            android:textSize="16sp"/>
+        <ImageView
+            android:id="@+id/ivTransactionLogo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"/>
 
-        <TextView
-            android:id="@+id/tvTransactionAmount"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_color_light"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvTransactionName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_light"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvTransactionAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_light"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

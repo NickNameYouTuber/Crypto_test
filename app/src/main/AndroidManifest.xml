@@ -19,13 +19,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar"
+        android:theme="@style/Theme.QryptApp.Dark"
         tools:targetApi="31">
         <activity
             android:name=".FirstTabActivity"
             android:exported="false" />
         <activity
-            android:name=".PasswordActivity"
+            android:name=".SplashActivity"
             android:exported="false" />
         <activity
             android:name=".AddAccountDialog"
@@ -40,7 +40,7 @@
             android:name=".BalanceActivity"
             android:exported="false" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".PasswordActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
