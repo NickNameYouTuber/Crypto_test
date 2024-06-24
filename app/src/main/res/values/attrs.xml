@@ -5,4 +5,5 @@
     <attr name="backgroundColor" format="color" />
     <attr name="textColor" format="color" />
     <attr name="dotColor" format="color" />
+    <attr name="selectedDotColor" format="color" />
 </resources>
