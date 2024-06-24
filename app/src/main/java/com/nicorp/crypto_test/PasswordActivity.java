@@ -1,6 +1,11 @@
 package com.nicorp.crypto_test;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,12 +69,7 @@ public class PasswordActivity extends AppCompatActivity {
 
     private void checkPassword() {
         if (enteredPassword.toString().equals(CORRECT_PASSWORD)) {
-            for (int i = 0; i < llDots.getChildCount(); i++) {
-                View dot = llDots.getChildAt(i);
-                dot.setBackgroundColor(Color.GREEN);
-            }
-            Toast.makeText(this, "Password Correct!", Toast.LENGTH_SHORT).show();
-            // Proceed to the next screen
+            animateCorrectPassword();
         } else {
             animateWrongPassword();
         }
@@ -83,6 +83,49 @@ public class PasswordActivity extends AppCompatActivity {
             dot.setBackgroundColor(Color.RED);
         }
         new Handler().postDelayed(this::resetDots, 500);
+    }
+
+    private void animateCorrectPassword() {
+        AnimatorSet animatorSet = new AnimatorSet();
+
+        AnimatorSet scaleDown = new AnimatorSet();
+        for (int i = 0; i < llDots.getChildCount(); i++) {
+            View dot = llDots.getChildAt(i);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(dot, "scaleX", 1f, 0.5f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(dot, "scaleY", 1f, 0.5f);
+            scaleDown.playTogether(scaleX, scaleY);
+        }
+        scaleDown.setDuration(500);
+
+        AnimatorSet rotate = new AnimatorSet();
+        for (int i = 0; i < llDots.getChildCount(); i++) {
+            View dot = llDots.getChildAt(i);
+            ObjectAnimator rotation = ObjectAnimator.ofFloat(dot, "rotation", 0f, 720f);
+            rotate.playTogether(rotation);
+        }
+        rotate.setDuration(2000);
+
+        AnimatorSet scaleUp = new AnimatorSet();
+        for (int i = 0; i < llDots.getChildCount(); i++) {
+            View dot = llDots.getChildAt(i);
+            ObjectAnimator scaleX = ObjectAnimator.ofFloat(dot, "scaleX", 0.5f, 1f);
+            ObjectAnimator scaleY = ObjectAnimator.ofFloat(dot, "scaleY", 0.5f, 1f);
+            scaleUp.playTogether(scaleX, scaleY);
+        }
+        scaleUp.setDuration(500);
+
+        animatorSet.playSequentially(scaleDown, rotate, scaleUp);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                for (int i = 0; i < llDots.getChildCount(); i++) {
+                    View dot = llDots.getChildAt(i);
+                    // Set background as green circle
+                    dot.setBackgroundResource(R.drawable.green_dot);
+                }
+            }
+        });
+        animatorSet.start();
     }
 
     private void resetDots() {
