@@ -6,6 +6,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -123,6 +124,9 @@ public class PasswordActivity extends AppCompatActivity {
                     // Set background as green circle
                     dot.setBackgroundResource(R.drawable.green_dot);
                 }
+                // Go to FirstTabActivity
+                startActivity(new Intent(PasswordActivity.this, FirstTabActivity.class));
+                finish();
             }
         });
         animatorSet.start();

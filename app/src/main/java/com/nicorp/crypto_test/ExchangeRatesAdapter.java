@@ -28,7 +28,7 @@ public class ExchangeRatesAdapter extends RecyclerView.Adapter<ExchangeRatesAdap
     @Override
     public ExchangeRateViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_exchange_rate, parent, false);
-        parentWidth = parent.getWidth();
+        parentWidth = parent.getMeasuredWidth();
         return new ExchangeRateViewHolder(view);
     }
 

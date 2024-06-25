@@ -28,7 +28,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_transaction, parent, false);
-        parentWidth = parent.getWidth();
+        parentWidth = parent.getMeasuredWidth();
         return new TransactionViewHolder(view);
     }
 
@@ -62,6 +62,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
             tvTransactionName = itemView.findViewById(R.id.tvTransactionName);
             tvTransactionAmount = itemView.findViewById(R.id.tvTransactionAmount);
             cardView = itemView.findViewById(R.id.cardView);
+
         }
     }
 }

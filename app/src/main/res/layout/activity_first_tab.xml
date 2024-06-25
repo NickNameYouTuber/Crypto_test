@@ -56,14 +56,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBills"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:orientation="horizontal"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvMyBills" />
@@ -82,14 +79,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTransactions"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvMyTransactions" />
@@ -121,14 +115,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvExchangeRates"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvExchangeRates" />

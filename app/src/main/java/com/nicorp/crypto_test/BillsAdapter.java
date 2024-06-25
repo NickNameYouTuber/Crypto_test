@@ -29,7 +29,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
     @Override
     public BillViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_bill, parent, false);
-        parentWidth = parent.getWidth();
+        parentWidth = parent.getMeasuredWidth();
         return new BillViewHolder(view);
     }
 
