@@ -9,13 +9,13 @@
     app:cardMaxElevation="0dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true"
-    app:contentPadding="10dp"
+    app:contentPadding="5dp"
     app:cardBackgroundColor="?attr/dotColor"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="0dp">
 
@@ -27,27 +27,28 @@
 
             <ImageView
                 android:id="@+id/ivCurrencyLogo"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginEnd="8dp" />
 
             <TextView
                 android:id="@+id/tvCurrencyName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:textColor="@color/text_color_light"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/tvExchangeRate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:text="1"
             android:textAlignment="center"
             android:textColor="@color/text_color_light"
-            android:layout_marginTop="5dp"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
