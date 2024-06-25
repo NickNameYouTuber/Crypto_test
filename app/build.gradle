@@ -44,6 +44,7 @@ dependencies {
     implementation 'org.web3j:core:4.8.7'
     implementation 'org.web3j:crypto:4.8.7'
     implementation 'org.bitcoinj:bitcoinj-core:0.16.2'
+    implementation 'androidx.palette:palette:1.0.0'
 
     implementation libs.appcompat
     implementation libs.material

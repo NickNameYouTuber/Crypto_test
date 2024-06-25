@@ -59,19 +59,19 @@ public class FirstTabActivity extends AppCompatActivity {
 
     private void addTestData() {
         // Добавляем тестовые счета
-        billList.add(new Bill(R.drawable.qcoin, "First Bill", "50 QC", "5 USD"));
-        billList.add(new Bill(R.drawable.ethereum, "Second Bill", "30 QC", "3 USD"));
+        billList.add(new Bill(R.drawable.qcoin, "First Bill", "50 QC", "~ 5 USDT"));
+        billList.add(new Bill(R.drawable.bitcoin, "Second Bill", "0,001 BTC", "~ 300 USDT"));
         billsAdapter.notifyDataSetChanged();
 
         // Добавляем тестовые транзакции
-        transactionList.add(new Transaction(R.drawable.bitcoin, "Payment to John", "-50 QC"));
-        transactionList.add(new Transaction(R.drawable.bitcoin, "Payment from Mary", "+50 QC"));
+        transactionList.add(new Transaction(R.drawable.tether, "Ivan I.I.", "+ 10 USDT"));
+        transactionList.add(new Transaction(R.drawable.pyaterochka, "Pyaterochka", "- 1488 RUB"));
         transactionsAdapter.notifyDataSetChanged();
 
         // Добавляем тестовые курсы обмена
-        exchangeRateList.add(new ExchangeRate(R.drawable.qcoin, "USD/QC", "1:10"));
-        exchangeRateList.add(new ExchangeRate(R.drawable.bitcoin, "EUR/QC", "1:12"));
-        exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
+        exchangeRateList.add(new ExchangeRate(R.drawable.qcoin, "QCoin", "0.1 USDT"));
+        exchangeRateList.add(new ExchangeRate(R.drawable.bitcoin, "Bitcoin", "63 532 USDT"));
+        exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "Etherium", "3 489 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
         exchangeRatesAdapter.notifyDataSetChanged();
