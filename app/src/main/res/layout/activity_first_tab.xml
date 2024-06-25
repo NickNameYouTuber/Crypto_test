@@ -92,18 +92,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvMyTransactions" />
 
-    <Button
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/btnTransferTo"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Transfer to"
-        android:backgroundTint="@color/yellow"
-        android:textColor="@color/text_color_light"
+        android:layout_height="50dp"
+        android:background="@drawable/button_background"
         app:layout_constraintTop_toBottomOf="@id/rvTransactions"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Transfer to"
+            android:textColor="@color/text_color_light"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tvExchangeRates"
@@ -133,13 +145,13 @@
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:menu="@menu/bottom_nav_menu"
         android:background="?attr/backgroundColor"
+        app:itemIconTint="@color/colorPrimaryDarkLight"
+        app:itemTextColor="?attr/textColor"
         app:labelVisibilityMode="unlabeled"
-        app:itemIconTint="@color/yellow"
-        app:itemTextColor="?attr/textColor"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

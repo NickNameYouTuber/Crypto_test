@@ -16,18 +16,21 @@ public class ThemeHelper {
         switch (currentNightMode) {
             case Configuration.UI_MODE_NIGHT_NO:
                 // Светлая тема
-                setTheme(activity, R.style.AppTheme_Light);
-                sharedPreferences.edit().putInt(SELECTED_THEME, R.style.AppTheme_Light).apply();
+                setTheme(activity, R.style.Theme_QryptApp_Light);
+                sharedPreferences.edit().putInt(SELECTED_THEME, R.style.Theme_QryptApp_Light).apply();
+                System.out.println("Theme applied: " + "R.style.Theme_QryptApp_Light");
                 break;
             case Configuration.UI_MODE_NIGHT_YES:
                 // Темная тема
-                setTheme(activity, R.style.AppTheme_Dark);
-                sharedPreferences.edit().putInt(SELECTED_THEME, R.style.AppTheme_Dark).apply();
+                setTheme(activity, R.style.Theme_QryptApp_Dark);
+                sharedPreferences.edit().putInt(SELECTED_THEME, R.style.Theme_QryptApp_Dark).apply();
+                System.out.println("Theme applied: " + "R.style.Theme_QryptApp_Dark");
                 break;
             default:
                 // Тема по умолчанию
-                int savedTheme = sharedPreferences.getInt(SELECTED_THEME, R.style.AppTheme_Light);
+                int savedTheme = sharedPreferences.getInt(SELECTED_THEME, R.style.Theme_QryptApp_Light);
                 setTheme(activity, savedTheme);
+                System.out.println("Theme applied: " + "savedTheme");
                 break;
         }
     }

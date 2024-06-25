@@ -32,7 +32,9 @@ public class FirstTabActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeHelper.applyTheme(this);
         setContentView(R.layout.activity_first_tab);
+        ThemeHelper.applyTheme(this);
 
         rvBills = findViewById(R.id.rvBills);
         rvTransactions = findViewById(R.id.rvTransactions);
@@ -66,7 +68,7 @@ public class FirstTabActivity extends AppCompatActivity {
         // Добавляем тестовые транзакции
         transactionList.add(new Transaction(R.drawable.tether, "Ivan I.I.", "+ 10 USDT"));
         transactionList.add(new Transaction(R.drawable.pyaterochka, "Pyaterochka", "- 1488 RUB"));
-        transactionList.add(new Transaction(R.drawable.dns, "DNS", "- 9000 RUB"));
+        transactionList.add(new Transaction(R.drawable.mvideo, "Mvideo", "- 9000 RUB"));
         transactionsAdapter.notifyDataSetChanged();
 
         // Добавляем тестовые курсы обмена
@@ -74,7 +76,6 @@ public class FirstTabActivity extends AppCompatActivity {
         exchangeRateList.add(new ExchangeRate(R.drawable.bitcoin, "Bitcoin", "63 532 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "Etherium", "3 489 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ton, "TON", "60 USDT"));
-        exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
         exchangeRatesAdapter.notifyDataSetChanged();
 
         // Добавляем ItemDecoration для расстояний между элементами

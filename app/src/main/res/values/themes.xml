@@ -29,7 +29,7 @@
     <!-- Base application theme -->
     <style name="Base.Theme.QryptApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Общие настройки -->
-        <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDarkLight</item>
         <item name="selectedDotColor">@color/selected_dot_color</item>
 
     </style>
