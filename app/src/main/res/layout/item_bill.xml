@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color_light"
+            android:layout_marginStart="10dp"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/ivBillLogo"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +44,7 @@
             android:textColor="@color/text_color_light"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/ivBillLogo"
+            app:layout_constraintStart_toStartOf="@+id/tvBillTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvBillTitle" />
 
         <TextView
@@ -53,7 +54,7 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/text_color_light"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/ivBillLogo"
+            app:layout_constraintStart_toStartOf="@+id/tvBillAmount"
             app:layout_constraintTop_toBottomOf="@+id/tvBillAmount" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

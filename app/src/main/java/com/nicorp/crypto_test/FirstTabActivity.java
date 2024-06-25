@@ -66,13 +66,14 @@ public class FirstTabActivity extends AppCompatActivity {
         // Добавляем тестовые транзакции
         transactionList.add(new Transaction(R.drawable.tether, "Ivan I.I.", "+ 10 USDT"));
         transactionList.add(new Transaction(R.drawable.pyaterochka, "Pyaterochka", "- 1488 RUB"));
+        transactionList.add(new Transaction(R.drawable.dns, "DNS", "- 9000 RUB"));
         transactionsAdapter.notifyDataSetChanged();
 
         // Добавляем тестовые курсы обмена
         exchangeRateList.add(new ExchangeRate(R.drawable.qcoin, "QCoin", "0.1 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.bitcoin, "Bitcoin", "63 532 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "Etherium", "3 489 USDT"));
-        exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
+        exchangeRateList.add(new ExchangeRate(R.drawable.ton, "TON", "60 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
         exchangeRatesAdapter.notifyDataSetChanged();
 
