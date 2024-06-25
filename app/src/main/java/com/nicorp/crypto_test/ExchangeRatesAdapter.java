@@ -49,7 +49,7 @@ public class ExchangeRatesAdapter extends RecyclerView.Adapter<ExchangeRatesAdap
         // Устанавливаем ширину и высоту для соотношения 2/3
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
         layoutParams.width = (parentWidth - dpToPx(20) * (3 - 1)) / 3; // Adjust this calculation if needed
-        layoutParams.height = (int) (layoutParams.width * (2.0 / 3.0));
+        layoutParams.height = (int) (layoutParams.width * (9.0 / 12.0));
         holder.itemView.setLayoutParams(layoutParams);
     }
 

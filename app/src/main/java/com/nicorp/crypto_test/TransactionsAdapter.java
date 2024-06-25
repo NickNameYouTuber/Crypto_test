@@ -49,7 +49,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         // Устанавливаем ширину и высоту для соотношения 1/3
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
         layoutParams.width = (parentWidth - dpToPx(20) * (2 - 1)) / 2; // Adjust this calculation if needed
-        layoutParams.height = (int) (layoutParams.width * (1.0 / 3.0));
+        layoutParams.height = (int) (layoutParams.width * (11.0 / 30.0));
         holder.itemView.setLayoutParams(layoutParams);
     }
 
