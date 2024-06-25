@@ -24,7 +24,7 @@
             android:id="@+id/ivTransactionLogo"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="10dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
