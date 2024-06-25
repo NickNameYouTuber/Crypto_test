@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.graphics.Rect;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -52,10 +53,6 @@ public class FirstTabActivity extends AppCompatActivity {
         exchangeRatesAdapter = new ExchangeRatesAdapter(this, exchangeRateList);
         rvExchangeRates.setAdapter(exchangeRatesAdapter);
 
-        // Добавляем ItemDecoration для расстояний между элементами
-        rvBills.addItemDecoration(new ItemOffsetDecoration(16));
-        rvTransactions.addItemDecoration(new ItemOffsetDecoration(16));
-        rvExchangeRates.addItemDecoration(new ItemOffsetDecoration(16));
 
         addTestData();
     }
@@ -78,20 +75,52 @@ public class FirstTabActivity extends AppCompatActivity {
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "GBP/QC", "1:14"));
         exchangeRatesAdapter.notifyDataSetChanged();
+
+        // Добавляем ItemDecoration для расстояний между элементами
+        rvBills.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvBills, 2), 20));
+        rvTransactions.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvTransactions, 2), 20));
+        rvExchangeRates.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvExchangeRates, 3), 20));
+
     }
 
     // Класс для установки расстояний между элементами RecyclerView
     private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
-        private int offset;
+        private int itemWidth;
+        private int spaceBetweenItems;
 
-        public ItemOffsetDecoration(int offset) {
-            this.offset = offset;
+        public ItemOffsetDecoration(int itemWidth, int spaceBetweenItems) {
+            this.itemWidth = itemWidth;
+            this.spaceBetweenItems = spaceBetweenItems;
         }
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.left = offset;
-            outRect.right = offset;
+            int position = parent.getChildAdapterPosition(view);
+            int itemCount = parent.getAdapter().getItemCount();
+
+            // Reset all offsets
+            outRect.left = 0;
+            outRect.right = 0;
+
+            // Apply spacing logic
+            if (position / (itemCount-1) != 1) {
+                // Not the last item in each row
+                outRect.right = dpToPx(spaceBetweenItems);
+            }
         }
     }
+
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getBaseContext().getResources().getDisplayMetrics().density);
+    }
+
+    private int calculateItemWidth(RecyclerView recyclerView, int itemCount) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int screenWidth = displayMetrics.widthPixels;
+        int spaceBetweenItems = dpToPx(20); // Adjust this as needed
+        return (screenWidth - spaceBetweenItems * (itemCount - 1)) / itemCount;
+    }
+
+
 }

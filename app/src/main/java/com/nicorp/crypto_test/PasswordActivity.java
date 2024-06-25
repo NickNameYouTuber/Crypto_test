@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class PasswordActivity extends AppCompatActivity {
 
-    private static final String CORRECT_PASSWORD = "12345";
+    private static final String CORRECT_PASSWORD = "11111";
     private StringBuilder enteredPassword = new StringBuilder();
     private LinearLayout llDots;
 

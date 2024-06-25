@@ -41,7 +41,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
 
         // Устанавливаем ширину и высоту для соотношения 1/3
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-        layoutParams.width = parentWidth / 2;
+        layoutParams.width = (parentWidth - dpToPx(20)) / 2; // Вычисляем ширину с учетом отступов (20dp между элементами)
         layoutParams.height = (int) (layoutParams.width * (1.0 / 3.0));
         holder.itemView.setLayoutParams(layoutParams);
     }
@@ -62,7 +62,11 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
             tvTransactionName = itemView.findViewById(R.id.tvTransactionName);
             tvTransactionAmount = itemView.findViewById(R.id.tvTransactionAmount);
             cardView = itemView.findViewById(R.id.cardView);
-
         }
+    }
+
+    // Метод для перевода dp в пиксели
+    private int dpToPx(int dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 }

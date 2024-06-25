@@ -29,7 +29,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
     @Override
     public BillViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_bill, parent, false);
-        parentWidth = parent.getMeasuredWidth();
+        parentWidth = parent.getMeasuredWidth(); // Получаем ширину родительского RecyclerView
         return new BillViewHolder(view);
     }
 
@@ -43,7 +43,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
 
         // Устанавливаем ширину и высоту для соотношения 5/9
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-        layoutParams.width = parentWidth / 3;
+        layoutParams.width = (parentWidth - dpToPx(20)) / 2; // Вычисляем ширину с учетом отступов (20dp между элементами)
         layoutParams.height = (int) (layoutParams.width * (5.0 / 9.0));
         holder.itemView.setLayoutParams(layoutParams);
     }
@@ -66,5 +66,10 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
             tvBillUsdAmount = itemView.findViewById(R.id.tvBillUsdAmount);
             cardView = itemView.findViewById(R.id.cardView);
         }
+    }
+
+    // Метод для перевода dp в пиксели
+    private int dpToPx(int dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 }
