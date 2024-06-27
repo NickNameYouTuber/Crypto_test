@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ThemeHelper.applyTheme(this);
+        AllHelpersSetup.setup(this, R.layout.activity_splash, false);
 //        // Установка темы в зависимости от системной темы устройства
 //        int currentNightMode = getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
 //        switch (currentNightMode) {
@@ -50,9 +50,6 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             logoResId = R.drawable.test_logo_w; // Логотип для светлой темы
         }
-
-
-        setContentView(R.layout.activity_splash);
 
         ImageView logo = findViewById(R.id.logoImageView);
         logo.setVisibility(View.GONE); // Скрыть логотип по умолчанию

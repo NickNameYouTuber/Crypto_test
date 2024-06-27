@@ -10,6 +10,7 @@ public class NavigationHelper {
     private static int previousItemId = R.id.nav_wallet;
 
     public static void setupBottomNavigation(Activity activity) {
+        // Инициализируем BottomNavigationView
         BottomNavigationView bottomNav = activity.findViewById(R.id.bottomNav);
 
         // Определяем текущую активность, чтобы выбрать правильный пункт меню

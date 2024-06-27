@@ -49,9 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ThemeHelper.applyTheme(this);
-        setContentView(R.layout.activity_login);
-
+        AllHelpersSetup.setup(this, R.layout.activity_login, false);
         setupBouncyCastle();
 
         walletAddressEditText = findViewById(R.id.walletAddressEditText);

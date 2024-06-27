@@ -45,8 +45,7 @@ public class PasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ThemeHelper.applyTheme(this);
-        setContentView(R.layout.activity_password);
+        AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
         llDots = findViewById(R.id.llDots);
         GridLayout gridLayout = findViewById(R.id.gridLayout);
@@ -202,7 +201,7 @@ public class PasswordActivity extends AppCompatActivity {
                     dot.setBackgroundResource(R.drawable.green_dot);
                 }
                 // Go to FirstTabActivity
-                startActivity(new Intent(PasswordActivity.this, FirstTabActivity.class));
+                startActivity(new Intent(PasswordActivity.this, QRActivity.class));
                 finish();
             }
         });

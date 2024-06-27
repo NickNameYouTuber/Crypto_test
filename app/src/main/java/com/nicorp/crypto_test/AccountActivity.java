@@ -16,9 +16,7 @@ public class AccountActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_account);
-        NavigationHelper.setupBottomNavigation(this);
+        AllHelpersSetup.setup(this, R.layout.activity_account);
 
         // Обработчик нажатия на кнопку "Управление счетами"
         ConstraintLayout billsManagementButton = findViewById(R.id.billsManagementButton);

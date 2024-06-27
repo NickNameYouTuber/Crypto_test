@@ -55,8 +55,7 @@ public class BalanceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ThemeHelper.applyTheme(this);
-        setContentView(R.layout.activity_balance);
+        AllHelpersSetup.setup(this, R.layout.activity_balance);
 
         balanceTextView = findViewById(R.id.balanceTextView);
         balanceValueTextView = findViewById(R.id.balanceValueTextView);

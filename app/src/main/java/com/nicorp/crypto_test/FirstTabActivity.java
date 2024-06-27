@@ -32,10 +32,7 @@ public class FirstTabActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ThemeHelper.applyTheme(this);
-        setContentView(R.layout.activity_first_tab);
-        ThemeHelper.applyTheme(this);
-        NavigationHelper.setupBottomNavigation(this);
+        AllHelpersSetup.setup(this, R.layout.activity_first_tab);
 
         rvBills = findViewById(R.id.rvBills);
         rvTransactions = findViewById(R.id.rvTransactions);
