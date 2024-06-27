@@ -20,13 +20,13 @@
 
     <ImageView
         android:id="@+id/profileImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@color/gray"
         app:layout_constraintTop_toBottomOf="@id/tvQrypt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="80dp" />
 
     <TextView
         android:id="@+id/userName"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:text="Petr P.P"
         android:textColor="?attr/textColor"
-        android:textSize="18sp"
+        android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@id/profileImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,43 +45,100 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/userName"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="40dp"
         android:padding="16dp">
 
-        <Button
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/billsManagementButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Bills management"
-            android:textColor="?attr/textColor"
+            android:layout_height="50dp"
             android:background="@drawable/button_background"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
 
-        <Button
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bills management"
+                android:textColor="@color/text_color_light"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/accountSettingsButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Account settings"
-            android:textColor="?attr/textColor"
+            android:layout_height="50dp"
             android:background="@drawable/button_background"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
 
-        <Button
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Account settings"
+                android:textColor="@color/text_color_light"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/appSettingsButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="App settings"
-            android:textColor="?attr/textColor"
+            android:layout_height="50dp"
             android:background="@drawable/button_background"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
 
-        <Button
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="App settings"
+                android:textColor="@color/text_color_light"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/transAuthButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TransAuth"
-            android:textColor="?attr/textColor"
-            android:background="@drawable/button_background" />
+            android:layout_height="50dp"
+            android:background="@drawable/button_background"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TransAuth"
+                android:textColor="@color/text_color_light"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
@@ -97,5 +154,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-    
+
 </androidx.constraintlayout.widget.ConstraintLayout>
