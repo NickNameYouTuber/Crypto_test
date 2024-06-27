@@ -18,6 +18,7 @@ public class Bills_Management_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bills_management);
+        NavigationHelper.setupBottomNavigation(this);
 
         recyclerView = findViewById(R.id.rvBills);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

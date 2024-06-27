@@ -35,6 +35,7 @@ public class FirstTabActivity extends AppCompatActivity {
         ThemeHelper.applyTheme(this);
         setContentView(R.layout.activity_first_tab);
         ThemeHelper.applyTheme(this);
+        NavigationHelper.setupBottomNavigation(this);
 
         rvBills = findViewById(R.id.rvBills);
         rvTransactions = findViewById(R.id.rvTransactions);
