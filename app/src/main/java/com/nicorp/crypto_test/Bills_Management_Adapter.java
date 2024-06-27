@@ -75,6 +75,11 @@ public class Bills_Management_Adapter extends RecyclerView.Adapter<Bills_Managem
                 int dominantColor = palette.getDominantColor(ContextCompat.getColor(context, android.R.color.white));
                 cardView.setCardBackgroundColor(dominantColor);
 
+                // Add bottom margin to card view
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
+                params.bottomMargin = dpToPx(20);
+                cardView.setLayoutParams(params);
+
                 // Determine text color based on background brightness
                 int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, android.R.color.white) : ContextCompat.getColor(context, R.color.text_color_dark);
                 BillTitle.setTextColor(textColor);
@@ -87,6 +92,10 @@ public class Bills_Management_Adapter extends RecyclerView.Adapter<Bills_Managem
     private boolean isDarkColor(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
         return darkness >= 0.5; // Adjust this threshold as needed
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 
 }

@@ -31,9 +31,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/iconBill"
             app:layout_constraintStart_toEndOf="@id/iconBill"
-            app:layout_constraintTop_toTopOf="@id/iconBill"
-            app:layout_constraintBottom_toBottomOf="@id/iconBill" />
+            app:layout_constraintTop_toTopOf="@+id/iconBill" />
 
         <TextView
             android:id="@+id/amountBill"

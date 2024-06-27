@@ -201,7 +201,7 @@ public class PasswordActivity extends AppCompatActivity {
                     dot.setBackgroundResource(R.drawable.green_dot);
                 }
                 // Go to FirstTabActivity
-                startActivity(new Intent(PasswordActivity.this, QRActivity.class));
+                startActivity(new Intent(PasswordActivity.this, FirstTabActivity.class));
                 finish();
             }
         });
