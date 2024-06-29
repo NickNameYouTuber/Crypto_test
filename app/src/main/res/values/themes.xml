@@ -38,4 +38,10 @@
         <item name="rippleColor">@color/button_ripple_color_dark</item>
     </style>
 
+    <style name="BottomNavigationViewStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="itemIconTint">@color/navigation_item_color</item>
+        <item name="itemTextColor">@color/navigation_item_color</item>
+        <item name="itemBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

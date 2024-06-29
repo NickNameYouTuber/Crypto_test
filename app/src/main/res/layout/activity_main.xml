@@ -9,11 +9,10 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
+        style="@style/BottomNavigationViewStyle"
         android:layout_width="0dp"
         android:layout_height="80dp"
         android:background="?attr/backgroundColor"
-        app:itemIconTint="@color/colorPrimaryDarkLight"
-        app:itemTextColor="?attr/textColor"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
