@@ -48,7 +48,7 @@ public class PasswordActivity extends AppCompatActivity {
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
     private SharedPreferences sharedPreferences;
-    private BroadcastReceiver responseReceiver;
+    private MessageReceiver messageReceiver;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -62,8 +62,22 @@ public class PasswordActivity extends AppCompatActivity {
         message.add("Hello");
         message.add("World");
 
-        MessageManager.sendMessage(this, "com.example.transauth_test", String.valueOf(message), MessageTags.ENTER_TO, MessagePermissions.USER);
+        String packageName = getPackageName();
+        Log.d("MainActivity", "Package name: " + packageName);
 
+        MessageManager.sendMessage(this, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.USER);
+
+
+        messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {
+            @Override
+            public void onMessageReceived(ArrayList<String> message) {
+                // Получено сообщение с тегом EnterFrom
+                Log.d("MainActivity", "Received message: " + message.toString());
+                Toast.makeText(PasswordActivity.this, "Received message: " + message.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        messageReceiver.register(this);
 
 
         llDots = findViewById(R.id.llDots);
@@ -83,7 +97,7 @@ public class PasswordActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(responseReceiver);
+        messageReceiver.unregister(this);
     }
 
 

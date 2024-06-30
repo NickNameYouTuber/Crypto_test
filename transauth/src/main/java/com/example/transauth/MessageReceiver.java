@@ -27,21 +27,29 @@ public class MessageReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String tag = MessageManager.extractMessageTagFromIntent(intent);
         String permission = MessageManager.extractMessagePermissionFromIntent(intent);
-        ArrayList<String> message = new ArrayList<>();
-        message.add(MessageManager.extractMessageTextFromIntent(intent));
+        String senderPackage = MessageManager.extractSenderPackageFromIntent(intent);
+        ArrayList<String> message = MessageManager.extractMessageListFromIntent(intent);
+
+        Log.d(TAG, "Received message: " + message.toString());
+        Log.d(TAG, "Received tag: " + tag);
+        Log.d(TAG, "Received permission: " + permission);
+        Log.d(TAG, "Sender package: " + senderPackage);
 
         if (tag.equals(MessageTags.ENTER_TO)) {
             if (permission.equals(MessagePermissions.USER)) {
                 // Отправляем ответное сообщение в uppercase
                 ArrayList<String> modifiedMessage = modifyMessage(message, true);
-                sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM);
+                sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
             } else if (permission.equals(MessagePermissions.ADMIN)) {
                 // Отправляем ответное сообщение в lowercase
                 ArrayList<String> modifiedMessage = modifyMessage(message, false);
-                sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM);
+                sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
             }
         } else if (tag.equals(MessageTags.ENTER_FROM)) {
             // Выводим полученное сообщение
+            if (listener != null) {
+                listener.onMessageReceived(message);
+            }
             Log.d(TAG, "Received message: " + message.toString());
         }
     }
@@ -58,18 +66,23 @@ public class MessageReceiver extends BroadcastReceiver {
         return modified;
     }
 
-    private void sendMessageBack(Context context, ArrayList<String> message, String tag) {
+    private void sendMessageBack(Context context, ArrayList<String> message, String tag, String targetPackage) {
         Intent intent = new Intent(MessageManager.ACTION_SEND_MESSAGE);
-        intent.setPackage(context.getPackageName()); // Отправляем сообщение в тот же пакет
+        intent.setPackage(targetPackage); // Отправляем сообщение обратно в исходный пакет
         intent.putStringArrayListExtra(MessageManager.EXTRA_MESSAGE_LIST, message);
         intent.putExtra(MessageManager.EXTRA_MESSAGE_TAG, tag);
         context.sendBroadcast(intent);
     }
 
     public void register(Context context) {
+        Log.d(TAG, "register() called with: context = [" + context + "]");
         IntentFilter filter = new IntentFilter(MessageManager.ACTION_SEND_MESSAGE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.registerReceiver(this, filter, Context.RECEIVER_EXPORTED);
+            Log.d(TAG, "register was successful");
+        } else {
+            context.registerReceiver(this, filter);
+            Log.d(TAG, "register was successful");
         }
     }
 
