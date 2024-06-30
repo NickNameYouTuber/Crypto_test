@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -31,6 +32,9 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.example.transauth.MessageManager;
+import com.example.transauth.MessagePermissions;
+import com.example.transauth.MessageReceiver;
+import com.example.transauth.MessageTags;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
@@ -53,13 +57,12 @@ public class PasswordActivity extends AppCompatActivity {
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
 
+        // Отправка сообщения из первого приложения
         ArrayList<String> message = new ArrayList<>();
         message.add("Hello");
         message.add("World");
 
-        MessageManager.sendMessage(this, "com.example.transauth_test", message);
-
-
+        MessageManager.sendMessage(this, "com.example.transauth_test", String.valueOf(message), MessageTags.ENTER_TO, MessagePermissions.USER);
 
 
 
