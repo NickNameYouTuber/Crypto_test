@@ -1,18 +1,18 @@
 package com.nicorp.crypto_test;
 
-import android.Manifest;
 import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.hardware.fingerprint.FingerprintManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -25,10 +25,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.transauth.AccountInfo;
+import com.example.transauth.AccountRequestHandler;
+import com.example.transauth.ObjectSerializer;
+import com.example.transauth.TransAuthButton;
 
 import java.util.concurrent.Executor;
 
@@ -41,11 +46,36 @@ public class PasswordActivity extends AppCompatActivity {
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
     private SharedPreferences sharedPreferences;
+    private TransAuthButton transAuthButton;
+    private BroadcastReceiver responseReceiver;
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
+
+        transAuthButton = findViewById(R.id.transAuthButton);
+        responseReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String requestType = intent.getStringExtra("RequestType");
+                String serializedAccountInfo = intent.getStringExtra("AccountInfo");
+
+                if ("BUTTON".equals(requestType) && serializedAccountInfo != null) {
+                    AccountInfo accountInfo = (AccountInfo) ObjectSerializer.deserialize(serializedAccountInfo);
+                    if (accountInfo != null) {
+                        transAuthButton.updateButton(accountInfo.getName());
+                    }
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter("com.example.transauth.RESPONSE");
+        registerReceiver(responseReceiver, filter);
+
+        transAuthButton.setAccountRequestHandler(new AccountRequestHandler(this, null));
+
 
         llDots = findViewById(R.id.llDots);
         GridLayout gridLayout = findViewById(R.id.gridLayout);
@@ -58,6 +88,22 @@ public class PasswordActivity extends AppCompatActivity {
 
         if (sharedPreferences.getBoolean(USE_FINGERPRINT_KEY, false)) {
             startFingerprintAuthentication();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(responseReceiver);
+    }
+
+    private class AccountInfoReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String name = intent.getStringExtra("name");
+            if (name != null) {
+                transAuthButton.setText("Войти как " + name);
+            }
         }
     }
 
