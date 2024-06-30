@@ -30,11 +30,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
-import com.example.transauth.AccountInfo;
-import com.example.transauth.AccountRequestHandler;
-import com.example.transauth.ObjectSerializer;
-import com.example.transauth.TransAuthButton;
+import com.example.transauth.MessageManager;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 public class PasswordActivity extends AppCompatActivity {
@@ -46,7 +44,6 @@ public class PasswordActivity extends AppCompatActivity {
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
     private SharedPreferences sharedPreferences;
-    private TransAuthButton transAuthButton;
     private BroadcastReceiver responseReceiver;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -55,26 +52,15 @@ public class PasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
-        transAuthButton = findViewById(R.id.transAuthButton);
-        responseReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String requestType = intent.getStringExtra("RequestType");
-                String serializedAccountInfo = intent.getStringExtra("AccountInfo");
 
-                if ("BUTTON".equals(requestType) && serializedAccountInfo != null) {
-                    AccountInfo accountInfo = (AccountInfo) ObjectSerializer.deserialize(serializedAccountInfo);
-                    if (accountInfo != null) {
-                        transAuthButton.updateButton(accountInfo.getName());
-                    }
-                }
-            }
-        };
+        ArrayList<String> message = new ArrayList<>();
+        message.add("Hello");
+        message.add("World");
 
-        IntentFilter filter = new IntentFilter("com.example.transauth.RESPONSE");
-        registerReceiver(responseReceiver, filter, Context.RECEIVER_EXPORTED);
+        MessageManager.sendMessage(this, "com.example.transauth_test", message);
 
-        transAuthButton.setAccountRequestHandler(new AccountRequestHandler(this, null));
+
+
 
 
         llDots = findViewById(R.id.llDots);
@@ -97,15 +83,6 @@ public class PasswordActivity extends AppCompatActivity {
         unregisterReceiver(responseReceiver);
     }
 
-    private class AccountInfoReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String name = intent.getStringExtra("name");
-            if (name != null) {
-                transAuthButton.setText("Войти как " + name);
-            }
-        }
-    }
 
     private void startFingerprintAuthentication() {
         Executor executor = ContextCompat.getMainExecutor(this);
