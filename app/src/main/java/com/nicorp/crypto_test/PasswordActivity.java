@@ -31,6 +31,7 @@ import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
 import com.example.transauth.MessageManager;
+import com.example.transauth.Permissions;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
@@ -57,7 +58,7 @@ public class PasswordActivity extends AppCompatActivity {
         message.add("Hello");
         message.add("World");
 
-        MessageManager.sendMessage(this, "com.example.transauth_test", message);
+        MessageManager.sendMessage(this, "com.example.app", message, Permissions.SECOND); // Используем Permission.SECOND для отправки всех элементов
 
 
 
