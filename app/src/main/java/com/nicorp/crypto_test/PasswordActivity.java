@@ -72,7 +72,7 @@ public class PasswordActivity extends AppCompatActivity {
         };
 
         IntentFilter filter = new IntentFilter("com.example.transauth.RESPONSE");
-        registerReceiver(responseReceiver, filter);
+        registerReceiver(responseReceiver, filter, Context.RECEIVER_EXPORTED);
 
         transAuthButton.setAccountRequestHandler(new AccountRequestHandler(this, null));
 

@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 public class AccountRequestHandler {
     private static final String REQUEST_ACTION = "com.example.transauth.REQUEST";
@@ -26,6 +29,7 @@ public class AccountRequestHandler {
         this.accountProvider = accountProvider;
 
         this.requestReceiver = new BroadcastReceiver() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onReceive(Context context, Intent intent) {
                 int appCode = intent.getIntExtra(EXTRA_APP_CODE, -1);
