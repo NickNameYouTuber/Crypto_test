@@ -9,10 +9,15 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class MessageReceiver extends BroadcastReceiver {
     private static final String TAG = "MessageReceiver";
+    private static final String FILE_NAME = "message.txt";
     private MessageListener listener;
 
     public interface MessageListener {
@@ -37,12 +42,18 @@ public class MessageReceiver extends BroadcastReceiver {
 
         if (tag.equals(MessageTags.ENTER_TO)) {
             if (permission.equals(MessagePermissions.USER)) {
-                // Отправляем ответное сообщение в uppercase
-                ArrayList<String> modifiedMessage = modifyMessage(message, true);
+                // Записываем сообщение в файл
+                writeFile(context, message);
+
+                // Читаем сообщение из файла и отправляем его обратно в uppercase
+                ArrayList<String> modifiedMessage = readFileAndModify(context, true);
                 sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
             } else if (permission.equals(MessagePermissions.ADMIN)) {
-                // Отправляем ответное сообщение в lowercase
-                ArrayList<String> modifiedMessage = modifyMessage(message, false);
+                // Записываем сообщение в файл
+                writeFile(context, message);
+
+                // Читаем сообщение из файла и отправляем его обратно в lowercase
+                ArrayList<String> modifiedMessage = readFileAndModify(context, false);
                 sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
             }
         } else if (tag.equals(MessageTags.ENTER_FROM)) {
@@ -54,16 +65,33 @@ public class MessageReceiver extends BroadcastReceiver {
         }
     }
 
-    private ArrayList<String> modifyMessage(ArrayList<String> message, boolean toUpperCase) {
-        ArrayList<String> modified = new ArrayList<>();
-        for (String msg : message) {
-            if (toUpperCase) {
-                modified.add(msg.toUpperCase());
-            } else {
-                modified.add(msg.toLowerCase());
+    private void writeFile(Context context, ArrayList<String> message) {
+        try (FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
+            for (String line : message) {
+                fos.write((line + "\n").getBytes());
             }
+        } catch (Exception e) {
+            Log.e(TAG, "Error writing file", e);
         }
-        return modified;
+    }
+
+    private ArrayList<String> readFileAndModify(Context context, boolean toUpperCase) {
+        ArrayList<String> modifiedMessage = new ArrayList<>();
+        try (FileInputStream fis = context.openFileInput(FILE_NAME);
+             InputStreamReader isr = new InputStreamReader(fis);
+             BufferedReader br = new BufferedReader(isr)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (toUpperCase) {
+                    modifiedMessage.add(line.toUpperCase());
+                } else {
+                    modifiedMessage.add(line.toLowerCase());
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error reading file", e);
+        }
+        return modifiedMessage;
     }
 
     private void sendMessageBack(Context context, ArrayList<String> message, String tag, String targetPackage) {
