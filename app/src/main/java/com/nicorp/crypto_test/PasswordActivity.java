@@ -57,13 +57,8 @@ public class PasswordActivity extends AppCompatActivity {
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
 
-        // Отправка сообщения из первого приложения
         ArrayList<String> message = new ArrayList<>();
-        message.add("Hello");
-        message.add("World");
-
-        String packageName = getPackageName();
-        Log.d("MainActivity", "Package name: " + packageName);
+        message.add("1234");
 
         MessageManager.sendMessage(this, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.USER);
 

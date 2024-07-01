@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class MessageManager {
     public static final String ACTION_SEND_MESSAGE = "com.example.messaging.ACTION_SEND_MESSAGE";
-    public static final String EXTRA_MESSAGE_TEXT = "com.example.messaging.EXTRA_MESSAGE_TEXT";
     public static final String EXTRA_MESSAGE_TAG = "com.example.messaging.EXTRA_MESSAGE_TAG";
     public static final String EXTRA_MESSAGE_PERMISSION = "com.example.messaging.EXTRA_MESSAGE_PERMISSION";
     public static final String EXTRA_MESSAGE_LIST = "com.example.messaging.EXTRA_MESSAGE_LIST";

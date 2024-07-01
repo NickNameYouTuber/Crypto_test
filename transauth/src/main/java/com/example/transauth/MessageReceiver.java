@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class MessageReceiver extends BroadcastReceiver {
     private static final String TAG = "MessageReceiver";
     private static final String FILE_NAME = "message.txt";
+    private static final String SPECIAL_CODE = "1234";
     private MessageListener listener;
 
     public interface MessageListener {
@@ -41,20 +42,26 @@ public class MessageReceiver extends BroadcastReceiver {
         Log.d(TAG, "Sender package: " + senderPackage);
 
         if (tag.equals(MessageTags.ENTER_TO)) {
-            if (permission.equals(MessagePermissions.USER)) {
-                // Записываем сообщение в файл
-                writeFile(context, message);
+            if (message.size() == 1 && message.get(0).equals(SPECIAL_CODE)) {
+                // Читаем сообщение из файла и отправляем его обратно
+                ArrayList<String> fileMessage = readFile(context);
+                sendMessageBack(context, fileMessage, MessageTags.ENTER_FROM, senderPackage);
+            } else {
+                if (permission.equals(MessagePermissions.USER)) {
+                    // Записываем сообщение в файл
+                    writeFile(context, message);
 
-                // Читаем сообщение из файла и отправляем его обратно в uppercase
-                ArrayList<String> modifiedMessage = readFileAndModify(context, true);
-                sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
-            } else if (permission.equals(MessagePermissions.ADMIN)) {
-                // Записываем сообщение в файл
-                writeFile(context, message);
+                    // Читаем сообщение из файла и отправляем его обратно в uppercase
+                    ArrayList<String> modifiedMessage = readFileAndModify(context, true);
+                    sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
+                } else if (permission.equals(MessagePermissions.ADMIN)) {
+                    // Записываем сообщение в файл
+                    writeFile(context, message);
 
-                // Читаем сообщение из файла и отправляем его обратно в lowercase
-                ArrayList<String> modifiedMessage = readFileAndModify(context, false);
-                sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
+                    // Читаем сообщение из файла и отправляем его обратно в lowercase
+                    ArrayList<String> modifiedMessage = readFileAndModify(context, false);
+                    sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
+                }
             }
         } else if (tag.equals(MessageTags.ENTER_FROM)) {
             // Выводим полученное сообщение
@@ -73,6 +80,21 @@ public class MessageReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             Log.e(TAG, "Error writing file", e);
         }
+    }
+
+    private ArrayList<String> readFile(Context context) {
+        ArrayList<String> fileMessage = new ArrayList<>();
+        try (FileInputStream fis = context.openFileInput(FILE_NAME);
+             InputStreamReader isr = new InputStreamReader(fis);
+             BufferedReader br = new BufferedReader(isr)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                fileMessage.add(line);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error reading file", e);
+        }
+        return fileMessage;
     }
 
     private ArrayList<String> readFileAndModify(Context context, boolean toUpperCase) {
