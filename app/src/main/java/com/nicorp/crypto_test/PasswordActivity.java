@@ -37,6 +37,8 @@ import com.example.transauth.MessageReceiver;
 import com.example.transauth.MessageTags;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 public class PasswordActivity extends AppCompatActivity {
@@ -57,15 +59,19 @@ public class PasswordActivity extends AppCompatActivity {
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
 
-        ArrayList<String> message = new ArrayList<>();
-        message.add("1234");
+        // MainActivity.java в первом приложении
 
-        MessageManager.sendMessage(this, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.USER);
+        Map<String, String> message = new HashMap<>();
+        message.put("code", "1234");
 
+        MessageManager.sendMessage(this, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.ADMIN);
+
+
+        // MainActivity.java во втором приложении
 
         messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {
             @Override
-            public void onMessageReceived(ArrayList<String> message) {
+            public void onMessageReceived(Map<String, String> message) {
                 // Получено сообщение с тегом EnterFrom
                 Log.d("MainActivity", "Received message: " + message.toString());
                 Toast.makeText(PasswordActivity.this, "Received message: " + message.toString(), Toast.LENGTH_LONG).show();
@@ -73,6 +79,7 @@ public class PasswordActivity extends AppCompatActivity {
         });
 
         messageReceiver.register(this);
+
 
 
         llDots = findViewById(R.id.llDots);
