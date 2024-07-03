@@ -17,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,17 +52,19 @@ public class MessageReceiver extends BroadcastReceiver {
             if (message.size() == 1 && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
                 // Читаем сообщение из файла и отправляем его обратно
                 Map<String, String> fileMessage = readFile(context);
-                sendMessageBack(context, fileMessage, MessageTags.ENTER_FROM, senderPackage);
-            } else {
+                Map<String, String> responseMessage = new HashMap<>();
+
                 if (permission.equals(MessagePermissions.USER)) {
-                    // Читаем сообщение из файла и отправляем его обратно в uppercase
-                    Map<String, String> modifiedMessage = readFileAndModify(context, true);
-                    sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
+                    // Отправляем только Name
+                    if (fileMessage.containsKey("Name")) {
+                        responseMessage.put("Name", fileMessage.get("Name"));
+                    }
                 } else if (permission.equals(MessagePermissions.ADMIN)) {
-                    // Читаем сообщение из файла и отправляем его обратно в lowercase
-                    Map<String, String> modifiedMessage = readFileAndModify(context, false);
-                    sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
+                    // Отправляем все данные
+                    responseMessage.putAll(fileMessage);
                 }
+
+                sendMessageBack(context, responseMessage, MessageTags.ENTER_FROM, senderPackage);
             }
         } else if (tag.equals(MessageTags.ENTER_FROM)) {
             // Выводим полученное сообщение
