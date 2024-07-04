@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class MessageReceiver extends BroadcastReceiver {
         Log.d(TAG, "Received permission: " + permission);
         Log.d(TAG, "Sender package: " + senderPackage);
 
+<<<<<<< HEAD
         if (tag != null && permission != null && senderPackage != null) {
             if (tag.equals(MessageTags.ENTER_TO)) {
                 if (message != null && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
@@ -74,6 +76,23 @@ public class MessageReceiver extends BroadcastReceiver {
                 // Отправляем сообщение самому себе, что данных нет
                 Log.d(TAG, "ДАННЫХ НЕТ");
                 sendMessageToSelf(context, "ДАННЫХ НЕТ");
+=======
+        if (tag.equals(MessageTags.ENTER_TO)) {
+            if (message.size() == 1 && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
+                // Читаем сообщение из файла и отправляем его обратно
+                Map<String, String> fileMessage = readFile(context);
+                sendMessageBack(context, fileMessage, MessageTags.ENTER_FROM, senderPackage);
+            } else {
+                if (permission.equals(MessagePermissions.USER)) {
+                    // Читаем сообщение из файла и отправляем его обратно в uppercase
+                    Map<String, String> modifiedMessage = readFileAndModify(context, true);
+                    sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
+                } else if (permission.equals(MessagePermissions.ADMIN)) {
+                    // Читаем сообщение из файла и отправляем его обратно в lowercase
+                    Map<String, String> modifiedMessage = readFileAndModify(context, false);
+                    sendMessageBack(context, modifiedMessage, MessageTags.ENTER_FROM, senderPackage);
+                }
+>>>>>>> parent of f854df2 (Update)
             }
         } else {
             Log.e(TAG, "Received invalid/null data from intent.");
