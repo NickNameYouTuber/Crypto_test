@@ -37,6 +37,12 @@ import com.example.transauth.MessageReceiver;
 import com.example.transauth.MessageTags;
 
 import java.util.ArrayList;
+<<<<<<< Updated upstream
+=======
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+>>>>>>> Stashed changes
 import java.util.concurrent.Executor;
 
 public class PasswordActivity extends AppCompatActivity {
@@ -60,8 +66,25 @@ public class PasswordActivity extends AppCompatActivity {
         ArrayList<String> message = new ArrayList<>();
         message.add("1234");
 
+<<<<<<< Updated upstream
         MessageManager.sendMessage(this, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.USER);
 
+=======
+        Map<String, String> message = new HashMap<>();
+        message.put("code", "1234");
+// Пример использования метода writeAppListFile
+
+//        List<String> appList = new ArrayList<>();
+//        appList.add("com.example.app1");
+//        appList.add("com.example.app2");
+//
+//        MessageManager.writeAppListFile(this, appList);
+
+        MessageManager.sendMessage(this, message, MessageTags.ENTER_TO, MessagePermissions.ADMIN);
+
+
+        // MainActivity.java во втором приложении
+>>>>>>> Stashed changes
 
         messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {
             @Override

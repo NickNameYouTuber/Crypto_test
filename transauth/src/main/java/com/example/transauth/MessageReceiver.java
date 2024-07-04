@@ -1,5 +1,3 @@
-// src/main/java/com/example/transauth/MessageReceiver.java
-
 package com.example.transauth;
 
 import android.content.BroadcastReceiver;
@@ -14,7 +12,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -43,38 +40,47 @@ public class MessageReceiver extends BroadcastReceiver {
         String senderPackage = MessageManager.extractSenderPackageFromIntent(intent);
         Map<String, String> message = MessageManager.extractMessageMapFromIntent(intent);
 
-        Log.d(TAG, "Received message: " + message.toString());
+        Log.d(TAG, "Received message: " + message);
         Log.d(TAG, "Received tag: " + tag);
         Log.d(TAG, "Received permission: " + permission);
         Log.d(TAG, "Sender package: " + senderPackage);
 
-        if (tag.equals(MessageTags.ENTER_TO)) {
-            if (message.size() == 1 && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
-                // Читаем сообщение из файла и отправляем его обратно
-                Map<String, String> fileMessage = readFile(context);
-                Map<String, String> responseMessage = new HashMap<>();
+        if (tag != null && permission != null && senderPackage != null) {
+            if (tag.equals(MessageTags.ENTER_TO)) {
+                if (message != null && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
+                    // Читаем сообщение из файла и отправляем его обратно
+                    Map<String, String> fileMessage = readFile(context);
+                    Map<String, String> responseMessage = new HashMap<>();
 
-                if (permission.equals(MessagePermissions.USER)) {
-                    // Отправляем только Name
-                    if (fileMessage.containsKey("Name")) {
-                        responseMessage.put("Name", fileMessage.get("Name"));
+                    if (permission.equals(MessagePermissions.USER)) {
+                        // Отправляем только Name
+                        if (fileMessage.containsKey("Name")) {
+                            responseMessage.put("Name", fileMessage.get("Name"));
+                        }
+                    } else if (permission.equals(MessagePermissions.ADMIN)) {
+                        // Отправляем все данные
+                        responseMessage.putAll(fileMessage);
                     }
-                } else if (permission.equals(MessagePermissions.ADMIN)) {
-                    // Отправляем все данные
-                    responseMessage.putAll(fileMessage);
-                }
 
-                sendMessageBack(context, responseMessage, MessageTags.ENTER_FROM, senderPackage);
+                    sendMessageBack(context, responseMessage, MessageTags.ENTER_FROM, senderPackage);
+                }
+            } else if (tag.equals(MessageTags.ENTER_FROM)) {
+                // Выводим полученное сообщение
+                if (listener != null) {
+                    listener.onMessageReceived(message);
+                }
+                Log.d(TAG, "Received message: " + message);
+            } else if (tag.equals("ДАННЫХ НЕТ")) {
+                // Отправляем сообщение самому себе, что данных нет
+                Log.d(TAG, "ДАННЫХ НЕТ");
+                sendMessageToSelf(context, "ДАННЫХ НЕТ");
             }
-        } else if (tag.equals(MessageTags.ENTER_FROM)) {
-            // Выводим полученное сообщение
-            if (listener != null) {
-                listener.onMessageReceived(message);
-            }
-            Log.d(TAG, "Received message: " + message.toString());
+        } else {
+            Log.e(TAG, "Received invalid/null data from intent.");
         }
     }
 
+<<<<<<< Updated upstream
     private void writeFile(Context context, Map<String, String> message) {
         try (FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
             String json = gson.toJson(message);
@@ -83,6 +89,8 @@ public class MessageReceiver extends BroadcastReceiver {
             Log.e(TAG, "Error writing file", e);
         }
     }
+=======
+>>>>>>> Stashed changes
 
     private Map<String, String> readFile(Context context) {
         Map<String, String> fileMessage = new HashMap<>();
@@ -120,6 +128,14 @@ public class MessageReceiver extends BroadcastReceiver {
         intent.setPackage(targetPackage); // Отправляем сообщение обратно в исходный пакет
         intent.putExtra(MessageManager.EXTRA_MESSAGE_MAP, gson.toJson(message));
         intent.putExtra(MessageManager.EXTRA_MESSAGE_TAG, tag);
+        context.sendBroadcast(intent);
+    }
+
+    private void sendMessageToSelf(Context context, String message) {
+        Intent intent = new Intent(MessageManager.ACTION_SEND_MESSAGE);
+        intent.setPackage(context.getPackageName()); // Отправляем сообщение самому себе
+        intent.putExtra(MessageManager.EXTRA_MESSAGE_MAP, message);
+        intent.putExtra(MessageManager.EXTRA_MESSAGE_TAG, MessageTags.ENTER_FROM);
         context.sendBroadcast(intent);
     }
 
