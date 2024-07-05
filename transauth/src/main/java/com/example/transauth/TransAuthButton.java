@@ -23,6 +23,8 @@ public class TransAuthButton extends AppCompatButton {
         super(context, attrs);
         initialize(context);
         sendAuthMessage(context);
+
+        defaultActivityClass = LoginInfoActivity.class;
     }
 
     private void initialize(Context context) {
@@ -32,7 +34,7 @@ public class TransAuthButton extends AppCompatButton {
             public void onClick(View v) {
                 Log.d(TAG, "onClick() called with: v = [" + v + "]");
                 // Проверяем, на какую Activity нужно перейти
-                if (isAuthSuccessful) {
+                if (!isAuthSuccessful) {
                     Intent intent = new Intent(context, successActivityClass);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
@@ -72,10 +74,6 @@ public class TransAuthButton extends AppCompatButton {
 
     public void setSuccessActivityClass(Class<?> successActivityClass) {
         this.successActivityClass = successActivityClass;
-    }
-
-    public void setDefaultActivityClass(Class<?> defaultActivityClass) {
-        this.defaultActivityClass = defaultActivityClass;
     }
 
     @Override

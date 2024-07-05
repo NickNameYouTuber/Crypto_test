@@ -24,12 +24,13 @@
 
     <!-- Замените на ваш логотип -->
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="28dp"
         android:src="@drawable/test_logo_b"
+        app:shapeAppearanceOverlay="@style/rounded_image_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,10 +51,11 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="Сервис Qrypt получит доступы:"
+        android:textAlignment="center"
         android:textColor="@color/text_color_dark"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +64,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="- К дате рождения\n\n- К логину, имени и фамилии"
