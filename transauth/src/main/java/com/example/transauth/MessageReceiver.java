@@ -41,6 +41,10 @@ public class MessageReceiver extends BroadcastReceiver {
         void onMessageReceived(Map<String, String> message);
     }
 
+    public MessageReceiver() {
+
+    }
+
     /**
      * Конструктор MessageReceiver.
      *

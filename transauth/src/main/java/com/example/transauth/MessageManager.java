@@ -1,5 +1,3 @@
-// src/main/java/com/example/transauth/MessageManager.java
-
 package com.example.transauth;
 
 import android.content.Context;
@@ -144,19 +142,19 @@ public class MessageManager {
 
                 sendBroadcastMessage(context, packageName, message, tag, permission);
 
-                try {
-                    if (responseLatch.await(RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS)) {
-                        // Получен ответ от приложения
-                        Log.d(TAG, "Received response from package: " + packageName);
-                        return receivedMessage;
-                    } else {
-                        // Истекло время ожидания ответа
-                        Log.d(TAG, "Timeout waiting for response from package: " + packageName);
-                    }
-                } catch (InterruptedException e) {
-                    Log.e(TAG, "Interrupted while waiting for response", e);
-                    Thread.currentThread().interrupt();
-                }
+//                try {
+//                    if (responseLatch.await(RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS)) {
+//                        // Получен ответ от приложения
+//                        Log.d(TAG, "Received response from package: " + packageName);
+//                        return receivedMessage;
+//                    } else {
+//                        // Истекло время ожидания ответа
+//                        Log.d(TAG, "Timeout waiting for response from package: " + packageName);
+//                    }
+//                } catch (InterruptedException e) {
+//                    Log.e(TAG, "Interrupted while waiting for response", e);
+//                    Thread.currentThread().interrupt();
+//                }
             }
         }
         Log.d(TAG, "No data received from available packages");
