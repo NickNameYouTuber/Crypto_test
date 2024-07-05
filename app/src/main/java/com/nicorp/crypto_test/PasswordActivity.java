@@ -35,6 +35,7 @@ import com.example.transauth.MessageManager;
 import com.example.transauth.MessagePermissions;
 import com.example.transauth.MessageReceiver;
 import com.example.transauth.MessageTags;
+import com.example.transauth.TransAuthButton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +52,8 @@ public class PasswordActivity extends AppCompatActivity {
     private BiometricPrompt.PromptInfo promptInfo;
     private SharedPreferences sharedPreferences;
     private MessageReceiver messageReceiver;
+    private TransAuthButton transAuthButton;
+
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -59,13 +62,7 @@ public class PasswordActivity extends AppCompatActivity {
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
 
-        // MainActivity.java в первом приложении
-
-        Map<String, String> message = new HashMap<>();
-        message.put("code", "1234");
-
-        MessageManager.sendMessage(this, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.ADMIN);
-
+        transAuthButton = findViewById(R.id.transAuthButton);
 
         // MainActivity.java во втором приложении
 

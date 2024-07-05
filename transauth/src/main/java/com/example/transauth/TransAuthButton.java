@@ -4,41 +4,60 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import androidx.appcompat.widget.AppCompatButton;
 
-public class TransAuthButton extends androidx.appcompat.widget.AppCompatButton {
-//    private AccountRequestHandler accountRequestHandler;
+import java.util.HashMap;
+import java.util.Map;
+
+public class TransAuthButton extends AppCompatButton {
+    private static final String TAG = "TransAuthSendButton";
+    private MessageReceiver messageReceiver;
 
     public TransAuthButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialize();
+        initialize(context);
+        sendAuthMessage(context);
     }
 
-    private void initialize() {
+    private void initialize(Context context) {
         setText("Войти через TransAuth");
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TransAuthButton", "onClick() called with: v = [" + v + "]");
-//                requestAccountInfo();
+                Log.d(TAG, "onClick() called with: v = [" + v + "]");
             }
         });
+
+        // Register the MessageReceiver to listen for responses
+        messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {
+            @Override
+            public void onMessageReceived(Map<String, String> message) {
+                Log.d(TAG, "Received message: " + message.toString());
+                if (message.containsKey("Name")) {
+                    updateButton(message.get("Name"));
+                } else {
+                    setText("Войти через TransAuth");
+                }
+            }
+        });
+        messageReceiver.register(context);
     }
 
-//    public void setAccountRequestHandler(AccountRequestHandler accountRequestHandler) {
-//        this.accountRequestHandler = accountRequestHandler;
-//    }
-//
-//    private void requestAccountInfo() {
-//        Intent requestIntent = new Intent(getContext(), AccountRequestService.class);
-//        requestIntent.setAction("com.example.transauth.REQUEST");
-//        requestIntent.putExtra("AppCode", 1111);
-//        requestIntent.putExtra("RequestType", "YOUR_REQUEST_TYPE");
-//        getContext().startService(requestIntent);
-//
-//
-//    }
+    private void sendAuthMessage(Context context) {
+        Map<String, String> message = new HashMap<>();
+        message.put("code", "1234");
+        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.USER);
+    }
 
     public void updateButton(String accountName) {
         setText("Войти как " + accountName);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (messageReceiver != null) {
+            messageReceiver.unregister(getContext());
+        }
     }
 }
