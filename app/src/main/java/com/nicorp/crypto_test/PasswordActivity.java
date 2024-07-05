@@ -63,6 +63,8 @@ public class PasswordActivity extends AppCompatActivity {
 
 
         transAuthButton = findViewById(R.id.transAuthButton);
+        transAuthButton.setDefaultActivityClass(PasswordActivity.class);
+        transAuthButton.setSuccessActivityClass(MainActivity.class);
 
         // MainActivity.java во втором приложении
 
