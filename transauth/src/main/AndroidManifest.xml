@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
     <queries>
+
         <!-- Specific packages your app needs to query -->
         <package android:name="com.example.transauth_test" />
         <!-- Add more packages as needed -->
     </queries>
+
     <application>
-
-
+        <activity
+            android:name=".LoginInfoActivity"
+            android:exported="false" />
     </application>
+
 </manifest>
