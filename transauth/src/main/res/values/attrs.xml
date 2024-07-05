@@ -6,9 +6,4 @@
     <attr name="textColor" format="color" />
     <attr name="dotColor" format="color" />
     <attr name="selectedDotColor" format="color" />
-
-    <declare-styleable name="TransAuthButton">
-        <attr name="buttonText" format="string"/>
-        <attr name="buttonBackgroundColor" format="color"/>
-    </declare-styleable>
 </resources>

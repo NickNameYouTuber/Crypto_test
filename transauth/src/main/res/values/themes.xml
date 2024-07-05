@@ -29,14 +29,12 @@
     <style name="Widget.App.Button.Light" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/text_color_light</item>
         <item name="backgroundTint">@android:color/transparent</item>
-        <item name="backgroundColor">@color/background_color_dark</item>
         <item name="rippleColor">@color/button_ripple_color_light</item>
     </style>
 
     <style name="Widget.App.Button.Dark" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/text_color_dark</item>
         <item name="backgroundTint">@android:color/transparent</item>
-        <item name="backgroundColor">@color/background_color_light</item>
         <item name="rippleColor">@color/button_ripple_color_dark</item>
     </style>
 

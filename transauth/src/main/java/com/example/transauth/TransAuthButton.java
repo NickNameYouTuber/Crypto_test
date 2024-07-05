@@ -2,19 +2,16 @@ package com.example.transauth;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
+import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransAuthButton extends CardView {
+public class TransAuthButton extends AppCompatButton {
     private static final String TAG = "TransAuthSendButton";
     private MessageReceiver messageReceiver;
 
@@ -22,57 +19,29 @@ public class TransAuthButton extends CardView {
     private Class<?> defaultActivityClass; // Activity по умолчанию
     private boolean isAuthSuccessful = false; // Флаг успешного входа
 
-    private TextView textView;
-
     public TransAuthButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialize(context, attrs);
+        initialize(context);
         sendAuthMessage(context);
 
         defaultActivityClass = LoginInfoActivity.class;
     }
 
-    private void initialize(Context context, AttributeSet attrs) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.trans_auth_button, this, true);
-        textView = view.findViewById(R.id.trans_auth_button_text);
-
-        // Получение атрибутов из XML
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.TransAuthButton, 0, 0);
-        String buttonText = "Войти через TransAuth";
-        int backgroundColor = 0; // Значение по умолчанию
-        try {
-            buttonText = a.getString(R.styleable.TransAuthButton_buttonText);
-            backgroundColor = a.getColor(R.styleable.TransAuthButton_buttonBackgroundColor, 0);
-        } finally {
-            a.recycle();
-        }
-
-        // Установка текста кнопки
-        textView.setText(buttonText);
-
-        // Установка параметров CardView
-        setRadius(12.0f); // Радиус углов CardView
-        setCardElevation(8.0f); // Высота тени
-        setContentPadding(16, 16, 16, 16); // Отступы внутри CardView
-        setCardBackgroundColor(backgroundColor);
-        setClickable(true);
-        setFocusable(true);
-
-        // Обработка нажатия
+    private void initialize(Context context) {
+        setText("Войти через TransAuth");
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick() called with: v = [" + v + "]");
                 // Проверяем, на какую Activity нужно перейти
-                if (isAuthSuccessful) {
-                    Intent intent = new Intent(getContext(), successActivityClass);
+                if (!isAuthSuccessful) {
+                    Intent intent = new Intent(context, successActivityClass);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getContext().startActivity(intent);
+                    context.startActivity(intent);
                 } else {
-                    Intent intent = new Intent(getContext(), defaultActivityClass);
+                    Intent intent = new Intent(context, defaultActivityClass);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getContext().startActivity(intent);
+                    context.startActivity(intent);
                 }
             }
         });
@@ -85,11 +54,11 @@ public class TransAuthButton extends CardView {
                 if (message.containsKey("Name")) {
                     updateButton(message.get("Name"));
                 } else {
-                    textView.setText("Войти через TransAuth");
+                    setText("Войти через TransAuth");
                 }
             }
         });
-        messageReceiver.register(getContext());
+        messageReceiver.register(context);
     }
 
     private void sendAuthMessage(Context context) {
@@ -99,7 +68,7 @@ public class TransAuthButton extends CardView {
     }
 
     public void updateButton(String accountName) {
-        textView.setText("Войти как " + accountName);
+        setText("Войти как " + accountName);
         isAuthSuccessful = true;
     }
 
