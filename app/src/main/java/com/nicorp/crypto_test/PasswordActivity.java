@@ -39,6 +39,7 @@ import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthButton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -65,6 +66,8 @@ public class PasswordActivity extends AppCompatActivity {
         // Initialize TransAuth
         TransAuth transAuth = new TransAuth("1234");
         TransAuth.addPermissions(MessagePermissions.GET_LOGIN);
+
+        Log.d("transAuth" , Arrays.toString(TransAuth.getPermissionsArray()));
 
         transAuthButton = findViewById(R.id.transAuthButton);
         transAuthButton.setSuccessActivityClass(MainActivity.class);
