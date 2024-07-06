@@ -9,6 +9,48 @@
     android:orientation="vertical"
     android:padding="32dp">
 
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="35dp"
+        android:orientation="horizontal"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3">
+
+        <ImageView
+            android:id="@+id/googleSignInBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/account_image_background"
+            android:clipToOutline="true"
+            android:src="@drawable/google_icon" />
+
+        <ImageView
+            android:id="@+id/yandexSignInBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/account_image_background"
+            android:clipToOutline="true"
+            android:src="@drawable/yandex_icon" />
+
+        <ImageView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/account_image_background"
+            android:clipToOutline="true"
+            android:src="@drawable/nicorp_icon" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -102,5 +144,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
         app:srcCompat="@drawable/enter_button" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Or login with:"
+        android:textColor="?attr/textColor"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
