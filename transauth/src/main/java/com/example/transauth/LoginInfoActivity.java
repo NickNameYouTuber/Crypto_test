@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +14,20 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class LoginInfoActivity extends AppCompatActivity {
+    private TransAuthLoginButton transAuthLoginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_info);
+
+        transAuthLoginButton = findViewById(R.id.transAuthLoginButton);
+
+        // Get accountName from intent
+        String accountName = getIntent().getStringExtra("Name");
+        if (accountName != null) {
+            transAuthLoginButton.setText("Войти как " + accountName);
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE);
         int currentNightMode = this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;

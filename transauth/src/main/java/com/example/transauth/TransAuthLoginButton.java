@@ -11,44 +11,29 @@ import androidx.appcompat.widget.AppCompatButton;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransAuthButton extends AppCompatButton {
+public class TransAuthLoginButton extends AppCompatButton {
     private static final String TAG = "TransAuthSendButton";
     private MessageReceiver messageReceiver;
 
-    private static Class<?> successActivityClass; // Activity для успешного входа
+    private Class<?> successActivityClass; // Activity для успешного входа
     private Class<?> defaultActivityClass; // Activity по умолчанию
     private boolean isAuthSuccessful = false; // Флаг успешного входа
-    private String accountName;
 
-    public static Class<?> getSuccessActivityClass() {
-        return successActivityClass;
-    }
-
-    public TransAuthButton(Context context, AttributeSet attrs) {
+    public TransAuthLoginButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
-        sendAuthMessage(context);
 
         defaultActivityClass = LoginInfoActivity.class;
     }
 
     private void initialize(Context context) {
-        setText("Войти через TransAuth");
+        successActivityClass = TransAuthButton.getSuccessActivityClass();
+
+//        setText("Войти через TransAuth");
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick() called with: v = [" + v + "]");
-                // Проверяем, на какую Activity нужно перейти
-                if (isAuthSuccessful) {
-                    Intent intent = new Intent(context, LoginInfoActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("Name", accountName);
-                    context.startActivity(intent);
-                } else {
-                    Intent intent = new Intent(context, defaultActivityClass);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intent);
-                }
+                sendAuthMessage(context);
             }
         });
 
@@ -58,10 +43,14 @@ public class TransAuthButton extends AppCompatButton {
             public void onMessageReceived(Map<String, String> message) {
                 Log.d(TAG, "Received message: " + message.toString());
                 if (message.containsKey("Name")) {
-                    updateButton(message.get("Name"));
-                    accountName = message.get("Name");
+//                    updateButton(message.get("Name"));
+                    Intent intent = new Intent(context, successActivityClass);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
                 } else {
-                    setText("Войти через TransAuth");
+                    Intent intent = new Intent(context, defaultActivityClass);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
                 }
             }
         });
@@ -71,17 +60,9 @@ public class TransAuthButton extends AppCompatButton {
     private void sendAuthMessage(Context context) {
         Map<String, String> message = new HashMap<>();
         message.put("code", "1234");
-        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.USER);
+        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.ADMIN);
     }
 
-    public void updateButton(String accountName) {
-        setText("Войти как " + accountName);
-        isAuthSuccessful = true;
-    }
-
-    public void setSuccessActivityClass(Class<?> successActivityClass) {
-        this.successActivityClass = successActivityClass;
-    }
 
     @Override
     protected void onDetachedFromWindow() {
