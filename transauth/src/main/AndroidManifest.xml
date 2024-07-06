@@ -10,6 +10,9 @@
 
     <application>
         <activity
+            android:name=".LoginFirstActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginInfoActivity"
             android:exported="false" />
     </application>
