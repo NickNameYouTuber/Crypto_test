@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
+
 import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,6 +44,7 @@ public class MessageManager {
      * @param permissions     Список разрешений.
      */
     public static void sendMessage(Context context, String targetPackage, Map<String, String> message, String tag, List<String> permissions) {
+        Log.d(TAG, "Sending message with permissions: " + permissions);
         sendMessageWithDataCheck(context, targetPackage, message, tag, permissions);
     }
 
@@ -139,20 +142,16 @@ public class MessageManager {
             Log.d(TAG, "Checking package: " + packageName);
             if (isPackageInstalled(packageName, context.getPackageManager())) {
                 Log.d(TAG, "Sending message to package: " + packageName);
-                // Используем новый CountDownLatch для каждого пакета
                 responseLatch = new CountDownLatch(1);
                 receivedMessage = null;
 
-                Map<String, String> filteredMessage = filterMessageByPermissions(message, permissions);
-                sendBroadcastMessage(context, packageName, filteredMessage, tag, permissions);
+                sendBroadcastMessage(context, packageName, message, tag, permissions);
 
                 try {
                     if (responseLatch.await(RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS)) {
-                        // Получен ответ от приложения
                         Log.d(TAG, "Received response from package: " + packageName);
                         return receivedMessage;
                     } else {
-                        // Истекло время ожидания ответа
                         Log.d(TAG, "Timeout waiting for response from package: " + packageName);
                     }
                 } catch (InterruptedException e) {
@@ -179,11 +178,12 @@ public class MessageManager {
         intent.setPackage(packageName);
         intent.putExtra(EXTRA_MESSAGE_MAP, gson.toJson(message));
         intent.putExtra(EXTRA_MESSAGE_TAG, tag);
-        intent.putExtra(EXTRA_MESSAGE_PERMISSION, gson.toJson(permissions));
+        intent.putStringArrayListExtra(EXTRA_MESSAGE_PERMISSIONS, new ArrayList<>(permissions));
         intent.putExtra(EXTRA_SENDER_PACKAGE, context.getPackageName());
         context.sendBroadcast(intent);
         Log.d(TAG, "Sent broadcast message to package: " + packageName);
     }
+
 
     /**
      * Получает список доступных пакетов из файла `packages.txt`.

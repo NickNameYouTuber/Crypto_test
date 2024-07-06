@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -65,7 +67,6 @@ public class MessageReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Log.d(TAG, "onReceive: " + action);
 
-        // Обрабатываем только сообщения с действием ACTION_SEND_MESSAGE
         if (action != null && action.equals(MessageManager.ACTION_SEND_MESSAGE)) {
             String tag = MessageManager.extractMessageTagFromIntent(intent);
             List<String> permissions = MessageManager.extractMessagePermissionsFromIntent(intent); // Извлекаем список разрешений
@@ -77,7 +78,6 @@ public class MessageReceiver extends BroadcastReceiver {
             Log.d(TAG, "Received permissions: " + permissions);
             Log.d(TAG, "Sender package: " + senderPackage);
 
-            // Обработка сообщения в зависимости от тега
             if (tag.equals(MessageTags.ENTER_TO)) {
                 handleEnterToMessage(context, message, permissions, senderPackage);
             } else if (tag.equals(MessageTags.ENTER_FROM)) {
@@ -117,8 +117,8 @@ public class MessageReceiver extends BroadcastReceiver {
                         break;
                     case MessagePermissions.GET_NAME:
                         // Добавляем данные для другого разрешения, если требуется
-                        if (fileMessage.containsKey("OtherData")) {
-                            responseMessage.put("OtherData", fileMessage.get("OtherData"));
+                        if (fileMessage.containsKey("Name")) {
+                            responseMessage.put("Name", fileMessage.get("Name"));
                         }
                         break;
                     // Добавьте другие разрешения по мере необходимости

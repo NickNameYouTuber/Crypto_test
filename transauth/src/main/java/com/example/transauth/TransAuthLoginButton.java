@@ -9,7 +9,6 @@ import android.view.View;
 import androidx.appcompat.widget.AppCompatButton;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class TransAuthLoginButton extends AppCompatButton {
             @Override
             public void onMessageReceived(Map<String, String> message) {
                 Log.d(TAG, "Received message: " + message.toString());
-                if (message.containsKey("Name")) {
+                if (message.containsKey("Login")) {
 //                    updateButton(message.get("Name"));
                     Intent intent = new Intent(context, successActivityClass);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
