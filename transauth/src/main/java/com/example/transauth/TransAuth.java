@@ -11,7 +11,7 @@ public class TransAuth {
 
     private String TransAuthToken;
     private String testToken = "1234";
-    private List<String> permissions = new ArrayList<>();
+    private static List<String> permissions = new ArrayList<>();
 
     // --- Публичные конструкторы ---
     public TransAuth(String TransAuthToken) {
@@ -26,8 +26,8 @@ public class TransAuth {
      * @param permissions список разрешений
      *                    example: "GET_LOGIN", "GET_MAIL"
      */
-    public void addPermissions(String... permissions) {
-        this.permissions.addAll(Arrays.asList(permissions));
+    public static void addPermissions(String... permissions) {
+        TransAuth.permissions.addAll(Arrays.asList(permissions));
         for (String permission : permissions) {
             Log.d(TAG, "Added permission: " + permission);
         }
@@ -37,9 +37,10 @@ public class TransAuth {
      * Получение списка разрешений
      * @return список разрешений
      */
-    public List<String> getPermissions() {
-        return permissions;
+    public static String[] getPermissionsArray() {
+        return permissions.toArray(new String[0]);
     }
+
 
     // --- Приватные методы ---
 

@@ -63,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/permissionsList"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="30dp"
