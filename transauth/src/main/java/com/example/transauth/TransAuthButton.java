@@ -34,7 +34,7 @@ public class TransAuthButton extends AppCompatButton {
             public void onClick(View v) {
                 Log.d(TAG, "onClick() called with: v = [" + v + "]");
                 // Проверяем, на какую Activity нужно перейти
-                if (!isAuthSuccessful) {
+                if (isAuthSuccessful) {
                     Intent intent = new Intent(context, successActivityClass);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundDark"
+    android:background="?attr/backgroundColor"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="32dp">
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="TransAuth"
-        android:textColor="@color/text_color_dark"
+        android:textColor="?attr/textColor"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
         android:layout_marginTop="60dp"
         android:gravity="center"
         android:text="Enter to Qrypt"
-        android:textColor="@color/text_color_dark"
+        android:textColor="?attr/textColor"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +56,7 @@
         android:layout_marginTop="30dp"
         android:text="Сервис Qrypt получит доступы:"
         android:textAlignment="center"
-        android:textColor="@color/text_color_dark"
+        android:textColor="?attr/textColor"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,11 +65,13 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:text="- К дате рождения\n\n- К логину, имени и фамилии"
-        android:textColor="@color/text_color_dark"
+        android:textColor="?attr/textColor"
         android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/transAuthButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -78,25 +80,24 @@
         android:id="@+id/transAuthButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:padding="16dp"
-        android:text="Continue as Nick"
-        android:textSize="18sp"
+        android:layout_marginBottom="30dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="Submit"
+        android:textColor="?attr/textColor"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:text="Choose another account"
-        android:textColor="@color/colorPrimaryDarkLight"
+        android:textColor="?attr/textColor"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transAuthButton" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
