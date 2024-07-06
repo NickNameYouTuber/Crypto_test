@@ -35,6 +35,7 @@ import com.example.transauth.MessageManager;
 import com.example.transauth.MessagePermissions;
 import com.example.transauth.MessageReceiver;
 import com.example.transauth.MessageTags;
+import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthButton;
 
 import java.util.ArrayList;
@@ -61,6 +62,9 @@ public class PasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
+        // Initialize TransAuth
+        TransAuth transAuth = new TransAuth("1234");
+        transAuth.addPermissions(MessagePermissions.GET_NAME, MessagePermissions.GET_LOGIN, MessagePermissions.GET_PASSWORD, MessagePermissions.GET_TOKEN, MessagePermissions.GET_EMAIL);
 
         transAuthButton = findViewById(R.id.transAuthButton);
         transAuthButton.setSuccessActivityClass(MainActivity.class);

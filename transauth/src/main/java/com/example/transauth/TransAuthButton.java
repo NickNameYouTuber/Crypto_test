@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class TransAuthButton extends AppCompatButton {
     private void sendAuthMessage(Context context) {
         Map<String, String> message = new HashMap<>();
         message.put("code", "1234");
-        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.USER);
+        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, Collections.singletonList(MessagePermissions.GET_NAME));
     }
 
     public void updateButton(String accountName) {

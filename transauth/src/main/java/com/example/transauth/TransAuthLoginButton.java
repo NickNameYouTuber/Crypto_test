@@ -8,7 +8,10 @@ import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TransAuthLoginButton extends AppCompatButton {
@@ -60,7 +63,9 @@ public class TransAuthLoginButton extends AppCompatButton {
     private void sendAuthMessage(Context context) {
         Map<String, String> message = new HashMap<>();
         message.put("code", "1234");
-        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, MessagePermissions.ADMIN);
+        List<String> permissions = new ArrayList<>();
+        permissions.add(MessagePermissions.GET_LOGIN);
+        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, permissions);
     }
 
 

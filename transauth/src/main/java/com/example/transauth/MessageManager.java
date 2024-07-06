@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -21,6 +22,8 @@ public class MessageManager {
     public static final String EXTRA_MESSAGE_PERMISSION = "com.example.messaging.EXTRA_MESSAGE_PERMISSION";
     public static final String EXTRA_MESSAGE_MAP = "com.example.messaging.EXTRA_MESSAGE_MAP";
     public static final String EXTRA_SENDER_PACKAGE = "com.example.messaging.EXTRA_SENDER_PACKAGE";
+    public static final String EXTRA_MESSAGE_PERMISSIONS = "com.example.transauth.EXTRA_MESSAGE_PERMISSIONS";
+
     private static final long RESPONSE_TIMEOUT = 5000; // 5 секунд на ожидание ответа
 
     private static final Gson gson = new Gson();
@@ -36,10 +39,10 @@ public class MessageManager {
      * @param targetPackage   Имя пакета целевого приложения (необязательно, если используется список).
      * @param message         Сообщение в виде Map<String, String>.
      * @param tag             Тег сообщения.
-     * @param permission      Уровень доступа сообщения.
+     * @param permissions     Список разрешений.
      */
-    public static void sendMessage(Context context, String targetPackage, Map<String, String> message, String tag, String permission) {
-        sendMessageWithDataCheck(context, targetPackage, message, tag, permission);
+    public static void sendMessage(Context context, String targetPackage, Map<String, String> message, String tag, List<String> permissions) {
+        sendMessageWithDataCheck(context, targetPackage, message, tag, permissions);
     }
 
     /**
@@ -121,10 +124,10 @@ public class MessageManager {
      * @param targetPackage   Имя пакета целевого приложения (необязательно, если используется список).
      * @param message         Сообщение в виде Map<String, String>.
      * @param tag             Тег сообщения.
-     * @param permission      Уровень доступа сообщения.
+     * @param permissions     Список разрешений.
      * @return Map<String, String> с данными ответа от приложения или null, если данные не получены.
      */
-    private static Map<String, String> sendMessageWithDataCheck(Context context, String targetPackage, Map<String, String> message, String tag, String permission) {
+    private static Map<String, String> sendMessageWithDataCheck(Context context, String targetPackage, Map<String, String> message, String tag, List<String> permissions) {
         List<String> availablePackages = getAvailablePackages(context, "packages.txt");
 
         if (availablePackages.isEmpty()) {
@@ -140,21 +143,22 @@ public class MessageManager {
                 responseLatch = new CountDownLatch(1);
                 receivedMessage = null;
 
-                sendBroadcastMessage(context, packageName, message, tag, permission);
+                Map<String, String> filteredMessage = filterMessageByPermissions(message, permissions);
+                sendBroadcastMessage(context, packageName, filteredMessage, tag, permissions);
 
-//                try {
-//                    if (responseLatch.await(RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS)) {
-//                        // Получен ответ от приложения
-//                        Log.d(TAG, "Received response from package: " + packageName);
-//                        return receivedMessage;
-//                    } else {
-//                        // Истекло время ожидания ответа
-//                        Log.d(TAG, "Timeout waiting for response from package: " + packageName);
-//                    }
-//                } catch (InterruptedException e) {
-//                    Log.e(TAG, "Interrupted while waiting for response", e);
-//                    Thread.currentThread().interrupt();
-//                }
+                try {
+                    if (responseLatch.await(RESPONSE_TIMEOUT, TimeUnit.MILLISECONDS)) {
+                        // Получен ответ от приложения
+                        Log.d(TAG, "Received response from package: " + packageName);
+                        return receivedMessage;
+                    } else {
+                        // Истекло время ожидания ответа
+                        Log.d(TAG, "Timeout waiting for response from package: " + packageName);
+                    }
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "Interrupted while waiting for response", e);
+                    Thread.currentThread().interrupt();
+                }
             }
         }
         Log.d(TAG, "No data received from available packages");
@@ -168,14 +172,14 @@ public class MessageManager {
      * @param packageName     Имя пакета целевого приложения.
      * @param message         Сообщение в виде Map<String, String>.
      * @param tag             Тег сообщения.
-     * @param permission      Уровень доступа сообщения.
+     * @param permissions     Список разрешений.
      */
-    private static void sendBroadcastMessage(Context context, String packageName, Map<String, String> message, String tag, String permission) {
+    private static void sendBroadcastMessage(Context context, String packageName, Map<String, String> message, String tag, List<String> permissions) {
         Intent intent = new Intent(ACTION_SEND_MESSAGE);
         intent.setPackage(packageName);
         intent.putExtra(EXTRA_MESSAGE_MAP, gson.toJson(message));
         intent.putExtra(EXTRA_MESSAGE_TAG, tag);
-        intent.putExtra(EXTRA_MESSAGE_PERMISSION, permission);
+        intent.putExtra(EXTRA_MESSAGE_PERMISSION, gson.toJson(permissions));
         intent.putExtra(EXTRA_SENDER_PACKAGE, context.getPackageName());
         context.sendBroadcast(intent);
         Log.d(TAG, "Sent broadcast message to package: " + packageName);
@@ -226,5 +230,36 @@ public class MessageManager {
             Log.i("PackageUtils", "Package not found: " + packageName);
             return false;
         }
+    }
+
+    /**
+     * Фильтрует сообщение по разрешениям.
+     *
+     * @param message     Исходное сообщение.
+     * @param permissions Список разрешений.
+     * @return Отфильтрованное сообщение.
+     */
+    private static Map<String, String> filterMessageByPermissions(Map<String, String> message, List<String> permissions) {
+        if (permissions == null || permissions.isEmpty()) {
+            return message;
+        }
+
+        Map<String, String> filteredMessage = new HashMap<>();
+        for (String key : message.keySet()) {
+            if (permissions.contains(key)) {
+                filteredMessage.put(key, message.get(key));
+            }
+        }
+        return filteredMessage;
+    }
+
+    /**
+     * Извлекает список разрешений из Intent.
+     *
+     * @param intent Intent, содержащий сообщение.
+     * @return Список разрешений или пустой список, если разрешений нет.
+     */
+    public static List<String> extractMessagePermissionsFromIntent(Intent intent) {
+        return intent.getStringArrayListExtra(EXTRA_MESSAGE_PERMISSIONS);
     }
 }

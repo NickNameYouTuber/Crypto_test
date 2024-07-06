@@ -1,5 +1,3 @@
-// src/main/java/com/example/transauth/MessageReceiver.java
-
 package com.example.transauth;
 
 import android.content.BroadcastReceiver;
@@ -15,7 +13,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +42,6 @@ public class MessageReceiver extends BroadcastReceiver {
     }
 
     public MessageReceiver() {
-
     }
 
     /**
@@ -69,23 +68,24 @@ public class MessageReceiver extends BroadcastReceiver {
         // Обрабатываем только сообщения с действием ACTION_SEND_MESSAGE
         if (action != null && action.equals(MessageManager.ACTION_SEND_MESSAGE)) {
             String tag = MessageManager.extractMessageTagFromIntent(intent);
-            String permission = MessageManager.extractMessagePermissionFromIntent(intent);
+            List<String> permissions = MessageManager.extractMessagePermissionsFromIntent(intent); // Извлекаем список разрешений
             String senderPackage = MessageManager.extractSenderPackageFromIntent(intent);
             Map<String, String> message = MessageManager.extractMessageMapFromIntent(intent);
 
             Log.d(TAG, "Received message: " + message.toString());
             Log.d(TAG, "Received tag: " + tag);
-            Log.d(TAG, "Received permission: " + permission);
+            Log.d(TAG, "Received permissions: " + permissions);
             Log.d(TAG, "Sender package: " + senderPackage);
 
             // Обработка сообщения в зависимости от тега
             if (tag.equals(MessageTags.ENTER_TO)) {
-                handleEnterToMessage(context, message, permission, senderPackage);
+                handleEnterToMessage(context, message, permissions, senderPackage);
             } else if (tag.equals(MessageTags.ENTER_FROM)) {
                 handleEnterFromMessage(context, message, intent);
             }
         }
     }
+
 
     /**
      * Обрабатывает сообщение с тегом ENTER_TO.
@@ -93,24 +93,38 @@ public class MessageReceiver extends BroadcastReceiver {
      *
      * @param context       Контекст приложения.
      * @param message       Полученное сообщение.
-     * @param permission    Уровень доступа сообщения.
+     * @param permissions    Уровень доступа сообщения.
      * @param senderPackage Имя пакета отправителя.
      */
-    private void handleEnterToMessage(Context context, Map<String, String> message, String permission, String senderPackage) {
+    private void handleEnterToMessage(Context context, Map<String, String> message, List<String> permissions, String senderPackage) {
         if (message.size() == 1 && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
             Map<String, String> fileMessage = readFile(context);
             Map<String, String> responseMessage = new HashMap<>();
 
-            if (permission.equals(MessagePermissions.USER)) {
-                // Отправляем только Name
-                if (fileMessage.containsKey("Name")) {
-                    responseMessage.put("Name", fileMessage.get("Name"));
+            for (String permission : permissions) {
+                switch (permission) {
+                    case MessagePermissions.GET_EMAIL:
+                        // Добавляем Name
+                        if (fileMessage.containsKey("Email")) {
+                            responseMessage.put("Email", fileMessage.get("Email"));
+                        }
+                        break;
+                    case MessagePermissions.GET_LOGIN:
+                        // Добавляем все данные
+                        if (fileMessage.containsKey("Login")) {
+                            responseMessage.put("Login", fileMessage.get("Login"));
+                        }
+                        break;
+                    case MessagePermissions.GET_NAME:
+                        // Добавляем данные для другого разрешения, если требуется
+                        if (fileMessage.containsKey("OtherData")) {
+                            responseMessage.put("OtherData", fileMessage.get("OtherData"));
+                        }
+                        break;
+                    // Добавьте другие разрешения по мере необходимости
                 }
-            } else if (permission.equals(MessagePermissions.ADMIN)) {
-                // Отправляем все данные
-                responseMessage.putAll(fileMessage);
             }
-            sendMessageBack(context, responseMessage, MessageTags.ENTER_FROM, senderPackage);
+            sendMessageBack(context, responseMessage, MessageTags.ENTER_FROM, senderPackage, permissions);
         }
     }
 
@@ -161,12 +175,14 @@ public class MessageReceiver extends BroadcastReceiver {
      * @param message       Сообщение для отправки.
      * @param tag           Тег сообщения.
      * @param targetPackage Имя пакета получателя.
+     * @param permissions   Список разрешений.
      */
-    private void sendMessageBack(Context context, Map<String, String> message, String tag, String targetPackage) {
+    private void sendMessageBack(Context context, Map<String, String> message, String tag, String targetPackage, List<String> permissions) {
         Intent intent = new Intent(MessageManager.ACTION_SEND_MESSAGE);
         intent.setPackage(targetPackage);
         intent.putExtra(MessageManager.EXTRA_MESSAGE_MAP, gson.toJson(message));
         intent.putExtra(MessageManager.EXTRA_MESSAGE_TAG, tag);
+        intent.putStringArrayListExtra(MessageManager.EXTRA_MESSAGE_PERMISSIONS, new ArrayList<>(permissions));
         context.sendBroadcast(intent);
         Log.d(TAG, "Sent response message to package: " + targetPackage);
     }
