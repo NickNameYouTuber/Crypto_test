@@ -84,7 +84,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:text="Welcome to TransAuth"
         android:textColor="?attr/textColor"
@@ -125,7 +125,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="30dp"
         android:background="@drawable/et_background"
         android:ems="10"
@@ -137,11 +137,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <ImageView
+    <com.example.transauth.TransAuthEnterButton
         android:id="@+id/imageView3"
         android:layout_width="231dp"
         android:layout_height="51dp"
         android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_background"
+        android:text="Enter"
+        android:textColor="?attr/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
