@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -31,7 +32,7 @@ public class TransAuthButton extends AppCompatButton {
         initialize(context);
         sendAuthMessage(context);
 
-        defaultActivityClass = LoginInfoActivity.class;
+        defaultActivityClass = LoginFirstActivity.class;
     }
 
     private void initialize(Context context) {
@@ -53,6 +54,23 @@ public class TransAuthButton extends AppCompatButton {
                 }
             }
         });
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).start();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        v.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                        break;
+                }
+                return false;
+            }
+        });
+
+
 
         // Регистрация MessageReceiver для прослушивания ответов
         messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {

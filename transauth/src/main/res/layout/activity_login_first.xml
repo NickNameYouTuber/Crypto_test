@@ -27,8 +27,9 @@
             android:id="@+id/googleSignInBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:background="@drawable/account_image_background"
             android:clipToOutline="true"
             android:src="@drawable/google_icon" />
 
@@ -36,8 +37,9 @@
             android:id="@+id/yandexSignInBtn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:background="@drawable/account_image_background"
             android:clipToOutline="true"
             android:src="@drawable/yandex_icon" />
 
@@ -45,8 +47,8 @@
             android:id="@+id/textView9"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:background="@drawable/account_image_background"
             android:clipToOutline="true"
             android:src="@drawable/nicorp_icon" />
     </LinearLayout>
@@ -58,7 +60,7 @@
         android:layout_marginTop="20dp"
         android:text="TransAuth"
         android:textColor="?attr/textColor"
-        android:textSize="32sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,8 +70,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginTop="28dp"
         android:src="@drawable/test_logo_b"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,15 +88,15 @@
         android:gravity="center"
         android:text="Welcome to TransAuth"
         android:textColor="?attr/textColor"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -105,10 +107,10 @@
         android:id="@+id/editTextTextPassword"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/button_background"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/et_background"
         android:ems="10"
         android:inputType="text"
         android:paddingStart="15dp"
@@ -122,10 +124,10 @@
         android:id="@+id/editTextText"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="40dp"
-        android:background="@drawable/button_background"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/et_background"
         android:ems="10"
         android:inputType="text"
         android:paddingStart="15dp"
@@ -139,7 +141,7 @@
         android:id="@+id/imageView3"
         android:layout_width="231dp"
         android:layout_height="51dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
@@ -149,11 +151,34 @@
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:text="Or login with:"
         android:textColor="?attr/textColor"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout3"
         app:layout_constraintStart_toStartOf="@+id/linearLayout3" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+        android:text="Login"
+        android:textColor="?attr/textColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextText"
+        app:layout_constraintStart_toStartOf="@+id/editTextText" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dp"
+
+        android:text="Password"
+        android:textColor="?attr/textColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
