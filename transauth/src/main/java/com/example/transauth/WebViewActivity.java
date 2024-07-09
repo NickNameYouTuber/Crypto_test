@@ -1,5 +1,7 @@
 package com.example.transauth;
 
+import static com.example.transauth.TransAuthUserAdapter.getUserFromYandex;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +10,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,12 +50,14 @@ public class WebViewActivity extends AppCompatActivity {
             Intent resultIntent = new Intent();
             resultIntent.putExtra("token", token);
 
-            TransAuthUser user = new TransAuthUser();
-            user.setTokens(new HashMap<>());
-            user.getTokens().put("yandex_token", token);
+            getUserFromYandex(token, new TransAuthUserAdapter.UserCallback () {
 
-            MessageReceiver receiver = new MessageReceiver(null);
-            receiver.writeFile(this, user);
+                @Override
+                public void onUserReceived(TransAuthUser user) {
+                    MessageReceiver receiver = new MessageReceiver(null);
+                    receiver.writeFile(getBaseContext(), user);
+                }
+            });
 
             setResult(RESULT_OK, resultIntent);
             finish();
