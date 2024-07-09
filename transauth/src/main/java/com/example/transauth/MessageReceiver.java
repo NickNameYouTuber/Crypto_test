@@ -217,6 +217,14 @@ public class MessageReceiver extends BroadcastReceiver {
             Log.e(TAG, "Error writing file", e);
         }
     }
+    public void writeFile(Context context, TransAuthUser transAuthUser) {
+        try (FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
+            String json = gson.toJson(transAuthUser);
+            fos.write(json.getBytes());
+        } catch (Exception e) {
+            Log.e(TAG, "Error writing file", e);
+        }
+    }
 
     /**
      * Отменяет регистрацию BroadcastReceiver.

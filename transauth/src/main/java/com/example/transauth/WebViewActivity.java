@@ -9,6 +9,9 @@ import android.webkit.WebViewClient;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WebViewActivity extends AppCompatActivity {
 
     private static final String REDIRECT_URI = "https://oauth.yandex.ru/verification_code";
@@ -42,6 +45,14 @@ public class WebViewActivity extends AppCompatActivity {
             String token = url.split("access_token=")[1].split("&")[0];
             Intent resultIntent = new Intent();
             resultIntent.putExtra("token", token);
+
+            TransAuthUser user = new TransAuthUser();
+            user.setTokens(new HashMap<>());
+            user.getTokens().put("yandex_token", token);
+
+            MessageReceiver receiver = new MessageReceiver(null);
+            receiver.writeFile(this, user);
+
             setResult(RESULT_OK, resultIntent);
             finish();
         } else {
