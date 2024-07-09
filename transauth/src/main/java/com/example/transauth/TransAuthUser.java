@@ -3,6 +3,7 @@ package com.example.transauth;
 import java.util.HashMap;
 
 public class TransAuthUser {
+    private String login;
     private String username;
     private String password;
     private String email;
@@ -47,5 +48,13 @@ public class TransAuthUser {
 
     public void setTokens(HashMap<String, String> tokens) {
         this.tokens = tokens;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }
