@@ -8,8 +8,7 @@ import java.util.List;
 
 public class TransAuth {
     private static final String TAG = "TransAuth";
-
-    private String TransAuthToken;
+    private static String TransAuthToken;
     private String testToken = "1234";
     private static List<String> permissions = new ArrayList<>();
 

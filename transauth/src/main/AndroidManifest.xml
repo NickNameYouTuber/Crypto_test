@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <queries>
 
         <!-- Specific packages your app needs to query -->
@@ -9,6 +11,9 @@
     </queries>
 
     <application>
+        <activity
+            android:name=".WebViewActivity"
+            android:exported="false" />
         <activity
             android:name=".LoginFirstActivity"
             android:exported="false" />

@@ -2,23 +2,35 @@ package com.example.transauth;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class LoginFirstActivity extends AppCompatActivity {
+
+    private static final int YANDEX_OAUTH_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_first);
 
+        ImageView yandexSignInBtn = findViewById(R.id.yandexSignInBtn);
+        yandexSignInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginFirstActivity.this, WebViewActivity.class);
+                startActivityForResult(intent, YANDEX_OAUTH_REQUEST);
+            }
+        });
+
+        // Existing code for theme setup...
         SharedPreferences sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE);
         int currentNightMode = this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
@@ -41,8 +53,22 @@ public class LoginFirstActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == YANDEX_OAUTH_REQUEST) {
+            if (resultCode == RESULT_OK && data != null) {
+                String token = data.getStringExtra("token");
+
+                Log.d("YANDEX_TOKEN","Token "+token);
+                // Handle the token, for example, send it to your server for authentication
+            } else {
+                // Handle error
+            }
+        }
+    }
+
     private static void setTheme(Activity activity, int theme) {
         activity.setTheme(theme);
     }
-
 }
