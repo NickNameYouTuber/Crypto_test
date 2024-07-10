@@ -66,6 +66,7 @@ public class PasswordActivity extends AppCompatActivity {
         // Initialize TransAuth
         transAuth = new TransAuth("1234");
         TransAuth.addPermissions(MessagePermissions.GET_LOGIN);
+        TransAuth.addPermissions(MessagePermissions.GET_USERNAME);
 
         Log.d("transAuth" , Arrays.toString(TransAuth.getPermissionsArray()));
 

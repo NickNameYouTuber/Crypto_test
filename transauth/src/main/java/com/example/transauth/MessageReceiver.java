@@ -141,9 +141,26 @@ public class MessageReceiver extends BroadcastReceiver {
     private void handleEnterFromMessage(Context context, Map<String, String> message, Intent intent) {
         MessageManager.processResponse(context, intent);
 
-        if(message.containsKey("Login")){
-            setUser(); // Set user
+//        if(message.containsKey("Login")){
+//            TransAuthUser transAuthUser = new TransAuthUser();
+//            transAuthUser.setLogin(message.get("Login"));
+//
+//            setUser(transAuthUser); // Set user
+//        }
+
+        TransAuthUser transAuthUser = new TransAuthUser();
+
+        if (message.containsKey("Email")) {
+            transAuthUser.setEmail(message.get("Email"));
         }
+        if (message.containsKey("Login")) {
+            transAuthUser.setLogin(message.get("Login"));
+        }
+        if (message.containsKey("Username")) {
+            transAuthUser.setUsername(message.get("Username"));
+        }
+
+        setUser(transAuthUser); // Set user
 
         if (listener != null) {
             listener.onMessageReceived(message);
