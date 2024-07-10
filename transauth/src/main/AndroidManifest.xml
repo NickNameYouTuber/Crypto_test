@@ -11,9 +11,15 @@
     </queries>
 
     <application>
+        <meta-data
+            android:name="com.google.android.gms.auth.api.credentials.Credentials"
+            android:value="923460132579-b2a7fld1fftaeuh4uqdd6rvh1f8r1jsp.apps.googleusercontent.com" />
+
         <activity
             android:name=".WebViewActivity"
             android:exported="false" />
+        <activity android:name=".GoogleSignInActivity"
+            android:exported="false"/>
         <activity
             android:name=".LoginFirstActivity"
             android:exported="false" />

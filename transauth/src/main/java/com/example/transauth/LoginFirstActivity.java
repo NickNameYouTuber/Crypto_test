@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginFirstActivity extends AppCompatActivity {
 
     private static final int YANDEX_OAUTH_REQUEST = 1;
+    private static final int GOOGLE_SIGN_IN_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,29 +28,33 @@ public class LoginFirstActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginFirstActivity.this, WebViewActivity.class);
+                intent.putExtra("provider", "YANDEX");
                 startActivityForResult(intent, YANDEX_OAUTH_REQUEST);
             }
         });
 
-        // Existing code for theme setup...
+        ImageView googleSignInBtn = findViewById(R.id.googleSignInBtn);
+        googleSignInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginFirstActivity.this, WebViewActivity.class);
+                intent.putExtra("provider", "GOOGLE");
+                startActivityForResult(intent, GOOGLE_SIGN_IN_REQUEST);
+            }
+        });
+
         SharedPreferences sharedPreferences = getSharedPreferences("theme_prefs", Context.MODE_PRIVATE);
         int currentNightMode = this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
         switch (currentNightMode) {
             case Configuration.UI_MODE_NIGHT_NO:
-                // Светлая тема
                 setTheme(this, R.style.Theme_QryptApp_Light);
-                System.out.println("Theme applied: " + "R.style.Theme_QryptApp_Light");
                 break;
             case Configuration.UI_MODE_NIGHT_YES:
-                // Темная тема
                 setTheme(this, R.style.Theme_QryptApp_Dark);
-                System.out.println("Theme applied: " + "R.style.Theme_QryptApp_Dark");
                 break;
             default:
-                // Тема по умолчанию
                 setTheme(this, R.style.Theme_QryptApp_Light);
-                System.out.println("Theme applied: " + "savedTheme");
                 break;
         }
     }
@@ -59,11 +65,12 @@ public class LoginFirstActivity extends AppCompatActivity {
         if (requestCode == YANDEX_OAUTH_REQUEST) {
             if (resultCode == RESULT_OK && data != null) {
                 String token = data.getStringExtra("token");
-
-                Log.d("YANDEX_TOKEN","Token "+token);
-                // Handle the token, for example, send it to your server for authentication
-            } else {
-                // Handle error
+                Log.d("YANDEX_TOKEN", "Token " + token);
+            }
+        } else if (requestCode == GOOGLE_SIGN_IN_REQUEST) {
+            if (resultCode == RESULT_OK && data != null) {
+                String token = data.getStringExtra("token");
+                Log.d("GOOGLE_TOKEN", "Token " + token);
             }
         }
     }
