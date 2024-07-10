@@ -55,7 +55,7 @@ public class PasswordActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private MessageReceiver messageReceiver;
     private TransAuthButton transAuthButton;
-
+    private static TransAuth transAuth;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -64,7 +64,7 @@ public class PasswordActivity extends AppCompatActivity {
         AllHelpersSetup.setup(this, R.layout.activity_password, false);
 
         // Initialize TransAuth
-        TransAuth transAuth = new TransAuth("1234");
+        transAuth = new TransAuth("1234");
         TransAuth.addPermissions(MessagePermissions.GET_LOGIN);
 
         Log.d("transAuth" , Arrays.toString(TransAuth.getPermissionsArray()));
@@ -261,5 +261,13 @@ public class PasswordActivity extends AppCompatActivity {
             dot.setBackgroundResource(R.drawable.dot);
         }
         enteredPassword.setLength(0);
+    }
+
+    public static TransAuth getTransAuth() {
+        return transAuth;
+    }
+
+    public static void setTransAuth(TransAuth transAuth) {
+        PasswordActivity.transAuth = transAuth;
     }
 }

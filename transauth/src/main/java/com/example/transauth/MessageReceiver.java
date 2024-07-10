@@ -1,5 +1,7 @@
 package com.example.transauth;
 
+import static com.example.transauth.TransAuth.setUser;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -138,6 +140,11 @@ public class MessageReceiver extends BroadcastReceiver {
      */
     private void handleEnterFromMessage(Context context, Map<String, String> message, Intent intent) {
         MessageManager.processResponse(context, intent);
+
+        if(message.containsKey("Login")){
+            setUser(); // Set user
+        }
+
         if (listener != null) {
             listener.onMessageReceived(message);
         }

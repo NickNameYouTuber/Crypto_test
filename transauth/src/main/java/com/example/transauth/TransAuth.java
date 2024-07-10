@@ -10,12 +10,14 @@ public class TransAuth {
     private static final String TAG = "TransAuth";
     private static String TransAuthToken;
     private String testToken = "1234";
+    private static TransAuthUser user;
     private static List<String> permissions = new ArrayList<>();
 
     // --- Публичные конструкторы ---
     public TransAuth(String TransAuthToken) {
         this.TransAuthToken = TransAuthToken;
         checkToken();
+        user = new TransAuthUser();
     }
 
     // --- Публичные методы ---
@@ -52,5 +54,13 @@ public class TransAuth {
         } else {
             throw new IllegalArgumentException("Invalid token");
         }
+    }
+
+    public static TransAuthUser getUser() {
+        return user;
+    }
+
+    public static void setUser(TransAuthUser user) {
+        TransAuth.user = user;
     }
 }

@@ -10,6 +10,19 @@ public class TransAuthUser {
     private String phone;
     private HashMap<String, String> tokens;
 
+    public TransAuthUser() {
+
+    }
+
+    public TransAuthUser(String login, String username, String password, String email, String phone, HashMap<String, String> tokens) {
+        this.login = login;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.tokens = tokens;
+    }
+
     public String getUsername() {
         return username;
     }

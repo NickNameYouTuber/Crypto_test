@@ -50,7 +50,7 @@ public class TransAuthUserAdapter {
                     JSONObject jsonResponse = new JSONObject(response.toString());
 
                     // Создание объекта TransAuthUser из JSON данных
-                    TransAuthUser user = new TransAuthUser();
+                    TransAuthUser user = TransAuth.getUser();
                     user.setLogin(jsonResponse.getString("login"));
                     user.setUsername(jsonResponse.getString("display_name"));
                     user.setEmail(jsonResponse.getString("default_email"));
