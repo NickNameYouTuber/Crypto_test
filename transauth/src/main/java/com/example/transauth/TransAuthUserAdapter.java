@@ -56,7 +56,9 @@ public class TransAuthUserAdapter {
                     user.setEmail(jsonResponse.getString("default_email"));
                     // и так далее...
 
-                    Log.d("User", user.getUsername());
+                    Log.d("User", "Username: " + user.getUsername());
+                    Log.d("User", "Email: " + user.getEmail());
+                    Log.d("User", "Login: " + user.getLogin());
 
                     return user;
                 } else {

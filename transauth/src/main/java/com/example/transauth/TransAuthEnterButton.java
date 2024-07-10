@@ -29,7 +29,7 @@ public class TransAuthEnterButton extends AppCompatButton {
     public TransAuthEnterButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialize(context);
-        sendAuthMessage(context);
+//        sendAuthMessage(context);
 
         defaultActivityClass = LoginFirstActivity.class;
     }
