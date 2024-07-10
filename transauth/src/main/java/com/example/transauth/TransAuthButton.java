@@ -78,9 +78,9 @@ public class TransAuthButton extends AppCompatButton {
             @Override
             public void onMessageReceived(Map<String, String> message) {
                 Log.d(TAG, "Received message: " + message.toString());
-                if (message.containsKey("Name")) {
-                    updateButton(message.get("Name"));
-                    accountName = message.get("Name");
+                if (message.containsKey("Username")) {
+                    updateButton(message.get("Username"));
+                    accountName = message.get("Username");
                 } else {
                     setText("Войти через TransAuth");
                 }
@@ -92,7 +92,7 @@ public class TransAuthButton extends AppCompatButton {
     private void sendAuthMessage(Context context) {
         Map<String, String> message = new HashMap<>();
         message.put("code", "1234");
-        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, Collections.singletonList(MessagePermissions.GET_NAME));
+        MessageManager.sendMessage(context, "com.example.transauth_test", message, MessageTags.ENTER_TO, Collections.singletonList(MessagePermissions.GET_USERNAME));
     }
 
     public void updateButton(String accountName) {

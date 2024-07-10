@@ -105,20 +105,20 @@ public class MessageReceiver extends BroadcastReceiver {
                 switch (permission) {
                     case MessagePermissions.GET_EMAIL:
                         // Добавляем Name
-                        if (fileMessage.containsKey("Email")) {
-                            responseMessage.put("Email", fileMessage.get("Email"));
+                        if (fileMessage.containsKey("email")) {
+                            responseMessage.put("Email", fileMessage.get("email"));
                         }
                         break;
                     case MessagePermissions.GET_LOGIN:
                         // Добавляем все данные
-                        if (fileMessage.containsKey("Login")) {
-                            responseMessage.put("Login", fileMessage.get("Login"));
+                        if (fileMessage.containsKey("login")) {
+                            responseMessage.put("Login", fileMessage.get("login"));
                         }
                         break;
-                    case MessagePermissions.GET_NAME:
+                    case MessagePermissions.GET_USERNAME:
                         // Добавляем данные для другого разрешения, если требуется
-                        if (fileMessage.containsKey("Name")) {
-                            responseMessage.put("Name", fileMessage.get("Name"));
+                        if (fileMessage.containsKey("username")) {
+                            responseMessage.put("Username", fileMessage.get("username"));
                         }
                         break;
                     // Добавьте другие разрешения по мере необходимости

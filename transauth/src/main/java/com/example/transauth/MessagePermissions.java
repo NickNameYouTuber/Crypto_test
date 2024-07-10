@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MessagePermissions {
-    public static final String GET_NAME = "GET_NAME";
+    public static final String GET_USERNAME = "GET_USERNAME";
     public static final String GET_LOGIN = "GET_LOGIN";
     public static final String GET_PASSWORD = "GET_PASSWORD";
     public static final String GET_TOKEN = "GET_TOKEN";
@@ -13,7 +13,7 @@ public class MessagePermissions {
     private static final Map<String, String> permissionDescriptions = new HashMap<>();
 
     static {
-        permissionDescriptions.put(GET_NAME, "К вашему имени");
+        permissionDescriptions.put(GET_USERNAME, "К вашему имени");
         permissionDescriptions.put(GET_LOGIN, "К вашему логину");
         permissionDescriptions.put(GET_PASSWORD, "К паролю профиля");
         permissionDescriptions.put(GET_TOKEN, "К токену профиля");
