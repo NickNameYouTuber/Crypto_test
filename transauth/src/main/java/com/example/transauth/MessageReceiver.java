@@ -45,6 +45,7 @@ public class MessageReceiver extends BroadcastReceiver {
     /**
      * Конструктор MessageReceiver.
      *
+     * @param context  Контекст приложения.
      * @param listener Слушатель для обработки принятых сообщений.
      */
     public MessageReceiver(Context context, MessageListener listener) {

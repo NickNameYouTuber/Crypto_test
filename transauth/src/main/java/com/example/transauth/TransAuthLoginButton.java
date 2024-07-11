@@ -9,7 +9,6 @@ import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -57,12 +56,11 @@ public class TransAuthLoginButton extends AppCompatButton {
         });
 
         // Регистрация MessageReceiver для прослушивания ответов
-        messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {
+        messageReceiver = new MessageReceiver(context, new MessageReceiver.MessageListener() {
             @Override
             public void onMessageReceived(Map<String, String> message) {
                 Log.d(TAG, "Received message: " + message.toString());
                 if (message.containsKey("Login")) {
-//                    updateButton(message.get("Name"));
                     Intent intent = new Intent(context, successActivityClass);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
@@ -73,6 +71,7 @@ public class TransAuthLoginButton extends AppCompatButton {
                 }
             }
         });
+
         messageReceiver.register(context);
     }
 

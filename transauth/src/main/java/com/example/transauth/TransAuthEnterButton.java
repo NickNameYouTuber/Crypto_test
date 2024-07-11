@@ -72,7 +72,7 @@ public class TransAuthEnterButton extends AppCompatButton {
 
 
         // Регистрация MessageReceiver для прослушивания ответов
-        messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {
+        messageReceiver = new MessageReceiver(getContext(), new MessageReceiver.MessageListener() {
             @Override
             public void onMessageReceived(Map<String, String> message) {
                 Log.d(TAG, "Received message: " + message.toString());
@@ -84,6 +84,7 @@ public class TransAuthEnterButton extends AppCompatButton {
                 }
             }
         });
+
         messageReceiver.register(context);
     }
 

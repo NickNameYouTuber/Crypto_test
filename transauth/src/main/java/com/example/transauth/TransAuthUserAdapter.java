@@ -1,5 +1,6 @@
 package com.example.transauth;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONObject;
@@ -8,8 +9,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import android.os.AsyncTask;
 
 public class TransAuthUserAdapter {
 
@@ -49,12 +48,16 @@ public class TransAuthUserAdapter {
                     // Преобразование ответа в объект JSON
                     JSONObject jsonResponse = new JSONObject(response.toString());
 
+                    Log.d("User", "Response: " + jsonResponse.toString());
+
                     // Создание объекта TransAuthUser из JSON данных
                     TransAuthUser user = TransAuth.getUser();
                     user.setLogin(jsonResponse.getString("login"));
                     user.setUsername(jsonResponse.getString("display_name"));
                     user.setEmail(jsonResponse.getString("default_email"));
                     // и так далее...
+
+                    TransAuth.setUser(user);
 
                     Log.d("User", "Username: " + user.getUsername());
                     Log.d("User", "Email: " + user.getEmail());

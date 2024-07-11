@@ -75,7 +75,6 @@ import static com.example.transauth.TransAuthUserAdapter.getUserFromYandex;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -83,8 +82,6 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.HashMap;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -139,8 +136,9 @@ public class WebViewActivity extends AppCompatActivity {
                 getUserFromYandex(token, new TransAuthUserAdapter.UserCallback() {
                     @Override
                     public void onUserReceived(TransAuthUser user) {
-                        MessageReceiver receiver = new MessageReceiver(null);
-                        receiver.writeFile(getBaseContext(), user);
+//                        // Сохраняем пользователя в базу данных или другой механизм хранения
+//                        TransAuthUserDatabaseHelper db = new TransAuthUserDatabaseHelper(WebViewActivity.this);
+//                        db.addUser(user);
                     }
                 });
             }
@@ -152,4 +150,5 @@ public class WebViewActivity extends AppCompatActivity {
             finish();
         }
     }
+
 }

@@ -75,11 +75,11 @@ public class PasswordActivity extends AppCompatActivity {
 
         // MainActivity.java во втором приложении
 
-        messageReceiver = new MessageReceiver(new MessageReceiver.MessageListener() {
+        messageReceiver = new MessageReceiver(this, new MessageReceiver.MessageListener() {
             @Override
             public void onMessageReceived(Map<String, String> message) {
                 // Получено сообщение с тегом EnterFrom
-                Log.d("MainActivity", "Received message: " + message.toString());
+                Log.d("PasswordActivity", "Received message: " + message.toString());
                 Toast.makeText(PasswordActivity.this, "Received message: " + message.toString(), Toast.LENGTH_LONG).show();
             }
         });

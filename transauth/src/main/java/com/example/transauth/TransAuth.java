@@ -57,6 +57,9 @@ public class TransAuth {
     }
 
     public static TransAuthUser getUser() {
+        if (user == null) {
+            user = new TransAuthUser();
+        }
         return user;
     }
 
