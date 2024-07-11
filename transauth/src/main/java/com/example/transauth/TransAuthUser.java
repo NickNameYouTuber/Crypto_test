@@ -1,6 +1,7 @@
 package com.example.transauth;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class TransAuthUser {
     private String login;
@@ -9,6 +10,7 @@ public class TransAuthUser {
     private String email;
     private String phone;
     private HashMap<String, String> tokens;
+    private List<Wallet> wallets;
 
     public TransAuthUser() {
 
