@@ -2,6 +2,7 @@ package com.nicorp.crypto_test;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.transauth.TransAuth;
+import com.example.transauth.TransAuthUser;
+import com.example.transauth.TransAuthUserDatabaseHelper;
+import com.example.transauth.Wallet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +79,14 @@ public class BillsManagementFragment extends Fragment {
                 }
             }
         });
+
+        TransAuthUserDatabaseHelper db = new TransAuthUserDatabaseHelper(getContext());
+        TransAuthUser currentUser = db.getUser("nicktaser");
+
+        // if user has wallet
+        for (Wallet wallet : currentUser.getWallets()) {
+            Log.d("Wallet", wallet.getName());
+        }
 
         return view;
     }

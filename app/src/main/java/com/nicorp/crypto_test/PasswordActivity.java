@@ -37,6 +37,7 @@ import com.example.transauth.MessageReceiver;
 import com.example.transauth.MessageTags;
 import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthButton;
+import com.example.transauth.TransAuthUserDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -250,6 +251,11 @@ public class PasswordActivity extends AppCompatActivity {
                 }
                 // Go to FirstTabActivity
                 startActivity(new Intent(PasswordActivity.this, MainActivity.class));
+                // Set user from db if exists
+                TransAuthUserDatabaseHelper db = new TransAuthUserDatabaseHelper(PasswordActivity.this);
+                if (db.getUser("nicktaser") != null) {
+                    TransAuth.setUser(db.getUser("nicktaser"));
+                }
                 finish();
             }
         });

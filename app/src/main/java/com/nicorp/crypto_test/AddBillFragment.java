@@ -41,20 +41,11 @@ public class AddBillFragment extends Fragment {
             // handle arguments if needed
         }
 
-        Log.d("Wallet", "onCreate");
-
         db = new TransAuthUserDatabaseHelper(getActivity());
 
         // Assuming you have some way to get the current user's login, e.g., from shared preferences
         String currentUserLogin = "login";  // Replace with actual login retrieval
         currentUser = db.getUser("nicktaser");
-
-        Log.d("Wallet", currentUser.getUsername());
-
-        // if user has wallet
-        for (Wallet wallet : currentUser.getWallets()) {
-            Log.d("Wallet", wallet.getName());
-        }
     }
 
     @Override
