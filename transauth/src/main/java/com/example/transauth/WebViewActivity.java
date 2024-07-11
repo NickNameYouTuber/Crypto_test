@@ -137,8 +137,8 @@ public class WebViewActivity extends AppCompatActivity {
                     @Override
                     public void onUserReceived(TransAuthUser user) {
 //                        // Сохраняем пользователя в базу данных или другой механизм хранения
-//                        TransAuthUserDatabaseHelper db = new TransAuthUserDatabaseHelper(WebViewActivity.this);
-//                        db.addUser(user);
+                        TransAuthUserDatabaseHelper db = new TransAuthUserDatabaseHelper(WebViewActivity.this);
+                        db.addUser(user);
                     }
                 });
             }

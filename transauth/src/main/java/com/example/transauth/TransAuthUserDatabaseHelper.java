@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,6 +82,11 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
         for (Wallet wallet : user.getWallets()) {
             addWallet(db, wallet, user.getLogin());
         }
+
+        Log.d("DatabaseHelper", "User added to database");
+        Log.d("DatabaseHelper", user.getLogin());
+
+        Log.d("DatabaseHelper", "Check that user in db: " + getUser(user.getLogin()).getLogin().toString());
 
         db.close();
     }

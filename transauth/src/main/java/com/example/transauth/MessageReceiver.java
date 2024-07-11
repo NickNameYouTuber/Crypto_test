@@ -95,7 +95,7 @@ public class MessageReceiver extends BroadcastReceiver {
      */
     private void handleEnterToMessage(Context context, Map<String, String> message, List<String> permissions, String senderPackage) {
         if (message.size() == 1 && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
-            TransAuthUser user = db.getUser(message.get("login")); // Предполагается, что логин передается в сообщении
+            TransAuthUser user = db.getUser("nicktaser"); // Предполагается, что логин передается в сообщении
             Map<String, String> responseMessage = new HashMap<>();
 
             if (user != null) {
@@ -146,9 +146,12 @@ public class MessageReceiver extends BroadcastReceiver {
             transAuthUser.setUsername(message.get("Username"));
         }
 
-        db.addUser(transAuthUser); // Сохраняем пользователя в базе данных
+        if (message.containsKey("Login")) {
+            db.addUser(transAuthUser); // Сохраняем пользователя в базе данных
 
-        setUser(transAuthUser); // Set user
+            setUser(transAuthUser); // Set user
+        }
+
 
         if (listener != null) {
             listener.onMessageReceived(message);
