@@ -10,13 +10,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,11 +21,11 @@ import java.util.Map;
  */
 public class MessageReceiver extends BroadcastReceiver {
     private static final String TAG = "MessageReceiver";
-    private static final String FILE_NAME = "message.json";
     private static final String SPECIAL_CODE = "1234"; // Код для тестового сценария
 
     private MessageListener listener; // Слушатель для обработки принятых сообщений
     private Gson gson; // Объект Gson для работы с JSON
+    private TransAuthUserDatabaseHelper db; // Помощник для работы с базой данных
 
     /**
      * Интерфейс для обратного вызова при получении сообщения.
@@ -53,9 +47,10 @@ public class MessageReceiver extends BroadcastReceiver {
      *
      * @param listener Слушатель для обработки принятых сообщений.
      */
-    public MessageReceiver(MessageListener listener) {
+    public MessageReceiver(Context context, MessageListener listener) {
         this.listener = listener;
         this.gson = new Gson();
+        this.db = new TransAuthUserDatabaseHelper(context);
     }
 
     /**
@@ -88,10 +83,9 @@ public class MessageReceiver extends BroadcastReceiver {
         }
     }
 
-
     /**
      * Обрабатывает сообщение с тегом ENTER_TO.
-     * В этом примере проверяет наличие специального кода и отправляет данные из файла обратно отправителю.
+     * В этом примере проверяет наличие специального кода и отправляет данные из базы данных обратно отправителю.
      *
      * @param context       Контекст приложения.
      * @param message       Полученное сообщение.
@@ -100,33 +94,31 @@ public class MessageReceiver extends BroadcastReceiver {
      */
     private void handleEnterToMessage(Context context, Map<String, String> message, List<String> permissions, String senderPackage) {
         if (message.size() == 1 && message.containsKey("code") && message.get("code").equals(SPECIAL_CODE)) {
-            Map<String, String> fileMessage = readFile(context);
+            TransAuthUser user = db.getUser(message.get("login")); // Предполагается, что логин передается в сообщении
             Map<String, String> responseMessage = new HashMap<>();
 
-            for (String permission : permissions) {
-                switch (permission) {
-                    case MessagePermissions.GET_EMAIL:
-                        // Добавляем Name
-                        if (fileMessage.containsKey("email")) {
-                            responseMessage.put("Email", fileMessage.get("email"));
-                        }
-                        break;
-                    case MessagePermissions.GET_LOGIN:
-                        // Добавляем все данные
-                        if (fileMessage.containsKey("login")) {
-                            responseMessage.put("Login", fileMessage.get("login"));
-                        }
-                        break;
-                    case MessagePermissions.GET_USERNAME:
-                        // Добавляем данные для другого разрешения, если требуется
-                        if (fileMessage.containsKey("username")) {
-                            responseMessage.put("Username", fileMessage.get("username"));
-                        }
-                        break;
-                    // Добавьте другие разрешения по мере необходимости
+            if (user != null) {
+                for (String permission : permissions) {
+                    switch (permission) {
+                        case MessagePermissions.GET_EMAIL:
+                            // Добавляем email
+                            responseMessage.put("Email", user.getEmail());
+                            break;
+                        case MessagePermissions.GET_LOGIN:
+                            // Добавляем login
+                            responseMessage.put("Login", user.getLogin());
+                            break;
+                        case MessagePermissions.GET_USERNAME:
+                            // Добавляем username
+                            responseMessage.put("Username", user.getUsername());
+                            break;
+                        // Добавьте другие разрешения по мере необходимости
+                    }
                 }
+                sendMessageBack(context, responseMessage, MessageTags.ENTER_FROM, senderPackage, permissions);
+            } else {
+                Log.d(TAG, "User not found in database");
             }
-            sendMessageBack(context, responseMessage, MessageTags.ENTER_FROM, senderPackage, permissions);
         }
     }
 
@@ -141,13 +133,6 @@ public class MessageReceiver extends BroadcastReceiver {
     private void handleEnterFromMessage(Context context, Map<String, String> message, Intent intent) {
         MessageManager.processResponse(context, intent);
 
-//        if(message.containsKey("Login")){
-//            TransAuthUser transAuthUser = new TransAuthUser();
-//            transAuthUser.setLogin(message.get("Login"));
-//
-//            setUser(transAuthUser); // Set user
-//        }
-
         TransAuthUser transAuthUser = new TransAuthUser();
 
         if (message.containsKey("Email")) {
@@ -160,36 +145,14 @@ public class MessageReceiver extends BroadcastReceiver {
             transAuthUser.setUsername(message.get("Username"));
         }
 
+        db.addUser(transAuthUser); // Сохраняем пользователя в базе данных
+
         setUser(transAuthUser); // Set user
 
         if (listener != null) {
             listener.onMessageReceived(message);
         }
         Log.d(TAG, "Received message: " + message.toString());
-    }
-
-    /**
-     * Читает данные из файла.
-     *
-     * @param context Контекст приложения.
-     * @return Map<String, String> с данными из файла или пустую Map, если произошла ошибка чтения.
-     */
-    private Map<String, String> readFile(Context context) {
-        Map<String, String> fileMessage = new HashMap<>();
-        try (FileInputStream fis = context.openFileInput(FILE_NAME);
-             InputStreamReader isr = new InputStreamReader(fis);
-             BufferedReader br = new BufferedReader(isr)) {
-            StringBuilder json = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                json.append(line);
-            }
-            Type type = new TypeToken<Map<String, String>>() {}.getType();
-            fileMessage = gson.fromJson(json.toString(), type);
-        } catch (Exception e) {
-            Log.e(TAG, "Error reading file", e);
-        }
-        return fileMessage;
     }
 
     /**
@@ -225,29 +188,6 @@ public class MessageReceiver extends BroadcastReceiver {
             context.registerReceiver(this, filter);
         }
         Log.d(TAG, "register was successful");
-    }
-
-    /**
-     * Записывает данные в файл.
-     *
-     * @param context Контекст приложения.
-     * @param message Данные для записи.
-     */
-    public void writeFile(Context context, Map<String, String> message) {
-        try (FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
-            String json = gson.toJson(message);
-            fos.write(json.getBytes());
-        } catch (Exception e) {
-            Log.e(TAG, "Error writing file", e);
-        }
-    }
-    public void writeFile(Context context, TransAuthUser transAuthUser) {
-        try (FileOutputStream fos = context.openFileOutput(FILE_NAME, Context.MODE_PRIVATE)) {
-            String json = gson.toJson(transAuthUser);
-            fos.write(json.getBytes());
-        } catch (Exception e) {
-            Log.e(TAG, "Error writing file", e);
-        }
     }
 
     /**

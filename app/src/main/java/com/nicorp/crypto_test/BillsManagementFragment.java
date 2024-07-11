@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ public class BillsManagementFragment extends Fragment {
     private RecyclerView recyclerView;
     private BillsManagementAdapter adapter;
     private ImageView backButton;
+    private ConstraintLayout addBillButton;
 
     @Nullable
     @Override
@@ -31,6 +33,7 @@ public class BillsManagementFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         backButton = view.findViewById(R.id.backButton);
+        addBillButton = view.findViewById(R.id.addBillButton);
 
         List<Bill> bills = new ArrayList<>();
         bills.add(new Bill(R.drawable.qcoin, "First bill", "1000 QC", "~ 100$"));
@@ -54,6 +57,19 @@ public class BillsManagementFragment extends Fragment {
                 // Handle back button click, for example, pop the back stack
                 if (getFragmentManager() != null) {
                     getFragmentManager().popBackStack();
+                }
+            }
+        });
+
+        addBillButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go to the AddBillFragment
+                if (getFragmentManager() != null) {
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fragmentContainerView, new AddBillFragment())
+                            .addToBackStack(null)
+                            .commit();
                 }
             }
         });

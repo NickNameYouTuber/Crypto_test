@@ -1,5 +1,6 @@
 package com.example.transauth;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,7 +14,8 @@ public class TransAuthUser {
     private List<Wallet> wallets;
 
     public TransAuthUser() {
-
+        this.wallets = new ArrayList<>();
+        this.tokens = new HashMap<>();
     }
 
     public TransAuthUser(String login, String username, String password, String email, String phone, HashMap<String, String> tokens) {
@@ -23,6 +25,7 @@ public class TransAuthUser {
         this.email = email;
         this.phone = phone;
         this.tokens = tokens;
+        this.wallets = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -79,5 +82,9 @@ public class TransAuthUser {
 
     public void setWallets(List<Wallet> wallets) {
         this.wallets = wallets;
+    }
+
+    public void addWallet(Wallet wallet) {
+        this.wallets.add(wallet);
     }
 }
