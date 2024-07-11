@@ -64,11 +64,11 @@ public class ImportBTCWalletActivity extends AppCompatActivity {
                     String ethereumAddress = Keys.toChecksumAddress(Keys.getAddress(accountKey.getPublicKeyAsHex()));
                     saveMainAccount(ethereumAddress);
                     // Передача адреса в другую активность
-                    Intent intent = new Intent(ImportBTCWalletActivity.this, BalanceActivity.class);
-                    intent.putExtra("walletAddress", ethereumAddress);
-                    System.out.println(ethereumAddress);
-                    startActivity(intent);
-                    finish();
+//                    Intent intent = new Intent(ImportBTCWalletActivity.this, BalanceActivity.class);
+//                    intent.putExtra("walletAddress", ethereumAddress);
+//                    System.out.println(ethereumAddress);
+//                    startActivity(intent);
+//                    finish();
 
                 } catch (MnemonicException | IllegalArgumentException e) {
                     e.printStackTrace();

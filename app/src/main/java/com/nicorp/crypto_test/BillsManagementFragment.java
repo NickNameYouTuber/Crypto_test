@@ -19,7 +19,7 @@ import java.util.List;
 public class BillsManagementFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private Bills_Management_Adapter adapter;
+    private BillsManagementAdapter adapter;
     private ImageView backButton;
 
     @Nullable
@@ -37,7 +37,7 @@ public class BillsManagementFragment extends Fragment {
         bills.add(new Bill(R.drawable.bitcoin, "Second bill", "0,001 BTC", "~ 63,79$"));
         bills.add(new Bill(R.drawable.ethereum, "Third bill", "500 ETH", "~ 1500$"));
 
-        adapter = new Bills_Management_Adapter(bills, getContext());
+        adapter = new BillsManagementAdapter(bills, getContext());
         recyclerView.setAdapter(adapter);
 
         // Set the appropriate drawable for the back button based on the theme

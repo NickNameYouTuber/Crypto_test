@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class Bills_Management_Adapter extends RecyclerView.Adapter<Bills_Management_Adapter.BillViewHolder> {
+public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagementAdapter.BillViewHolder> {
 
     private List<Bill> bills;
     private Context context;
 
 
-    public Bills_Management_Adapter(List<Bill> bills, Context context) {
+    public BillsManagementAdapter(List<Bill> bills, Context context) {
         this.bills = bills;
         this.context = context;
     }

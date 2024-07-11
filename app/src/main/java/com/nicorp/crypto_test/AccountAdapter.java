@@ -54,7 +54,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
                 editor.putInt("selected_account", selectedPosition);
                 editor.apply();
                 // Обновление информации о счете
-                ((BalanceActivity) context).updateSelectedAccount(accountItem);
+//                ((Ьф) context).updateSelectedAccount(accountItem);
             }
         });
     }

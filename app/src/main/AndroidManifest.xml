@@ -23,7 +23,7 @@
         android:theme="@style/Theme.QryptApp.Dark"
         tools:targetApi="31">
         <activity
-            android:name=".Bills_Management_Activity"
+            android:name=".BillsManagementActivity"
             android:exported="false" />
         <activity
             android:name=".AccountActivity"

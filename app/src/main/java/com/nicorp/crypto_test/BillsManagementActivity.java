@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bills_Management_Activity extends AppCompatActivity {
+public class BillsManagementActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private Bills_Management_Adapter adapter;
+    private BillsManagementAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class Bills_Management_Activity extends AppCompatActivity {
         bills.add(new Bill(R.drawable.bitcoin, "Second bill", "0,001 BTC", "~ 63,79$"));
         bills.add(new Bill(R.drawable.ethereum, "Third bill", "500 ETH", "~ 1500$"));
 
-        adapter = new Bills_Management_Adapter(bills, getBaseContext());
+        adapter = new BillsManagementAdapter(bills, getBaseContext());
         recyclerView.setAdapter(adapter);
     }
 }
