@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.TransAuthUserDatabaseHelper;
 import com.example.transauth.Wallet;
@@ -29,6 +28,8 @@ public class BillsManagementFragment extends Fragment {
     private BillsManagementAdapter adapter;
     private ImageView backButton;
     private ConstraintLayout addBillButton;
+    private TransAuthUserDatabaseHelper db;
+    private TransAuthUser currentUser;
 
     @Nullable
     @Override
@@ -41,13 +42,12 @@ public class BillsManagementFragment extends Fragment {
         backButton = view.findViewById(R.id.backButton);
         addBillButton = view.findViewById(R.id.addBillButton);
 
-        List<Bill> bills = new ArrayList<>();
-        bills.add(new Bill(R.drawable.qcoin, "First bill", "1000 QC", "~ 100$"));
-        bills.add(new Bill(R.drawable.bitcoin, "Second bill", "0,001 BTC", "~ 63,79$"));
-        bills.add(new Bill(R.drawable.ethereum, "Third bill", "500 ETH", "~ 1500$"));
+        db = new TransAuthUserDatabaseHelper(getContext());
+        String currentUserLogin = "nicktaser";  // Replace with actual login retrieval
+        currentUser = db.getUser(currentUserLogin);
 
-        adapter = new BillsManagementAdapter(bills, getContext());
-        recyclerView.setAdapter(adapter);
+        // Load bills from user's wallets
+        loadBills();
 
         // Set the appropriate drawable for the back button based on the theme
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -80,14 +80,39 @@ public class BillsManagementFragment extends Fragment {
             }
         });
 
-        TransAuthUserDatabaseHelper db = new TransAuthUserDatabaseHelper(getContext());
-        TransAuthUser currentUser = db.getUser("nicktaser");
+        return view;
+    }
 
-        // if user has wallet
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadBills();
+    }
+
+    private void loadBills() {
+        List<Bill> bills = new ArrayList<>();
+
+        // Add bills based on user's wallets
         for (Wallet wallet : currentUser.getWallets()) {
             Log.d("Wallet", wallet.getName());
+            bills.add(new Bill(getLogoResource(wallet.getPlatform()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USD"));
         }
 
-        return view;
+        adapter = new BillsManagementAdapter(bills, getContext());
+        recyclerView.setAdapter(adapter);
+    }
+
+    // Assuming you have a method to get the logo resource based on the platform name
+    private int getLogoResource(String platform) {
+        switch (platform.toLowerCase()) {
+            case "qcoin":
+                return R.drawable.qcoin;
+            case "bitcoin":
+                return R.drawable.bitcoin;
+            case "ethereum":
+                return R.drawable.ethereum;
+            default:
+                return R.drawable.qcoin; // Fallback logo if platform is unknown
+        }
     }
 }

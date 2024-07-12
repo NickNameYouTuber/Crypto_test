@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.transauth.TransAuthUser;
@@ -27,29 +29,20 @@ public class AddBillFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AddBillFragment newInstance(String param1, String param2) {
-        AddBillFragment fragment = new AddBillFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // handle arguments if needed
-        }
 
         db = new TransAuthUserDatabaseHelper(getActivity());
 
         // Assuming you have some way to get the current user's login, e.g., from shared preferences
-        String currentUserLogin = "login";  // Replace with actual login retrieval
-        currentUser = db.getUser("nicktaser");
+        String currentUserLogin = "nicktaser";  // Replace with actual login retrieval
+        currentUser = db.getUser(currentUserLogin);
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_bill, container, false);
 
         // Initialize views
@@ -94,5 +87,10 @@ public class AddBillFragment extends Fragment {
         db.addUser(currentUser);
 
         Toast.makeText(getActivity(), "Wallet added successfully", Toast.LENGTH_SHORT).show();
+
+        // Return to BillsManagementFragment
+        if (getFragmentManager() != null) {
+            getFragmentManager().popBackStack();
+        }
     }
 }
