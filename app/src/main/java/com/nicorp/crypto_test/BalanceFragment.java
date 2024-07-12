@@ -3,6 +3,7 @@ package com.nicorp.crypto_test;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.transauth.TransAuth;
+import com.example.transauth.TransAuthUser;
+import com.example.transauth.Wallet;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BalanceFragment extends Fragment {
 
@@ -57,24 +66,27 @@ public class BalanceFragment extends Fragment {
         exchangeRatesAdapter = new ExchangeRatesAdapter(getContext(), exchangeRateList);
         rvExchangeRates.setAdapter(exchangeRatesAdapter);
 
-        addTestData();
+        addTestData(); // Загружаем тестовые данные
 
         return view;
     }
 
-    private void addTestData() {
-        // Add test bills
-        billList.add(new Bill(R.drawable.qcoin, "First Bill", "50 QC", "~ 5 USDT"));
-        billList.add(new Bill(R.drawable.bitcoin, "Second Bill", "0,001 BTC", "~ 300 USDT"));
-        billsAdapter.notifyDataSetChanged();
+    @Override
+    public void onResume() {
+        super.onResume();
+        // При каждом отображении фрагмента обновляем данные
+        Log.d("BalanceFragment", "Resume");
+        updateBillList();
+    }
 
-        // Add test transactions
+    private void addTestData() {
+        // Load test transactions
         transactionList.add(new Transaction(R.drawable.tether, "Ivan I.I.", "+ 10 USDT"));
         transactionList.add(new Transaction(R.drawable.pyaterochka, "Pyaterochka", "- 1488 RUB"));
         transactionList.add(new Transaction(R.drawable.mvideo, "Mvideo", "- 9000 RUB"));
         transactionsAdapter.notifyDataSetChanged();
 
-        // Add test exchange rates
+        // Load test exchange rates
         exchangeRateList.add(new ExchangeRate(R.drawable.qcoin, "QCoin", "0.1 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.bitcoin, "Bitcoin", "63 532 USDT"));
         exchangeRateList.add(new ExchangeRate(R.drawable.ethereum, "Etherium", "3 489 USDT"));
@@ -85,6 +97,30 @@ public class BalanceFragment extends Fragment {
         rvBills.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvBills, 2), 20));
         rvTransactions.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvTransactions, 2), 20));
         rvExchangeRates.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvExchangeRates, 3), 20));
+    }
+
+    private void updateBillList() {
+        // Clear billList and load updated bills
+        billList.clear();
+        TransAuthUser currentUser = TransAuth.getUser();
+        for (Wallet wallet : currentUser.getWallets()) {
+            billList.add(new Bill(getLogoResource(wallet.getPlatform()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USDT"));
+        }
+        billsAdapter.notifyDataSetChanged(); // Notify adapter about data change
+    }
+
+    // Assuming you have a method to get the logo resource based on the platform name
+    private int getLogoResource(String platform) {
+        switch (platform.toLowerCase()) {
+            case "qcoin":
+                return R.drawable.qcoin;
+            case "bitcoin":
+                return R.drawable.bitcoin;
+            case "ethereum":
+                return R.drawable.ethereum;
+            default:
+                return R.drawable.qcoin; // Fallback logo if platform is unknown
+        }
     }
 
     // Class for setting spacing between RecyclerView items

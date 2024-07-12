@@ -59,9 +59,7 @@ public class FirstTabActivity extends AppCompatActivity {
 
     private void addTestData() {
         // Добавляем тестовые счета
-        billList.add(new Bill(R.drawable.qcoin, "First Bill", "50 QC", "~ 5 USDT"));
-        billList.add(new Bill(R.drawable.bitcoin, "Second Bill", "0,001 BTC", "~ 300 USDT"));
-        billsAdapter.notifyDataSetChanged();
+
 
         // Добавляем тестовые транзакции
         transactionList.add(new Transaction(R.drawable.tether, "Ivan I.I.", "+ 10 USDT"));

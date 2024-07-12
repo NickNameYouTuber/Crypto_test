@@ -1,5 +1,7 @@
 package com.example.transauth;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,16 @@ public class TransAuthUser {
         this.phone = phone;
         this.tokens = tokens;
         this.wallets = new ArrayList<>();
+    }
+
+    public TransAuthUser(String login, String username, String password, String email, String phone, HashMap<String, String> tokens, List<Wallet> updatedWallets) {
+        this.login = login;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.tokens = tokens;
+        this.wallets = updatedWallets;
     }
 
     public String getUsername() {
@@ -90,5 +102,6 @@ public class TransAuthUser {
 
     public void removeWallet(Wallet wallet) {
         this.wallets.remove(wallet);
+        Log.d("Wallets", String.valueOf(this.wallets.size()));
     }
 }

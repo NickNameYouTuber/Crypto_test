@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.TransAuthUserDatabaseHelper;
 import com.example.transauth.Wallet;
@@ -137,10 +138,12 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
         }
 
         if (walletToRemove != null) {
-            currentUser.removeWallet(walletToRemove); // Предполагается, что метод removeWallet существует в TransAuthUser
-            db.updateUser(currentUser); // Предполагается, что метод updateUser существует в TransAuthUserDatabaseHelper
+            currentUser.removeWallet(walletToRemove);
+            db.updateUser(currentUser);
+            TransAuth.setUser(currentUser);
             bills.remove(position);
             notifyItemRemoved(position);
+            db.deleteWallet(walletToRemove.getId());
         }
     }
 }

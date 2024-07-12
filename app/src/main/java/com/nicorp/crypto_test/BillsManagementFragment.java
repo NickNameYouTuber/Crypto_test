@@ -117,7 +117,7 @@ public class BillsManagementFragment extends Fragment {
         // Add bills based on user's wallets
         for (Wallet wallet : currentUser.getWallets()) {
             Log.d("Wallet", wallet.getName());
-            bills.add(new Bill(getLogoResource(wallet.getPlatform()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USD"));
+            bills.add(new Bill(getLogoResource(wallet.getPlatform()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " " + wallet.getCurrency() + " USD"));
         }
 
         adapter = new BillsManagementAdapter(bills, getContext(), currentUser);

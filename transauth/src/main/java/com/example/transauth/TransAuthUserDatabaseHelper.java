@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
@@ -192,5 +193,36 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_WALLETS, KEY_ID + " = ?", new String[]{String.valueOf(walletId)});
         db.close();
+
+        // Update user's wallets list after deletion
+        updateUserAfterWalletDeletion(walletId);
     }
+
+    public void updateUserAfterWalletDeletion(int walletId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Retrieve current user
+        TransAuthUser user = TransAuth.getUser();
+
+        if (user != null) {
+            List<Wallet> updatedWallets = new ArrayList<>(user.getWallets());
+
+            // Find and remove wallet from updated wallets list
+            Iterator<Wallet> iterator = updatedWallets.iterator();
+            while (iterator.hasNext()) {
+                Wallet wallet = iterator.next();
+                if (wallet.getId() == walletId) {
+                    iterator.remove();
+                    break; // Assuming wallet IDs are unique, we can break once found
+                }
+            }
+
+            // Update user's wallets list in the database
+            updateUser(new TransAuthUser(user.getLogin(), user.getUsername(), user.getPassword(),
+                    user.getEmail(), user.getPhone(), user.getTokens(), updatedWallets));
+        }
+
+        db.close();
+    }
+
 }
