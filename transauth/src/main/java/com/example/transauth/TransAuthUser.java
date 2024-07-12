@@ -87,4 +87,8 @@ public class TransAuthUser {
     public void addWallet(Wallet wallet) {
         this.wallets.add(wallet);
     }
+
+    public void removeWallet(Wallet wallet) {
+        this.wallets.remove(wallet);
+    }
 }

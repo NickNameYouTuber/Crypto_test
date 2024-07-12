@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -152,6 +154,46 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_USERS, KEY_LOGIN + " = ?", new String[]{login});
         db.delete(TABLE_WALLETS, KEY_USER_LOGIN + " = ?", new String[]{login});
+        db.close();
+    }
+
+    public void updateUser(TransAuthUser user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_USERNAME, user.getUsername());
+        values.put(KEY_PASSWORD, user.getPassword());
+        values.put(KEY_EMAIL, user.getEmail());
+        values.put(KEY_PHONE, user.getPhone());
+
+        db.update(TABLE_USERS, values, KEY_LOGIN + " = ?", new String[]{user.getLogin()});
+
+        // Обновляем кошельки
+        for (Wallet wallet : user.getWallets()) {
+            if (wallet.getId() == 0) { // Новый кошелек
+                addWallet(db, wallet, user.getLogin());
+            } else { // Существующий кошелек
+                updateWallet(db, wallet);
+            }
+        }
+
+        db.close();
+    }
+
+    private void updateWallet(SQLiteDatabase db, Wallet wallet) {
+        ContentValues values = new ContentValues();
+        values.put(KEY_ADDRESS, wallet.getAddress());
+        values.put(KEY_PLATFORM, wallet.getPlatform());
+        values.put(KEY_NAME, wallet.getName());
+        values.put(KEY_BALANCE, wallet.getBalance());
+        values.put(KEY_CURRENCY, wallet.getCurrency());
+
+        db.update(TABLE_WALLETS, values, KEY_ID + " = ?", new String[]{String.valueOf(wallet.getId())});
+    }
+
+    public void deleteWallet(int walletId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_WALLETS, KEY_ID + " = ?", new String[]{String.valueOf(walletId)});
         db.close();
     }
 }

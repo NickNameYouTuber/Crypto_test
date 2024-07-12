@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.transauth.TransAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class BillsManagementActivity extends AppCompatActivity {
         bills.add(new Bill(R.drawable.bitcoin, "Second bill", "0,001 BTC", "~ 63,79$"));
         bills.add(new Bill(R.drawable.ethereum, "Third bill", "500 ETH", "~ 1500$"));
 
-        adapter = new BillsManagementAdapter(bills, getBaseContext());
+        adapter = new BillsManagementAdapter(bills, getBaseContext(), TransAuth.getUser());
         recyclerView.setAdapter(adapter);
     }
 }

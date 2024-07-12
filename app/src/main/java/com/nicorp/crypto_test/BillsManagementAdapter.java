@@ -1,20 +1,29 @@
 package com.nicorp.crypto_test;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.transauth.TransAuthUser;
+import com.example.transauth.TransAuthUserDatabaseHelper;
+import com.example.transauth.Wallet;
 
 import java.util.List;
 
@@ -22,11 +31,14 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
 
     private List<Bill> bills;
     private Context context;
+    private TransAuthUserDatabaseHelper db;
+    private TransAuthUser currentUser;
 
-
-    public BillsManagementAdapter(List<Bill> bills, Context context) {
+    public BillsManagementAdapter(List<Bill> bills, Context context, TransAuthUser currentUser) {
         this.bills = bills;
         this.context = context;
+        this.currentUser = currentUser;
+        this.db = new TransAuthUserDatabaseHelper(context);
     }
 
     @NonNull
@@ -37,14 +49,20 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BillViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BillViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Bill bill = bills.get(position);
         holder.iconBill.setImageResource(bill.getLogo());
         holder.titleBill.setText(bill.getTitle());
         holder.amountBill.setText(bill.getAmount());
         holder.equivalentBill.setText(bill.getUsdAmount());
-        setCardViewBackground(holder.cardView, holder.iconBill, holder.titleBill, holder.amountBill, holder.equivalentBill); // Set background color and text color based on image
+        setCardViewBackground(holder.cardView, holder.iconBill, holder.titleBill, holder.amountBill, holder.equivalentBill);
 
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDeleteConfirmationDialog(position);
+            }
+        });
     }
 
     @Override
@@ -56,6 +74,7 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
         ImageView iconBill;
         TextView titleBill, amountBill, equivalentBill;
         CardView cardView;
+        ImageView btnDelete;
 
         BillViewHolder(View itemView) {
             super(itemView);
@@ -64,10 +83,11 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
             amountBill = itemView.findViewById(R.id.amountBill);
             equivalentBill = itemView.findViewById(R.id.equivalentBill);
             cardView = itemView.findViewById(R.id.cardView);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 
-    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView BillTitle, TextView BillAmount, TextView BillUsdAmount) {
+    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView titleBill, TextView amountBill, TextView equivalentBill) {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
@@ -75,16 +95,11 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
                 int dominantColor = palette.getDominantColor(ContextCompat.getColor(context, android.R.color.white));
                 cardView.setCardBackgroundColor(dominantColor);
 
-                // Add bottom margin to card view
-                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) cardView.getLayoutParams();
-                params.bottomMargin = dpToPx(20);
-                cardView.setLayoutParams(params);
-
                 // Determine text color based on background brightness
                 int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, android.R.color.white) : ContextCompat.getColor(context, R.color.text_color_dark);
-                BillTitle.setTextColor(textColor);
-                BillAmount.setTextColor(textColor);
-                BillUsdAmount.setTextColor(textColor);
+                titleBill.setTextColor(textColor);
+                amountBill.setTextColor(textColor);
+                equivalentBill.setTextColor(textColor);
             }
         });
     }
@@ -94,8 +109,38 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
         return darkness >= 0.5; // Adjust this threshold as needed
     }
 
-    private int dpToPx(int dp) {
-        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    private void showDeleteConfirmationDialog(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Are you sure you want to delete this bill?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteBill(position);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 
+    private void deleteBill(int position) {
+        Bill bill = bills.get(position);
+        Wallet walletToRemove = null;
+
+        for (Wallet wallet : currentUser.getWallets()) {
+            if (wallet.getName().equals(bill.getTitle())) {
+                walletToRemove = wallet;
+                break;
+            }
+        }
+
+        if (walletToRemove != null) {
+            currentUser.removeWallet(walletToRemove); // Предполагается, что метод removeWallet существует в TransAuthUser
+            db.updateUser(currentUser); // Предполагается, что метод updateUser существует в TransAuthUserDatabaseHelper
+            bills.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
 }

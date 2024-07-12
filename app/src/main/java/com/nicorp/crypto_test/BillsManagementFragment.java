@@ -22,6 +22,28 @@ import com.example.transauth.Wallet;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.transauth.TransAuthUser;
+import com.example.transauth.TransAuthUserDatabaseHelper;
+import com.example.transauth.Wallet;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class BillsManagementFragment extends Fragment {
 
     private RecyclerView recyclerView;
@@ -98,7 +120,7 @@ public class BillsManagementFragment extends Fragment {
             bills.add(new Bill(getLogoResource(wallet.getPlatform()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USD"));
         }
 
-        adapter = new BillsManagementAdapter(bills, getContext());
+        adapter = new BillsManagementAdapter(bills, getContext(), currentUser);
         recyclerView.setAdapter(adapter);
     }
 
