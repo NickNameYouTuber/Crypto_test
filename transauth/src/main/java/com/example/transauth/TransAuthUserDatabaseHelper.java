@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,11 +83,6 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
             addWallet(db, wallet, user.getLogin());
         }
 
-        Log.d("DatabaseHelper", "User added to database");
-        Log.d("DatabaseHelper", user.getLogin());
-
-        Log.d("DatabaseHelper", "Check that user in db: " + getUser(user.getLogin()).getLogin().toString());
-
         db.close();
     }
 
@@ -110,8 +103,7 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_LOGIN, KEY_USERNAME, KEY_PASSWORD, KEY_EMAIL, KEY_PHONE},
                 KEY_LOGIN + "=?", new String[]{login}, null, null, null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
+        if (cursor != null) cursor.moveToFirst();
 
         TransAuthUser user = new TransAuthUser(
                 cursor.getString(0),
@@ -168,12 +160,17 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
 
         db.update(TABLE_USERS, values, KEY_LOGIN + " = ?", new String[]{user.getLogin()});
 
-        // Обновляем кошельки
+        List<Wallet> existingWallets = getWalletsForUser(user.getLogin());
+        List<Integer> existingWalletIds = new ArrayList<>();
+        for (Wallet wallet : existingWallets) {
+            existingWalletIds.add(wallet.getId());
+        }
+
         for (Wallet wallet : user.getWallets()) {
-            if (wallet.getId() == 0) { // Новый кошелек
-                addWallet(db, wallet, user.getLogin());
-            } else { // Существующий кошелек
+            if (existingWalletIds.contains(wallet.getId())) {
                 updateWallet(db, wallet);
+            } else {
+                addWallet(db, wallet, user.getLogin());
             }
         }
 

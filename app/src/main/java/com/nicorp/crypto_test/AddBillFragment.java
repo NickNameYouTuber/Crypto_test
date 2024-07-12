@@ -2,7 +2,6 @@ package com.nicorp.crypto_test;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +83,7 @@ public class AddBillFragment extends Fragment {
         wallet.setCurrency(currency);
 
         currentUser.addWallet(wallet);
-        db.addUser(currentUser);
+        db.updateUser(currentUser);
 
         Toast.makeText(getActivity(), "Wallet added successfully", Toast.LENGTH_SHORT).show();
 
