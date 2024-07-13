@@ -95,7 +95,7 @@ public class BillsManagementFragment extends Fragment {
                 // Go to the AddBillFragment
                 if (getFragmentManager() != null) {
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.fragmentContainerView, new AddBillFragment())
+                            .replace(R.id.fragmentContainerView, new SelectPlatformFragment())
                             .addToBackStack(null)
                             .commit();
                 }
