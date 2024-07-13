@@ -117,7 +117,7 @@ public class BillsManagementFragment extends Fragment {
         // Add bills based on user's wallets
         for (Wallet wallet : currentUser.getWallets()) {
             Log.d("Wallet", wallet.getName());
-            bills.add(new Bill(getLogoResource(wallet.getPlatform()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " " + wallet.getCurrency() + " USD"));
+            bills.add(new Bill(getLogoResource(wallet.getCurrency()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " " + wallet.getCurrency() + " USD"));
         }
 
         adapter = new BillsManagementAdapter(bills, getContext(), currentUser);
@@ -127,12 +127,14 @@ public class BillsManagementFragment extends Fragment {
     // Assuming you have a method to get the logo resource based on the platform name
     private int getLogoResource(String platform) {
         switch (platform.toLowerCase()) {
-            case "qrypt":
-                return R.drawable.qrypt;
-            case "metamask":
+            case "btc":
+                return R.drawable.bitcoin;
+            case "eth":
+                return R.drawable.ethereum;
+            case "usdt":
+                return R.drawable.tether;
+            case "qcoin":
                 return R.drawable.qcoin;
-            case "trust wallet":
-                return R.drawable.trust_wallet;
             default:
                 return R.drawable.bitcoin; // Fallback logo if platform is unknown
         }

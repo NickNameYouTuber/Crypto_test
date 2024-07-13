@@ -97,10 +97,10 @@ public class AddWalletFragment extends Fragment {
 
             Toast.makeText(getActivity(), "Wallet added successfully", Toast.LENGTH_SHORT).show();
 
-            // Return to previous fragment
-            if (getFragmentManager() != null) {
-                getFragmentManager().popBackStack();
-            }
+            // Navigate to BillsManagementFragment
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, new BillsManagementFragment())
+                    .commit();
         } else {
             Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
         }

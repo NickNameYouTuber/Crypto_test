@@ -104,7 +104,7 @@ public class BalanceFragment extends Fragment {
         billList.clear();
         TransAuthUser currentUser = TransAuth.getUser();
         for (Wallet wallet : currentUser.getWallets()) {
-            billList.add(new Bill(getLogoResource(wallet.getPlatform()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USDT"));
+            billList.add(new Bill(getLogoResource(wallet.getCurrency()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USDT"));
         }
         billsAdapter.notifyDataSetChanged(); // Notify adapter about data change
     }
@@ -112,14 +112,16 @@ public class BalanceFragment extends Fragment {
     // Assuming you have a method to get the logo resource based on the platform name
     private int getLogoResource(String platform) {
         switch (platform.toLowerCase()) {
-            case "qrypt":
-                return R.drawable.qrypt;
-            case "metamask":
-                return R.drawable.metamask;
-            case "trust wallet":
-                return R.drawable.trust_wallet;
+            case "btc":
+                return R.drawable.bitcoin;
+            case "eth":
+                return R.drawable.ethereum;
+            case "usdt":
+                return R.drawable.tether;
+            case "qcoin":
+                return R.drawable.qcoin;
             default:
-                return R.drawable.qcoin; // Fallback logo if platform is unknown
+                return R.drawable.bitcoin; // Fallback logo if platform is unknown
         }
     }
 
