@@ -134,7 +134,7 @@ public class BillsManagementFragment extends Fragment {
             case "ethereum":
                 return R.drawable.ethereum;
             default:
-                return R.drawable.qcoin; // Fallback logo if platform is unknown
+                return R.drawable.bitcoin; // Fallback logo if platform is unknown
         }
     }
 }
