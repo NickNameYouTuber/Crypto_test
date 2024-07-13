@@ -11,6 +11,7 @@
     <style name="Theme.QryptApp.Light" parent="Base.Theme.QryptApp">
         <item name="backgroundColor">@color/background_color_light</item>
         <item name="textColor">@color/text_color_light</item>
+        <item name="textSecondColor">@color/text_color_dark</item>
         <item name="dotColor">@color/dot_color_light</item>
         <item name="android:navigationBarColor">@color/text_color_dark</item>
         <item name="buttonStyle">@style/Widget.App.Button.Light</item>
@@ -20,6 +21,7 @@
     <style name="Theme.QryptApp.Dark" parent="Base.Theme.QryptApp">
         <item name="backgroundColor">@color/background_color_dark</item>
         <item name="textColor">@color/text_color_dark</item>
+        <item name="textSecondColor">@color/text_color_light</item>
         <item name="dotColor">@color/dot_color_dark</item>
         <item name="android:navigationBarColor">@color/text_color_light</item>
         <item name="buttonStyle">@style/Widget.App.Button.Dark</item>

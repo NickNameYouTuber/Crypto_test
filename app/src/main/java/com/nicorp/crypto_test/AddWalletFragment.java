@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.TransAuthUserDatabaseHelper;
 import com.example.transauth.Wallet;
@@ -92,6 +93,7 @@ public class AddWalletFragment extends Fragment {
 
             currentUser.addWallet(wallet);
             db.updateUser(currentUser);
+            TransAuth.setUser(currentUser);
 
             Toast.makeText(getActivity(), "Wallet added successfully", Toast.LENGTH_SHORT).show();
 
