@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,9 @@ import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import androidx.core.content.ContextCompat;
@@ -77,26 +80,59 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
         }
     }
 
-    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView BillTitle, TextView BillAmount, TextView BillUsdAmount) {
+    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView titleBill, TextView amountBill, TextView equivalentBill) {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(@NonNull Palette palette) {
-                int dominantColor = palette.getDominantColor(ContextCompat.getColor(context, android.R.color.white));
-                cardView.setCardBackgroundColor(dominantColor);
+        int[] pixels = getBitmapPixels(bitmap);
+        int dominantColor = getDominantColor(pixels);
 
-                // Determine text color based on background brightness
-                int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, android.R.color.white) : ContextCompat.getColor(context, R.color.text_color_dark);
-                BillTitle.setTextColor(textColor);
-                BillAmount.setTextColor(textColor);
-                BillUsdAmount.setTextColor(textColor);
-            }
-        });
+        cardView.setCardBackgroundColor(dominantColor);
+
+        Log.d("BillViewHolder", "Is dark color: " + isDarkColor(dominantColor));
+
+        // Определяем цвет текста на основе яркости фона
+        int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, R.color.text_color_dark) : ContextCompat.getColor(context, R.color.text_color_light);
+        titleBill.setTextColor(textColor);
+        amountBill.setTextColor(textColor);
+        equivalentBill.setTextColor(textColor);
     }
 
+    // Получаем массив пикселей изображения
+    private int[] getBitmapPixels(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int[] pixels = new int[width * height];
+        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+        return pixels;
+    }
+
+    // Находим наиболее часто встречающийся цвет среди пикселей
+    private int getDominantColor(int[] pixels) {
+        Map<Integer, Integer> colorCountMap = new HashMap<>();
+
+        for (int color : pixels) {
+            if (colorCountMap.containsKey(color)) {
+                colorCountMap.put(color, colorCountMap.get(color) + 1);
+            } else {
+                colorCountMap.put(color, 1);
+            }
+        }
+
+        int maxCount = 0;
+        int dominantColor = Color.WHITE; // По умолчанию, если не найден другой цвет
+        for (Map.Entry<Integer, Integer> entry : colorCountMap.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                dominantColor = entry.getKey();
+            }
+        }
+
+        return dominantColor;
+    }
+
+    // Helper function to determine if a color is dark
     private boolean isDarkColor(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
-        return darkness >= 0.5; // Adjust this threshold as needed
+        return darkness >= 0.5;
     }
 
     private int dpToPx(int dp) {

@@ -112,12 +112,12 @@ public class BalanceFragment extends Fragment {
     // Assuming you have a method to get the logo resource based on the platform name
     private int getLogoResource(String platform) {
         switch (platform.toLowerCase()) {
-            case "qcoin":
-                return R.drawable.qcoin;
-            case "bitcoin":
-                return R.drawable.bitcoin;
-            case "ethereum":
-                return R.drawable.ethereum;
+            case "qrypt":
+                return R.drawable.qrypt;
+            case "metamask":
+                return R.drawable.metamask;
+            case "trust wallet":
+                return R.drawable.trust_wallet;
             default:
                 return R.drawable.qcoin; // Fallback logo if platform is unknown
         }
