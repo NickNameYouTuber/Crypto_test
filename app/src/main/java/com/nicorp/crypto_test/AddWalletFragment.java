@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.example.transauth.TransAuth;
@@ -23,7 +24,7 @@ public class AddWalletFragment extends Fragment {
 
     private EditText editTextAddress, editTextName, editTextCurrency;
     private TextView textViewAddress;
-    private Button buttonSave;
+    private ConstraintLayout btnTransferTo;
     private TransAuthUserDatabaseHelper db;
     private TransAuthUser currentUser;
     private String selectedPlatform;
@@ -57,7 +58,7 @@ public class AddWalletFragment extends Fragment {
         editTextName = view.findViewById(R.id.editTextName);
         editTextCurrency = view.findViewById(R.id.editTextCurrency);
         textViewAddress = view.findViewById(R.id.textView8);
-        buttonSave = view.findViewById(R.id.buttonSave);
+        btnTransferTo = view.findViewById(R.id.btnTransferTo);
 
         // Hide address input if platform is Qrypt
         if ("Qrypt".equals(selectedPlatform)) {
@@ -66,7 +67,7 @@ public class AddWalletFragment extends Fragment {
         }
 
         // Set button click listener
-        buttonSave.setOnClickListener(new View.OnClickListener() {
+        btnTransferTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveWallet();
