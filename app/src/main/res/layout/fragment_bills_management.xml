@@ -70,6 +70,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Loading layout -->
+    <FrameLayout
+        android:id="@+id/loadingLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?attr/backgroundColor"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/rvBills"
+        app:layout_constraintEnd_toEndOf="@+id/rvBills"
+        app:layout_constraintStart_toStartOf="@+id/rvBills"
+        app:layout_constraintTop_toTopOf="@+id/rvBills">
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

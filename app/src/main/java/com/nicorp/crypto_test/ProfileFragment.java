@@ -4,19 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.example.transauth.TransAuth;
-import com.example.transauth.TransAuthUser;
 
 public class ProfileFragment extends Fragment {
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Обработчик нажатия на кнопку "Управление счетами"
@@ -24,17 +21,10 @@ public class ProfileFragment extends Fragment {
         billsManagementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Replace the current fragment with BillsManagementFragment with animation
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-                transaction.replace(R.id.fragmentContainerView, new BillsManagementFragment());
-                transaction.addToBackStack(null); // Optionally add to back stack
-                transaction.commit();
+                // Navigate to BillsManagementFragment using NavigationHelper
+                NavigationHelper.navigateToFragment(getActivity(), new BillsManagementFragment());
             }
         });
-
-        TextView userName = view.findViewById(R.id.userName);
-        userName.setText(TransAuth.getUser().getUsername());
 
         return view;
     }

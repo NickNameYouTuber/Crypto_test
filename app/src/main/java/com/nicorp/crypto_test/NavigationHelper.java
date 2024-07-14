@@ -82,4 +82,39 @@ public class NavigationHelper {
         currentFragment = fragment;
         previousItemId = newItemId;
     }
+
+    public static void navigateToFragment(FragmentActivity activity, Fragment targetFragment) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+
+        // Hide the current fragment if it's not null
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // Check if the target fragment is already added
+        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
+
+        if (fragment == null) {
+            // Add the fragment if it is not already added
+            fragment = targetFragment;
+            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
+        } else {
+            // Show the existing fragment
+            transaction.show(fragment);
+        }
+
+        // Commit the transaction
+        transaction.addToBackStack(null).commitAllowingStateLoss();
+
+        // Update the current fragment
+        currentFragment = fragment;
+    }
+
+    public static void handleBackButton(FragmentActivity activity) {
+        if (activity.getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            activity.getSupportFragmentManager().popBackStack();
+        }
+    }
 }

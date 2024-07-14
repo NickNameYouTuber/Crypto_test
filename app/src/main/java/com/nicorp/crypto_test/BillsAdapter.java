@@ -117,6 +117,9 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
             }
         }
 
+        Log.d("BillViewHolder", "Color count map size: " + colorCountMap.size());
+        Log.d("BillViewHolder", "Color count map: " + colorCountMap);
+
         int maxCount = 0;
         int dominantColor = Color.WHITE; // По умолчанию, если не найден другой цвет
         for (Map.Entry<Integer, Integer> entry : colorCountMap.entrySet()) {
@@ -132,7 +135,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
     // Helper function to determine if a color is dark
     private boolean isDarkColor(int color) {
         double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
-        return darkness >= 0.5;
+        return darkness >= 0.3;
     }
 
     private int dpToPx(int dp) {
