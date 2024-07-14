@@ -62,7 +62,7 @@ public class BillsManagementFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Handle back button click using NavigationHelper
-                NavigationHelper.handleBackButton(getActivity());
+                NavigationHelper.handleBackButton(getActivity(), new ProfileFragment(), -1);
             }
         });
 

@@ -112,9 +112,48 @@ public class NavigationHelper {
         currentFragment = fragment;
     }
 
-    public static void handleBackButton(FragmentActivity activity) {
-        if (activity.getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            activity.getSupportFragmentManager().popBackStack();
+    public static void handleBackButton(FragmentActivity activity, Fragment targetFragment, int targetItemId) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        if (targetItemId == -1) {
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+        } else {
+            boolean isDirectionRight = targetItemId > previousItemId;
+
+            int enterAnimation = isDirectionRight ? R.anim.slide_in_left : R.anim.slide_in_right;
+            int exitAnimation = isDirectionRight ? R.anim.slide_out_right : R.anim.slide_out_left;
+            int popEnterAnimation = isDirectionRight ? R.anim.slide_in_right : R.anim.slide_in_left;
+            int popExitAnimation = isDirectionRight ? R.anim.slide_out_left : R.anim.slide_out_right;
+
+            transaction.setCustomAnimations(enterAnimation, exitAnimation, popEnterAnimation, popExitAnimation);
+        }
+
+        // Hide the current fragment if it's not null
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // Check if the target fragment is already added
+        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
+
+        if (fragment == null) {
+            // Add the fragment if it is not already added
+            fragment = targetFragment;
+            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
+        } else {
+            // Show the existing fragment
+            transaction.show(fragment);
+        }
+
+        // Commit the transaction
+        transaction.addToBackStack(null).commitAllowingStateLoss();
+
+        // Update the current fragment and previous item ID
+        currentFragment = fragment;
+        if (targetItemId != -1) {
+            previousItemId = targetItemId;
         }
     }
 }
