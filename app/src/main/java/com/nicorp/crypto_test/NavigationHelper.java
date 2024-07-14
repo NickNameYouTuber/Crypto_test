@@ -1,15 +1,14 @@
 package com.nicorp.crypto_test;
 
-import android.app.Activity;
-import android.content.Intent;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class NavigationHelper {
+    private static Fragment currentFragment;
     private static int previousItemId = R.id.nav_wallet;
 
     public static void setupBottomNavigation(FragmentActivity activity) {
@@ -30,10 +29,7 @@ public class NavigationHelper {
             }
 
             if (targetFragment != null) {
-                switchFragment(activity.getSupportFragmentManager(), targetFragment, item.getItemId());
-
-                // Update previous item ID
-                previousItemId = item.getItemId();
+                switchFragment(activity, targetFragment, item.getItemId());
                 return true;
             }
             return false;
@@ -42,18 +38,48 @@ public class NavigationHelper {
         // Set initial fragment
         if (activity.getSupportFragmentManager().getFragments().isEmpty()) {
             bottomNav.setSelectedItemId(selectedItemId);
+        } else {
+            // Restore the last fragment
+            currentFragment = activity.getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+            previousItemId = bottomNav.getSelectedItemId();
         }
     }
 
-    private static void switchFragment(FragmentManager fragmentManager, Fragment targetFragment, int newItemId) {
-        boolean isDirectionRight = newItemId < previousItemId;
+    private static void switchFragment(FragmentActivity activity, Fragment targetFragment, int newItemId) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(
-                        isDirectionRight ? R.anim.slide_in_right : R.anim.slide_in_left,
-                        isDirectionRight ? R.anim.slide_out_left : R.anim.slide_out_right
-                )
-                .replace(R.id.fragmentContainerView, targetFragment)
-                .commit();
+        boolean isDirectionRight = newItemId > previousItemId;
+
+        int enterAnimation = isDirectionRight ? R.anim.slide_in_left : R.anim.slide_in_right;
+        int exitAnimation = isDirectionRight ? R.anim.slide_out_right : R.anim.slide_out_left;
+        int popEnterAnimation = isDirectionRight ? R.anim.slide_in_right : R.anim.slide_in_left;
+        int popExitAnimation = isDirectionRight ? R.anim.slide_out_left : R.anim.slide_out_right;
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(enterAnimation, exitAnimation, popEnterAnimation, popExitAnimation);
+
+        // Hide the current fragment if it's not null
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // Check if the target fragment is already added
+        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
+
+        if (fragment == null) {
+            // Add the fragment if it is not already added
+            fragment = targetFragment;
+            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
+        } else {
+            // Show the existing fragment
+            transaction.show(fragment);
+        }
+
+        // Commit the transaction
+        transaction.commitAllowingStateLoss();
+
+        // Update the current fragment and previous item ID
+        currentFragment = fragment;
+        previousItemId = newItemId;
     }
 }

@@ -39,6 +39,7 @@ public class BalanceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("BalanceFragment", "onCreate");
     }
 
     @Override
@@ -66,6 +67,7 @@ public class BalanceFragment extends Fragment {
         exchangeRatesAdapter = new ExchangeRatesAdapter(getContext(), exchangeRateList);
         rvExchangeRates.setAdapter(exchangeRatesAdapter);
 
+        updateBillList();
         addTestData(); // Загружаем тестовые данные
 
         return view;
@@ -76,7 +78,7 @@ public class BalanceFragment extends Fragment {
         super.onResume();
         // При каждом отображении фрагмента обновляем данные
         Log.d("BalanceFragment", "Resume");
-        updateBillList();
+
     }
 
     private void addTestData() {
