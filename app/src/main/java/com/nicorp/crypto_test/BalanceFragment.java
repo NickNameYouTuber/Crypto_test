@@ -1,7 +1,11 @@
 package com.nicorp.crypto_test;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +35,8 @@ public class BalanceFragment extends Fragment {
     private ArrayList<Bill> billList = new ArrayList<>();
     private ArrayList<Transaction> transactionList = new ArrayList<>();
     private ArrayList<ExchangeRate> exchangeRateList = new ArrayList<>();
+    private View loadingLayout;
+
 
     public BalanceFragment() {
         // Required empty public constructor
@@ -51,6 +57,7 @@ public class BalanceFragment extends Fragment {
         rvBills = view.findViewById(R.id.rvBills);
         rvTransactions = view.findViewById(R.id.rvTransactions);
         rvExchangeRates = view.findViewById(R.id.rvExchangeRates);
+        loadingLayout = view.findViewById(R.id.loadingLayout);
 
         // Set LayoutManagers for RecyclerViews
         rvBills.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -67,7 +74,9 @@ public class BalanceFragment extends Fragment {
         exchangeRatesAdapter = new ExchangeRatesAdapter(getContext(), exchangeRateList);
         rvExchangeRates.setAdapter(exchangeRatesAdapter);
 
-        updateBillList();
+        showLoading();
+        // Load bills from user's wallets
+        new Handler(Looper.getMainLooper()).postDelayed(this::updateBillList, 500);
         addTestData(); // Загружаем тестовые данные
 
         return view;
@@ -108,7 +117,25 @@ public class BalanceFragment extends Fragment {
         for (Wallet wallet : currentUser.getWallets()) {
             billList.add(new Bill(getLogoResource(wallet.getCurrency()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USDT"));
         }
-        billsAdapter.notifyDataSetChanged(); // Notify adapter about data change
+        billsAdapter = new BillsAdapter(getContext(), billList);
+        rvBills.setAdapter(billsAdapter);
+
+        hideLoading();
+    }
+
+    private void showLoading() {
+        loadingLayout.setVisibility(View.VISIBLE);
+        loadingLayout.setAlpha(1f);
+//        loadingLayout.animate().alpha(1f).setDuration(200).setListener(null);
+    }
+
+    private void hideLoading() {
+        loadingLayout.animate().alpha(0f).setDuration(200).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                loadingLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     // Assuming you have a method to get the logo resource based on the platform name
