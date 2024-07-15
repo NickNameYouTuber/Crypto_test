@@ -8,9 +8,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,12 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.Wallet;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class BalanceFragment extends Fragment {
 
@@ -36,7 +37,8 @@ public class BalanceFragment extends Fragment {
     private ArrayList<Transaction> transactionList = new ArrayList<>();
     private ArrayList<ExchangeRate> exchangeRateList = new ArrayList<>();
     private View loadingLayout;
-
+    private LruCache<String, Bill> billCache;
+    private static final int INITIAL_LOAD_COUNT = 10;
 
     public BalanceFragment() {
         // Required empty public constructor
@@ -46,6 +48,11 @@ public class BalanceFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("BalanceFragment", "onCreate");
+
+        // Initialize LruCache
+        final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        final int cacheSize = maxMemory / 8; // Use 1/8th of the available memory for cache
+        billCache = new LruCache<>(cacheSize);
     }
 
     @Override
@@ -87,7 +94,6 @@ public class BalanceFragment extends Fragment {
         super.onResume();
         // При каждом отображении фрагмента обновляем данные
         Log.d("BalanceFragment", "Resume");
-
     }
 
     private void addTestData() {
@@ -111,22 +117,54 @@ public class BalanceFragment extends Fragment {
     }
 
     private void updateBillList() {
-        // Clear billList and load updated bills
-        billList.clear();
-        TransAuthUser currentUser = TransAuth.getUser();
-        for (Wallet wallet : currentUser.getWallets()) {
-            billList.add(new Bill(getLogoResource(wallet.getCurrency()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " USDT"));
-        }
-        billsAdapter = new BillsAdapter(getContext(), billList);
-        rvBills.setAdapter(billsAdapter);
+        showLoading();
 
-        hideLoading();
+        new Thread(() -> {
+            TransAuthUser currentUser = TransAuth.getUser();
+            List<Bill> updatedBillList = new ArrayList<>();
+            List<Wallet> wallets = currentUser.getWallets(); // Get wallets from TransAuthUser>
+
+            // Load initial batch of bills
+            for (int i = 0; i < INITIAL_LOAD_COUNT && i < currentUser.getWallets().size(); i++) {
+                Wallet wallet = wallets.get(i);
+//                String cacheKey = wallet.getCurrency() + wallet.getName();
+//                Bill bill = billCache.get(cacheKey);
+//
+//
+//                if (bill == null) {
+//                    bill = new Bill(
+//                            getLogoResource(wallet.getCurrency()),
+//                            wallet.getName(),
+//                            wallet.getBalance() + " " + wallet.getCurrency(),
+//                            "~ " + 100 + " USDT"
+//                    );
+//                    billCache.put(cacheKey, bill);
+//                }
+
+                Bill bill = new Bill(
+                        getLogoResource(wallet.getCurrency()),
+                        wallet.getName(),
+                        wallet.getBalance() + " " + wallet.getCurrency(),
+                        "~ " + 100 + " USDT"
+                );
+//                billCache.put(cacheKey, bill);
+
+                updatedBillList.add(bill);
+            }
+
+            // Update the UI on the main thread
+            new Handler(Looper.getMainLooper()).post(() -> {
+                billList.clear();
+                billList.addAll(updatedBillList);
+                billsAdapter.notifyDataSetChanged();
+                hideLoading();
+            });
+        }).start();
     }
 
     private void showLoading() {
         loadingLayout.setVisibility(View.VISIBLE);
         loadingLayout.setAlpha(1f);
-//        loadingLayout.animate().alpha(1f).setDuration(200).setListener(null);
     }
 
     private void hideLoading() {

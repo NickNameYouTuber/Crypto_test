@@ -2,7 +2,6 @@ package com.nicorp.crypto_test;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-
-import androidx.core.content.ContextCompat;
-import androidx.palette.graphics.Palette;
 
 public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHolder> {
 
@@ -48,14 +41,13 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
     public void onBindViewHolder(@NonNull BillViewHolder holder, int position) {
         Bill bill = bills.get(position);
         holder.ivBillLogo.setImageResource(bill.getLogo());
-        setCardViewBackground(holder.cardView, holder.ivBillLogo, holder.tvBillTitle, holder.tvBillAmount, holder.tvBillUsdAmount); // Set background color and text color based on image
+        setCardViewBackground(holder.cardView, holder.ivBillLogo, holder.tvBillTitle, holder.tvBillAmount, holder.tvBillUsdAmount);
         holder.tvBillTitle.setText(bill.getTitle());
         holder.tvBillAmount.setText(bill.getAmount());
         holder.tvBillUsdAmount.setText(bill.getUsdAmount());
 
-        // Устанавливаем ширину и высоту для соотношения 5/9
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-        layoutParams.width = (parentWidth - dpToPx(20) * (2 - 1)) / 2; // Adjust this calculation if needed
+        layoutParams.width = (parentWidth - dpToPx(20) * (2 - 1)) / 2;
         layoutParams.height = (int) (layoutParams.width * (5.0 / 9.0));
         holder.itemView.setLayoutParams(layoutParams);
     }
@@ -82,59 +74,21 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
 
     private void setCardViewBackground(CardView cardView, ImageView imageView, TextView titleBill, TextView amountBill, TextView equivalentBill) {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        int[] pixels = getBitmapPixels(bitmap);
-        int dominantColor = getDominantColor(pixels);
+        Palette.from(bitmap).generate(palette -> {
+            if (palette != null) {
+                int dominantColor = palette.getDominantColor(ContextCompat.getColor(context, R.color.background_color_light));
+                cardView.setCardBackgroundColor(dominantColor);
 
-        cardView.setCardBackgroundColor(dominantColor);
-
-        Log.d("BillViewHolder", "Is dark color: " + isDarkColor(dominantColor));
-
-        // Определяем цвет текста на основе яркости фона
-        int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, R.color.text_color_dark) : ContextCompat.getColor(context, R.color.text_color_light);
-        titleBill.setTextColor(textColor);
-        amountBill.setTextColor(textColor);
-        equivalentBill.setTextColor(textColor);
-    }
-
-    // Получаем массив пикселей изображения
-    private int[] getBitmapPixels(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        int[] pixels = new int[width * height];
-        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
-        return pixels;
-    }
-
-    // Находим наиболее часто встречающийся цвет среди пикселей
-    private int getDominantColor(int[] pixels) {
-        Map<Integer, Integer> colorCountMap = new HashMap<>();
-
-        for (int color : pixels) {
-            if (colorCountMap.containsKey(color)) {
-                colorCountMap.put(color, colorCountMap.get(color) + 1);
-            } else {
-                colorCountMap.put(color, 1);
+                int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, R.color.text_color_dark) : ContextCompat.getColor(context, R.color.text_color_light);
+                titleBill.setTextColor(textColor);
+                amountBill.setTextColor(textColor);
+                equivalentBill.setTextColor(textColor);
             }
-        }
-
-        Log.d("BillViewHolder", "Color count map size: " + colorCountMap.size());
-        Log.d("BillViewHolder", "Color count map: " + colorCountMap);
-
-        int maxCount = 0;
-        int dominantColor = Color.WHITE; // По умолчанию, если не найден другой цвет
-        for (Map.Entry<Integer, Integer> entry : colorCountMap.entrySet()) {
-            if (entry.getValue() > maxCount) {
-                maxCount = entry.getValue();
-                dominantColor = entry.getKey();
-            }
-        }
-
-        return dominantColor;
+        });
     }
 
-    // Helper function to determine if a color is dark
     private boolean isDarkColor(int color) {
-        double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
+        double darkness = 1 - (0.299 * android.graphics.Color.red(color) + 0.587 * android.graphics.Color.green(color) + 0.114 * android.graphics.Color.blue(color)) / 255;
         return darkness >= 0.3;
     }
 
@@ -142,4 +96,3 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
         return (int) (dp * context.getResources().getDisplayMetrics().density);
     }
 }
-
