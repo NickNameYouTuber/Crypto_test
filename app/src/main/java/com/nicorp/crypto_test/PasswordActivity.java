@@ -69,25 +69,20 @@ public class PasswordActivity extends AppCompatActivity {
         TransAuth.addPermissions(MessagePermissions.GET_LOGIN);
         TransAuth.addPermissions(MessagePermissions.GET_USERNAME);
 
-        Log.d("transAuth" , Arrays.toString(TransAuth.getPermissionsArray()));
+        Log.d("transAuth", Arrays.toString(TransAuth.getPermissionsArray()));
 
         transAuthButton = findViewById(R.id.transAuthButton);
         transAuthButton.setSuccessActivityClass(MainActivity.class);
 
-        // MainActivity.java во втором приложении
-
         messageReceiver = new MessageReceiver(this, new MessageReceiver.MessageListener() {
             @Override
             public void onMessageReceived(Map<String, String> message) {
-                // Получено сообщение с тегом EnterFrom
                 Log.d("PasswordActivity", "Received message: " + message.toString());
                 Toast.makeText(PasswordActivity.this, "Received message: " + message.toString(), Toast.LENGTH_LONG).show();
             }
         });
 
         messageReceiver.register(this);
-
-
 
         llDots = findViewById(R.id.llDots);
         GridLayout gridLayout = findViewById(R.id.gridLayout);
@@ -101,6 +96,9 @@ public class PasswordActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean(USE_FINGERPRINT_KEY, false)) {
             startFingerprintAuthentication();
         }
+
+        Button fingerButton = findViewById(R.id.fingerButton);
+        fingerButton.setOnClickListener(v -> startFingerprintAuthentication());
     }
 
     @Override
@@ -108,7 +106,6 @@ public class PasswordActivity extends AppCompatActivity {
         super.onDestroy();
         messageReceiver.unregister(this);
     }
-
 
     private void startFingerprintAuthentication() {
         Executor executor = ContextCompat.getMainExecutor(this);
@@ -151,10 +148,14 @@ public class PasswordActivity extends AppCompatActivity {
                 updateDots();
             }
         } else if (text.equals("O")) {
-            checkPassword();
+            startFingerprintAuthentication();
         } else {
             enteredPassword.append(text);
             updateDots();
+
+            if (enteredPassword.length() == 5) {
+                checkPassword();
+            }
         }
     }
 
@@ -246,12 +247,9 @@ public class PasswordActivity extends AppCompatActivity {
             public void onAnimationEnd(Animator animation) {
                 for (int i = 0; i < llDots.getChildCount(); i++) {
                     View dot = llDots.getChildAt(i);
-                    // Set background as green circle
                     dot.setBackgroundResource(R.drawable.green_dot);
                 }
-                // Go to FirstTabActivity
                 startActivity(new Intent(PasswordActivity.this, MainActivity.class));
-                // Set user from db if exists
                 TransAuthUserDatabaseHelper db = new TransAuthUserDatabaseHelper(PasswordActivity.this);
                 if (db.getUser("nicktaser") != null) {
                     TransAuth.setUser(db.getUser("nicktaser"));
