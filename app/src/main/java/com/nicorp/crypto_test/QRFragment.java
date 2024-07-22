@@ -1,6 +1,7 @@
 package com.nicorp.crypto_test;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,9 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+
+import org.json.JSONObject;
+
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -98,42 +102,39 @@ public class QRFragment extends Fragment {
         ByteBuffer uBuffer = image.getPlanes()[1].getBuffer();
         ByteBuffer vBuffer = image.getPlanes()[2].getBuffer();
 
-        int ySize = yBuffer.remaining();
-        int uSize = uBuffer.remaining();
-        int vSize = vBuffer.remaining();
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int[] rgbData = new int[width * height];
 
-        byte[] yData = new byte[ySize];
-        byte[] uData = new byte[uSize];
-        byte[] vData = new byte[vSize];
+        // Ensure the buffers are properly filled
+        byte[] yData = new byte[yBuffer.remaining()];
+        byte[] uData = new byte[uBuffer.remaining()];
+        byte[] vData = new byte[vBuffer.remaining()];
 
         yBuffer.get(yData);
         uBuffer.get(uData);
         vBuffer.get(vData);
 
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int[] rgbData = new int[width * height];
-
         // Convert YUV to RGB
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < width; i++) {
-                int yIndex = j * width + i;
-                int uIndex = (j / 2) * (width / 2) + (i / 2);
-                int vIndex = (j / 2) * (width / 2) + (i / 2);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int yIndex = y * width + x;
+                int uvIndex = (y >> 1) * (width >> 1) + (x >> 1);
+                int yValue = yData[yIndex] & 0xFF;
+                int uValue = uData[uvIndex] & 0xFF;
+                int vValue = vData[uvIndex] & 0xFF;
 
-                int y = yData[yIndex] & 0xFF;
-                int u = (uData[uIndex] & 0xFF) - 128;
-                int v = (vData[vIndex] & 0xFF) - 128;
+                // YUV to RGB conversion
+                int r = yValue + (int) (1.402 * (vValue - 128));
+                int g = yValue - (int) (0.344136 * (uValue - 128) + 0.714136 * (vValue - 128));
+                int b = yValue + (int) (1.772 * (uValue - 128));
 
-                int r = y + (int) (1.370705 * v);
-                int g = y - (int) (0.337633 * u + 0.698001 * v);
-                int b = y + (int) (1.732446 * u);
+                // Clamp RGB values to be between 0 and 255
+                r = Math.max(0, Math.min(255, r));
+                g = Math.max(0, Math.min(255, g));
+                b = Math.max(0, Math.min(255, b));
 
-                r = Math.min(Math.max(r, 0), 255);
-                g = Math.min(Math.max(g, 0), 255);
-                b = Math.min(Math.max(b, 0), 255);
-
-                rgbData[yIndex] = 0xFF000000 | (r << 16) | (g << 8) | b;
+                rgbData[yIndex] = (0xFF000000 | (r << 16) | (g << 8) | b);
             }
         }
 
@@ -143,13 +144,36 @@ public class QRFragment extends Fragment {
 
         try {
             Result result = reader.decode(bitmap);
-            if (result.getText().startsWith("QRYPT:")) {
-                requireActivity().runOnUiThread(() -> {
-                    NavigationHelper.navigateToFragment(requireActivity(), new ProfileFragment());
-                });
+            String qrData = result.getText();
+            Log.d("QR", qrData);
+            if (qrData.startsWith("\"QRYPT\"")) {
+                // Remove "QRYPT:" prefix
+                String jsonData = qrData.substring(8);
+
+                Log.d("QR json", jsonData);
+
+                // Parse JSON data
+                JSONObject jsonObject = new JSONObject(jsonData);
+                JSONObject toObject = jsonObject.getJSONObject("to");
+
+                String name = toObject.getString("name");
+                String address = toObject.getString("address");
+                int amount = toObject.getInt("amount");
+                String currency = toObject.getString("currency");
+
+                // Create a bundle to pass data to the next fragment
+                Bundle bundle = new Bundle();
+                bundle.putString("name", name);
+                bundle.putString("address", address);
+                bundle.putInt("amount", amount);
+                bundle.putString("currency", currency);
+
+                // Navigate to PaymentFragment with data
+                NavigationHelper.navigateToFragment(requireActivity(), new PaymentFragment(), bundle);
             }
         } catch (Exception e) {
-            // QR code not found, continue scanning
+            // QR code not found or parsing error
+            Log.e("QR", "Failed to decode QR code", e);
         } finally {
             image.close();
         }

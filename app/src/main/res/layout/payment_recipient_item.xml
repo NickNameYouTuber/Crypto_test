@@ -17,8 +17,7 @@
             android:id="@+id/to_logo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_pyaterochka_logo"
-        android:contentDescription="@string/pyaterochka_logo"
+            android:src="@drawable/pyaterochka"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

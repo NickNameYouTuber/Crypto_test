@@ -1,5 +1,8 @@
 package com.nicorp.crypto_test;
 
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -111,6 +114,39 @@ public class NavigationHelper {
         // Update the current fragment
         currentFragment = fragment;
     }
+
+    public static void navigateToFragment(FragmentActivity activity, Fragment targetFragment, @Nullable Bundle bundle) {
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+
+        // Hide the current fragment if it's not null
+        if (currentFragment != null) {
+            transaction.hide(currentFragment);
+        }
+
+        // Check if the target fragment is already added
+        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
+
+        if (fragment == null) {
+            // If the fragment is not already added, set its arguments and add it
+            fragment = targetFragment;
+            if (bundle != null) {
+                fragment.setArguments(bundle);
+            }
+            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
+        } else {
+            // If the fragment is already added, just show it
+            transaction.show(fragment);
+        }
+
+        // Commit the transaction
+        transaction.addToBackStack(null).commitAllowingStateLoss();
+
+        // Update the current fragment
+        currentFragment = fragment;
+    }
+
 
     public static void handleBackButton(FragmentActivity activity, Fragment targetFragment, int targetItemId) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
