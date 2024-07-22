@@ -53,6 +53,12 @@ public class PaymentFragment extends Fragment {
         billAdapter = new PaymentBillAdapter(getContext(), billList);
         billRecyclerView.setAdapter(billAdapter);
 
+        // Init pay button
+        view.findViewById(R.id.pay_button).setOnClickListener(v -> {
+            // Go to PaymentSuccessFragment using NavigationHelper
+            NavigationHelper.navigateToFragment(getActivity(), new PaymentSuccessFragment());
+        });
+
         // Attach PagerSnapHelper to the billRecyclerView for snapping effect
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(billRecyclerView);
