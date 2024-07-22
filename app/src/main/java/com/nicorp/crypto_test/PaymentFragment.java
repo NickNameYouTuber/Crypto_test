@@ -26,7 +26,7 @@ public class PaymentFragment extends Fragment {
         recipientRecyclerView = view.findViewById(R.id.recipient_recycler_view);
         recipientRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        recipientAdapter = new PaymentRecipientAdapter(recipientList);
+        recipientAdapter = new PaymentRecipientAdapter(getContext(), recipientList);
         recipientRecyclerView.setAdapter(recipientAdapter);
 
         // Retrieve and set data
