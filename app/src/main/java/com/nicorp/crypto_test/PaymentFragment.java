@@ -1,22 +1,19 @@
 package com.nicorp.crypto_test;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.transauth.TransAuth;
@@ -36,6 +33,7 @@ public class PaymentFragment extends Fragment {
     private List<Bill> billList = new ArrayList<>();
     private static final int INITIAL_LOAD_COUNT = 10;
 
+    @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -50,9 +48,14 @@ public class PaymentFragment extends Fragment {
         recipientRecyclerView.setAdapter(recipientAdapter);
 
         // Set up bill RecyclerView
-        billRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        billRecyclerView.setLayoutManager(layoutManager);
         billAdapter = new PaymentBillAdapter(getContext(), billList);
         billRecyclerView.setAdapter(billAdapter);
+
+        // Attach PagerSnapHelper to the billRecyclerView for snapping effect
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(billRecyclerView);
 
         // Retrieve and set data for recipients
         if (getArguments() != null) {
@@ -60,6 +63,10 @@ public class PaymentFragment extends Fragment {
             String address = getArguments().getString("address");
             int amount = getArguments().getInt("amount");
             String currency = getArguments().getString("currency");
+
+            EditText amountEditText = view.findViewById(R.id.amount);
+            amountEditText.setText(amount + " " + currency);
+            amountEditText.setEnabled(false);
 
             PaymentRecipient recipient = new PaymentRecipient(name, address, amount, currency);
             recipientList.add(recipient);
@@ -76,7 +83,7 @@ public class PaymentFragment extends Fragment {
         new Thread(() -> {
             TransAuthUser currentUser = TransAuth.getUser();
             List<Bill> updatedBillList = new ArrayList<>();
-            List<Wallet> wallets = currentUser.getWallets(); // Get wallets from TransAuthUser>
+            List<Wallet> wallets = currentUser.getWallets();
 
             // Load initial batch of bills
             for (int i = 0; i < INITIAL_LOAD_COUNT && i < wallets.size(); i++) {
@@ -101,8 +108,6 @@ public class PaymentFragment extends Fragment {
         }).start();
     }
 
-
-    // Assuming you have a method to get the logo resource based on the platform name
     private int getLogoResource(String platform) {
         switch (platform.toLowerCase()) {
             case "btc":
