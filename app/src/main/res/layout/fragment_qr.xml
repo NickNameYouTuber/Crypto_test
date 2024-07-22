@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/qrCodeContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -35,9 +35,10 @@
 
         <androidx.camera.view.PreviewView
             android:id="@+id/previewView"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </FrameLayout>
+    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
     <TextView
         android:id="@+id/scanInstructionText"
