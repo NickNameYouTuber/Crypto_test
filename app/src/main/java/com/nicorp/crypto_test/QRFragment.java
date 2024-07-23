@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.BarcodeView;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import org.json.JSONObject;
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 public class QRFragment extends Fragment {
 
     private static final int CAMERA_PERMISSION_REQUEST = 1;
-    private DecoratedBarcodeView barcodeView;
+    private BarcodeView barcodeView;
 
     @Nullable
     @Override

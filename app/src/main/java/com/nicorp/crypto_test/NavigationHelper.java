@@ -1,6 +1,7 @@
 package com.nicorp.crypto_test;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,24 +14,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class NavigationHelper {
     private static Fragment currentFragment;
     private static int previousItemId = R.id.nav_wallet;
+    private static BottomNavigationView bottomNav;
+    private static boolean isNavigating = false;
 
     public static void setupBottomNavigation(FragmentActivity activity) {
-        // Initialize BottomNavigationView
-        BottomNavigationView bottomNav = activity.findViewById(R.id.bottomNav);
-
-        // Determine the current fragment to select the correct menu item
-        int selectedItemId = R.id.nav_wallet; // Default selection
-
+        bottomNav = activity.findViewById(R.id.bottomNav);
         bottomNav.setOnItemSelectedListener(item -> {
-            Fragment targetFragment = null;
-            if (item.getItemId() == R.id.nav_wallet) {
-                targetFragment = new BalanceFragment();
-            } else if (item.getItemId() == R.id.nav_qr) {
-                targetFragment = new QRFragment();
-            } else if (item.getItemId() == R.id.nav_profile) {
-                targetFragment = new ProfileFragment();
-            }
-
+            if (isNavigating) return false;
+            Fragment targetFragment = getFragmentById(item.getItemId());
             if (targetFragment != null) {
                 switchFragment(activity, targetFragment, item.getItemId());
                 return true;
@@ -38,158 +29,83 @@ public class NavigationHelper {
             return false;
         });
 
-        // Set initial fragment
         if (activity.getSupportFragmentManager().getFragments().isEmpty()) {
-            bottomNav.setSelectedItemId(selectedItemId);
+            bottomNav.setSelectedItemId(R.id.nav_wallet);
         } else {
-            // Restore the last fragment
             currentFragment = activity.getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
             previousItemId = bottomNav.getSelectedItemId();
         }
     }
 
+    private static Fragment getFragmentById(int itemId) {
+//        switch (itemId) {
+//            case R.id.nav_wallet:
+//                return new BalanceFragment();
+//            case R.id.nav_qr:
+//                return new QRFragment();
+//            case R.id.nav_profile:
+//                return new ProfileFragment();
+//            default:
+//                return null;
+//        }
+        if (itemId == R.id.nav_wallet) return new BalanceFragment();
+        if (itemId == R.id.nav_qr) return new QRFragment();
+        if (itemId == R.id.nav_profile) return new ProfileFragment();
+        return null;
+    }
+
     private static void switchFragment(FragmentActivity activity, Fragment targetFragment, int newItemId) {
+        isNavigating = true;
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
-
-        boolean isDirectionRight = newItemId > previousItemId;
-
-        int enterAnimation = isDirectionRight ? R.anim.slide_in_left : R.anim.slide_in_right;
-        int exitAnimation = isDirectionRight ? R.anim.slide_out_right : R.anim.slide_out_left;
-        int popEnterAnimation = isDirectionRight ? R.anim.slide_in_right : R.anim.slide_in_left;
-        int popExitAnimation = isDirectionRight ? R.anim.slide_out_left : R.anim.slide_out_right;
-
         FragmentTransaction transaction = fragmentManager.beginTransaction()
-                .setCustomAnimations(enterAnimation, exitAnimation, popEnterAnimation, popExitAnimation);
+                .setCustomAnimations(getEnterAnimation(newItemId), getExitAnimation(newItemId));
 
-        // Hide the current fragment if it's not null
-        if (currentFragment != null) {
-            transaction.hide(currentFragment);
-        }
+        if (currentFragment != null) transaction.hide(currentFragment);
 
-        // Check if the target fragment is already added
         Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
-
         if (fragment == null) {
-            // Add the fragment if it is not already added
             fragment = targetFragment;
             transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
         } else {
-            // Show the existing fragment
             transaction.show(fragment);
         }
 
-        // Commit the transaction
         transaction.commitAllowingStateLoss();
-
-        // Update the current fragment and previous item ID
         currentFragment = fragment;
         previousItemId = newItemId;
+        bottomNav.setSelectedItemId(newItemId);
+        isNavigating = false;
+    }
+
+    private static int getEnterAnimation(int newItemId) {
+        return newItemId > previousItemId ? R.anim.slide_in_left : R.anim.slide_in_right;
+    }
+
+    private static int getExitAnimation(int newItemId) {
+        return newItemId > previousItemId ? R.anim.slide_out_right : R.anim.slide_out_left;
     }
 
     public static void navigateToFragment(FragmentActivity activity, Fragment targetFragment) {
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-
-        // Hide the current fragment if it's not null
-        if (currentFragment != null) {
-            transaction.hide(currentFragment);
+        int navId = getNavId(targetFragment);
+        if (navId != -1) {
+            bottomNav.setSelectedItemId(navId);
         }
-
-        // Check if the target fragment is already added
-        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
-
-        if (fragment == null) {
-            // Add the fragment if it is not already added
-            fragment = targetFragment;
-            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
-        } else {
-            // Show the existing fragment
-            transaction.show(fragment);
-        }
-
-        // Commit the transaction
-        transaction.addToBackStack(null).commitAllowingStateLoss();
-
-        // Update the current fragment
-        currentFragment = fragment;
+        switchFragment(activity, targetFragment, navId);
     }
 
     public static void navigateToFragment(FragmentActivity activity, Fragment targetFragment, @Nullable Bundle bundle) {
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-
-        // Hide the current fragment if it's not null
-        if (currentFragment != null) {
-            transaction.hide(currentFragment);
-        }
-
-        // Check if the target fragment is already added
-        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
-
-        if (fragment == null) {
-            // If the fragment is not already added, set its arguments and add it
-            fragment = targetFragment;
-            if (bundle != null) {
-                fragment.setArguments(bundle);
-            }
-            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
-        } else {
-            // If the fragment is already added, just show it
-            transaction.show(fragment);
-        }
-
-        // Commit the transaction
-        transaction.addToBackStack(null).commitAllowingStateLoss();
-
-        // Update the current fragment
-        currentFragment = fragment;
+        if (bundle != null) targetFragment.setArguments(bundle);
+        navigateToFragment(activity, targetFragment);
     }
 
+    private static int getNavId(Fragment fragment) {
+        if (fragment instanceof BalanceFragment) return R.id.nav_wallet;
+        if (fragment instanceof QRFragment) return R.id.nav_qr;
+        if (fragment instanceof ProfileFragment) return R.id.nav_profile;
+        return -1;
+    }
 
     public static void handleBackButton(FragmentActivity activity, Fragment targetFragment, int targetItemId) {
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-        if (targetItemId == -1) {
-            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-        } else {
-            boolean isDirectionRight = targetItemId > previousItemId;
-
-            int enterAnimation = isDirectionRight ? R.anim.slide_in_left : R.anim.slide_in_right;
-            int exitAnimation = isDirectionRight ? R.anim.slide_out_right : R.anim.slide_out_left;
-            int popEnterAnimation = isDirectionRight ? R.anim.slide_in_right : R.anim.slide_in_left;
-            int popExitAnimation = isDirectionRight ? R.anim.slide_out_left : R.anim.slide_out_right;
-
-            transaction.setCustomAnimations(enterAnimation, exitAnimation, popEnterAnimation, popExitAnimation);
-        }
-
-        // Hide the current fragment if it's not null
-        if (currentFragment != null) {
-            transaction.hide(currentFragment);
-        }
-
-        // Check if the target fragment is already added
-        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
-
-        if (fragment == null) {
-            // Add the fragment if it is not already added
-            fragment = targetFragment;
-            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
-        } else {
-            // Show the existing fragment
-            transaction.show(fragment);
-        }
-
-        // Commit the transaction
-        transaction.addToBackStack(null).commitAllowingStateLoss();
-
-        // Update the current fragment and previous item ID
-        currentFragment = fragment;
-        if (targetItemId != -1) {
-            previousItemId = targetItemId;
-        }
+        switchFragment(activity, targetFragment, targetItemId);
     }
 }
