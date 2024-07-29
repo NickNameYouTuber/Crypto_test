@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -87,6 +88,9 @@ public class PasswordActivity extends AppCompatActivity {
         llDots = findViewById(R.id.llDots);
         GridLayout gridLayout = findViewById(R.id.gridLayout);
         for (int i = 0; i < gridLayout.getChildCount(); i++) {
+            if (i == gridLayout.getChildCount() - 1) {
+                break;
+            }
             Button button = (Button) gridLayout.getChildAt(i);
             button.setOnClickListener(this::onNumberButtonClick);
         }
@@ -97,7 +101,7 @@ public class PasswordActivity extends AppCompatActivity {
             startFingerprintAuthentication();
         }
 
-        Button fingerButton = findViewById(R.id.fingerButton);
+        ImageButton fingerButton = findViewById(R.id.fingerButton);
         fingerButton.setOnClickListener(v -> startFingerprintAuthentication());
     }
 
