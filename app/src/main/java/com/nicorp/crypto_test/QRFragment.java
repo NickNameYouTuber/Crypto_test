@@ -155,18 +155,23 @@ public class QRFragment extends Fragment {
                 int amount = toObject.getInt("amount");
                 String currency = toObject.getString("currency");
 
+                Log.d("QRFragment", "Received data: " + name + ", " + address + ", " + amount + ", " + currency);
+
                 Bundle bundle = new Bundle();
                 bundle.putString("name", name);
                 bundle.putString("address", address);
                 bundle.putInt("amount", amount);
                 bundle.putString("currency", currency);
 
-                NavigationHelper.navigateToFragment(activity, new PaymentFragment(), bundle);
+                if (activity != null) {
+                    NavigationHelper.navigateToFragment(activity, new PaymentFragment(), bundle);
+                } else {
+                    Log.e("QRFragment", "Activity is null, cannot navigate to PaymentFragment");
+                }
             } else {
-//                showError("Invalid QR code format");
+                Log.e("QRFragment", "Invalid QR code format");
             }
         } catch (Exception e) {
-//            showError("Error processing QR code");
             Log.e("QRFragment", "Error processing QR code", e);
         }
     }

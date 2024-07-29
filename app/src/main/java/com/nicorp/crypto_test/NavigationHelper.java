@@ -65,21 +65,36 @@ public class NavigationHelper {
         FragmentTransaction transaction = fragmentManager.beginTransaction()
                 .setCustomAnimations(getEnterAnimation(newItemId), getExitAnimation(newItemId));
 
-        if (currentFragment != null) transaction.hide(currentFragment);
+        if (shouldKeepState(targetFragment)) {
+            // Handle existing fragment case
+            Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
+            if (fragment == null) {
+                fragment = targetFragment;
+                transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
+            } else {
+                transaction.show(fragment);
+            }
 
-        Fragment fragment = fragmentManager.findFragmentByTag(targetFragment.getClass().getName());
-        if (fragment == null) {
-            fragment = targetFragment;
-            transaction.add(R.id.fragmentContainerView, fragment, fragment.getClass().getName());
+            if (currentFragment != null && currentFragment != fragment) {
+                transaction.hide(currentFragment);
+            }
+
+            currentFragment = fragment;
         } else {
-            transaction.show(fragment);
+            // Handle new fragment case
+            if (currentFragment != null) {
+                transaction.remove(currentFragment);
+            }
+
+            transaction.add(R.id.fragmentContainerView, targetFragment, targetFragment.getClass().getName());
+            currentFragment = targetFragment;
         }
 
         transaction.commitAllowingStateLoss();
-        currentFragment = fragment;
         previousItemId = newItemId;
         bottomNav.setSelectedItemId(newItemId);
         isNavigating = false;
+
         Log.d("Navigation", "Switched to " + targetFragment.getClass().getName());
         if (targetFragment.getClass().getName().equals(QRFragment.class.getName())) {
             Log.d("QRFragment", "Restarting scanning");
@@ -88,6 +103,10 @@ public class NavigationHelper {
             Log.d("QRFragment", "Not restarting scanning");
             stopScanning();
         }
+    }
+
+    private static boolean shouldKeepState(Fragment fragment) {
+        return fragment instanceof BalanceFragment || fragment instanceof QRFragment || fragment instanceof ProfileFragment;
     }
 
     private static int getEnterAnimation(int newItemId) {
@@ -115,7 +134,9 @@ public class NavigationHelper {
     }
 
     public static void navigateToFragment(FragmentActivity activity, Fragment targetFragment, @Nullable Bundle bundle) {
-        if (bundle != null) targetFragment.setArguments(bundle);
+        if (bundle != null) {
+            targetFragment.setArguments(bundle);
+        }
         navigateToFragment(activity, targetFragment);
     }
 

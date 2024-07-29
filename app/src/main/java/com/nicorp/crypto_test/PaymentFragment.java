@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class PaymentFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
-
+        Log.d("PaymentFragment", "onCreateView");
         recipientRecyclerView = view.findViewById(R.id.recipient_recycler_view);
         billRecyclerView = view.findViewById(R.id.bill_recycler_view);
 
@@ -63,6 +64,19 @@ public class PaymentFragment extends Fragment {
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(billRecyclerView);
 
+        if (getArguments() != null) {
+            String name = getArguments().getString("name");
+            String address = getArguments().getString("address");
+            int amount = getArguments().getInt("amount");
+            String currency = getArguments().getString("currency");
+
+            Log.d("PaymentFragment", "Arguments: " + getArguments().toString());
+            // Используйте полученные данные для настройки UI или логики
+            Log.d("PaymentFragment", "Received data: " + name + ", " + address + ", " + amount + ", " + currency);
+        } else {
+            Log.e("PaymentFragment", "No arguments found");
+        }
+
         // Retrieve and set data for recipients
         if (getArguments() != null) {
             String name = getArguments().getString("name");
@@ -74,6 +88,11 @@ public class PaymentFragment extends Fragment {
             amountEditText.setText(amount + " " + currency);
             amountEditText.setEnabled(false);
 
+            Log.d("PaymentFragment", "Name: " + name);
+            Log.d("PaymentFragment", "Address: " + address);
+            Log.d("PaymentFragment", "Amount: " + amount);
+            Log.d("PaymentFragment", "Currency: " + currency);
+
             PaymentRecipient recipient = new PaymentRecipient(name, address, amount, currency);
             recipientList.add(recipient);
             recipientAdapter.notifyDataSetChanged();
@@ -83,6 +102,12 @@ public class PaymentFragment extends Fragment {
         loadBills();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("PaymentFragment", "onResume");
     }
 
     private void loadBills() {
