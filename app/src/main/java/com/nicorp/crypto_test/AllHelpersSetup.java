@@ -1,9 +1,9 @@
 package com.nicorp.crypto_test;
 
-import android.app.Activity;
-import android.app.Fragment;
-
 import androidx.fragment.app.FragmentActivity;
+
+import com.nicorp.crypto_test.helpers.NavigationHelper;
+import com.nicorp.crypto_test.helpers.ThemeHelper;
 
 public class AllHelpersSetup {
 

@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.nicorp.crypto_test.objects.AccountItem;
+
 public class AddAccountDialog extends DialogFragment {
 
     private EditText accountNameEditText;

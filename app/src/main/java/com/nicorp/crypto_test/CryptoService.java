@@ -1,5 +1,7 @@
 package com.nicorp.crypto_test;
 
+import com.nicorp.crypto_test.objects.CryptoData;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 
