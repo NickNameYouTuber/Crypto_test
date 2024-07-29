@@ -137,6 +137,12 @@ public class QRFragment extends Fragment {
 
     }
 
+    static void stopScanning() {
+        if (barcodeView != null) {
+            barcodeView.pause();
+        }
+    }
+
     public static void handleQrResultStatic(String qrData) {
         try {
             if (qrData.startsWith("\"QRYPT\"")) {

@@ -1,6 +1,7 @@
 package com.nicorp.crypto_test;
 
 import static com.nicorp.crypto_test.QRFragment.restartScanning;
+import static com.nicorp.crypto_test.QRFragment.stopScanning;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -83,6 +84,9 @@ public class NavigationHelper {
         if (targetFragment.getClass().getName().equals(QRFragment.class.getName())) {
             Log.d("QRFragment", "Restarting scanning");
             restartScanning();
+        } else {
+            Log.d("QRFragment", "Not restarting scanning");
+            stopScanning();
         }
     }
 
@@ -104,6 +108,9 @@ public class NavigationHelper {
         if (targetFragment.getClass().getName().equals(QRFragment.class.getName())) {
             Log.d("QRFragment", "Restarting scanning");
             restartScanning();
+        } else {
+            Log.d("QRFragment", "Not restarting scanning");
+            stopScanning();
         }
     }
 
