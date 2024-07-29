@@ -1,5 +1,7 @@
 package com.nicorp.crypto_test;
 
+import static com.nicorp.crypto_test.QRFragment.restartScanning;
+
 import android.os.Bundle;
 import android.util.Log;
 
@@ -50,7 +52,9 @@ public class NavigationHelper {
 //        }
         if (itemId == R.id.nav_wallet) return new BalanceFragment();
         if (itemId == R.id.nav_qr) return new QRFragment();
-        if (itemId == R.id.nav_profile) return new ProfileFragment();
+        if (itemId == R.id.nav_profile) {
+
+            return new ProfileFragment();}
         return null;
     }
 
@@ -75,6 +79,11 @@ public class NavigationHelper {
         previousItemId = newItemId;
         bottomNav.setSelectedItemId(newItemId);
         isNavigating = false;
+        Log.d("Navigation", "Switched to " + targetFragment.getClass().getName());
+        if (targetFragment.getClass().getName().equals(QRFragment.class.getName())) {
+            Log.d("QRFragment", "Restarting scanning");
+            restartScanning();
+        }
     }
 
     private static int getEnterAnimation(int newItemId) {
@@ -91,6 +100,11 @@ public class NavigationHelper {
             bottomNav.setSelectedItemId(navId);
         }
         switchFragment(activity, targetFragment, navId);
+        Log.d("Navigation", "Navigating to " + targetFragment.getClass().getName());
+        if (targetFragment.getClass().getName().equals(QRFragment.class.getName())) {
+            Log.d("QRFragment", "Restarting scanning");
+            restartScanning();
+        }
     }
 
     public static void navigateToFragment(FragmentActivity activity, Fragment targetFragment, @Nullable Bundle bundle) {
