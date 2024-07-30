@@ -51,7 +51,7 @@
         android:padding="16dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/billsManagementButton"
+            android:id="@+id/walletsManagementButton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/button_background"
@@ -63,7 +63,7 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bills management"
+                android:text="Wallets management"
                 android:textColor="@color/text_color_light"
                 android:textSize="16sp"
                 android:textStyle="bold"

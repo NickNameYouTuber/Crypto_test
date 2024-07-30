@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragments.BillsManagementFragment"
+    tools:context=".fragments.WalletsManagementFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor">
@@ -16,16 +16,16 @@
         android:contentDescription="Back"
         android:scaleType="fitXY"
         android:src="@drawable/arrow_left"
-        app:layout_constraintBottom_toBottomOf="@+id/tvBillsManagement"
+        app:layout_constraintBottom_toBottomOf="@+id/tvWalletsManagement"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvBillsManagement" />
+        app:layout_constraintTop_toTopOf="@+id/tvWalletsManagement" />
 
     <TextView
-        android:id="@+id/tvBillsManagement"
+        android:id="@+id/tvWalletsManagement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Bills Management"
+        android:text="Wallets Management"
         android:textColor="?attr/textColor"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -34,20 +34,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvBills"
+        android:id="@+id/rvWallets"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/addBillButton"
+        app:layout_constraintBottom_toTopOf="@+id/addWalletButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvBillsManagement" />
+        app:layout_constraintTop_toBottomOf="@id/tvWalletsManagement" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/addBillButton"
+        android:id="@+id/addWalletButton"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
@@ -61,7 +61,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add bill"
+            android:text="Add wallet"
             android:textColor="@color/text_color_light"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -77,10 +77,10 @@
         android:layout_height="0dp"
         android:background="?attr/backgroundColor"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/rvBills"
-        app:layout_constraintEnd_toEndOf="@+id/rvBills"
-        app:layout_constraintStart_toStartOf="@+id/rvBills"
-        app:layout_constraintTop_toTopOf="@+id/rvBills">
+        app:layout_constraintBottom_toBottomOf="@+id/rvWallets"
+        app:layout_constraintEnd_toEndOf="@+id/rvWallets"
+        app:layout_constraintStart_toStartOf="@+id/rvWallets"
+        app:layout_constraintTop_toTopOf="@+id/rvWallets">
 
         <ProgressBar
             android:layout_width="wrap_content"

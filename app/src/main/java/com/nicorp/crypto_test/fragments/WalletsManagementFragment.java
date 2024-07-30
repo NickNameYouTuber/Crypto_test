@@ -20,21 +20,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.TransAuthUserDatabaseHelper;
-import com.example.transauth.Wallet;
-import com.nicorp.crypto_test.objects.Bill;
+import com.example.transauth.TransAuthWallet;
+import com.nicorp.crypto_test.objects.Wallet;
 import com.nicorp.crypto_test.R;
-import com.nicorp.crypto_test.adapters.BillsManagementAdapter;
+import com.nicorp.crypto_test.adapters.WalletsManagementAdapter;
 import com.nicorp.crypto_test.helpers.NavigationHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BillsManagementFragment extends Fragment {
+public class WalletsManagementFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private BillsManagementAdapter adapter;
+    private WalletsManagementAdapter adapter;
     private ImageView backButton;
-    private ConstraintLayout addBillButton;
+    private ConstraintLayout addWalletButton;
     private View loadingLayout;
     private TransAuthUserDatabaseHelper db;
     private TransAuthUser currentUser;
@@ -42,13 +42,13 @@ public class BillsManagementFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bills_management, container, false);
+        View view = inflater.inflate(R.layout.fragment_wallets_management, container, false);
 
-        recyclerView = view.findViewById(R.id.rvBills);
+        recyclerView = view.findViewById(R.id.rvWallets);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         backButton = view.findViewById(R.id.backButton);
-        addBillButton = view.findViewById(R.id.addBillButton);
+        addWalletButton = view.findViewById(R.id.addWalletButton);
         loadingLayout = view.findViewById(R.id.loadingLayout);
 
         db = new TransAuthUserDatabaseHelper(getContext());
@@ -58,8 +58,8 @@ public class BillsManagementFragment extends Fragment {
         // Show the loading view
         showLoading();
 
-        // Load bills from user's wallets
-        new Handler(Looper.getMainLooper()).postDelayed(this::loadBills, 500);
+        // Load wallets from user's wallets
+        new Handler(Looper.getMainLooper()).postDelayed(this::loadWallets, 500);
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +69,7 @@ public class BillsManagementFragment extends Fragment {
             }
         });
 
-        addBillButton.setOnClickListener(new View.OnClickListener() {
+        addWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Navigate to SelectPlatformFragment using NavigationHelper
@@ -85,20 +85,20 @@ public class BillsManagementFragment extends Fragment {
         super.onResume();
         // Show the loading view
         showLoading();
-        // Load bills
-        new Handler(Looper.getMainLooper()).postDelayed(this::loadBills, 500);
+        // Load wallets
+        new Handler(Looper.getMainLooper()).postDelayed(this::loadWallets, 500);
     }
 
-    private void loadBills() {
-        List<Bill> bills = new ArrayList<>();
+    private void loadWallets() {
+        List<Wallet> wallets = new ArrayList<>();
 
-        // Add bills based on user's wallets
-        for (Wallet wallet : currentUser.getWallets()) {
-            Log.d("Wallet", wallet.getName());
-            bills.add(new Bill(getLogoResource(wallet.getCurrency()), wallet.getName(), wallet.getBalance() + " " + wallet.getCurrency(), "~ " + 100 + " " + wallet.getCurrency() + " USD"));
+        // Add wallets based on user's wallets
+        for (TransAuthWallet transAuthWallet : currentUser.getWallets()) {
+            Log.d("Wallet", transAuthWallet.getName());
+            wallets.add(new Wallet(getLogoResource(transAuthWallet.getCurrency()), transAuthWallet.getName(), transAuthWallet.getBalance() + " " + transAuthWallet.getCurrency(), "~ " + 100 + " " + transAuthWallet.getCurrency() + " USD"));
         }
 
-        adapter = new BillsManagementAdapter(bills, getContext(), currentUser);
+        adapter = new WalletsManagementAdapter(wallets, getContext(), currentUser);
         recyclerView.setAdapter(adapter);
 
         // Hide the loading view with fade out animation

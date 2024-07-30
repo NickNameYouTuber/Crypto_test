@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
-import com.example.transauth.Wallet;
-import com.nicorp.crypto_test.objects.Bill;
+import com.example.transauth.TransAuthWallet;
+import com.nicorp.crypto_test.objects.Wallet;
 import com.nicorp.crypto_test.objects.PaymentRecipient;
 import com.nicorp.crypto_test.R;
-import com.nicorp.crypto_test.adapters.PaymentBillAdapter;
+import com.nicorp.crypto_test.adapters.PaymentWalletAdapter;
 import com.nicorp.crypto_test.adapters.PaymentRecipientAdapter;
 import com.nicorp.crypto_test.helpers.NavigationHelper;
 
@@ -33,11 +33,11 @@ import java.util.List;
 public class PaymentFragment extends Fragment {
 
     private RecyclerView recipientRecyclerView;
-    private RecyclerView billRecyclerView;
+    private RecyclerView walletRecyclerView;
     private PaymentRecipientAdapter recipientAdapter;
-    private PaymentBillAdapter billAdapter;
+    private PaymentWalletAdapter walletAdapter;
     private List<PaymentRecipient> recipientList = new ArrayList<>();
-    private List<Bill> billList = new ArrayList<>();
+    private List<Wallet> walletList = new ArrayList<>();
     private static final int INITIAL_LOAD_COUNT = 10;
 
     @SuppressLint("SetTextI18n")
@@ -47,18 +47,18 @@ public class PaymentFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
         Log.d("PaymentFragment", "onCreateView");
         recipientRecyclerView = view.findViewById(R.id.recipient_recycler_view);
-        billRecyclerView = view.findViewById(R.id.bill_recycler_view);
+        walletRecyclerView = view.findViewById(R.id.wallet_recycler_view);
 
         // Set up recipient RecyclerView
         recipientRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recipientAdapter = new PaymentRecipientAdapter(getContext(), recipientList);
         recipientRecyclerView.setAdapter(recipientAdapter);
 
-        // Set up bill RecyclerView
+        // Set up wallet RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
-        billRecyclerView.setLayoutManager(layoutManager);
-        billAdapter = new PaymentBillAdapter(getContext(), billList);
-        billRecyclerView.setAdapter(billAdapter);
+        walletRecyclerView.setLayoutManager(layoutManager);
+        walletAdapter = new PaymentWalletAdapter(getContext(), walletList);
+        walletRecyclerView.setAdapter(walletAdapter);
 
         // Init pay button
         view.findViewById(R.id.pay_button).setOnClickListener(v -> {
@@ -66,9 +66,9 @@ public class PaymentFragment extends Fragment {
             NavigationHelper.navigateToFragment(getActivity(), new PaymentSuccessFragment());
         });
 
-        // Attach PagerSnapHelper to the billRecyclerView for snapping effect
+        // Attach PagerSnapHelper to the walletRecyclerView for snapping effect
         PagerSnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(billRecyclerView);
+        snapHelper.attachToRecyclerView(walletRecyclerView);
 
         if (getArguments() != null) {
             String name = getArguments().getString("name");
@@ -104,8 +104,8 @@ public class PaymentFragment extends Fragment {
             recipientAdapter.notifyDataSetChanged();
         }
 
-        // Load bills and show loading indicator
-        loadBills();
+        // Load wallets and show loading indicator
+        loadWallets();
 
         return view;
     }
@@ -116,31 +116,31 @@ public class PaymentFragment extends Fragment {
         Log.d("PaymentFragment", "onResume");
     }
 
-    private void loadBills() {
+    private void loadWallets() {
         new Thread(() -> {
             TransAuthUser currentUser = TransAuth.getUser();
-            List<Bill> updatedBillList = new ArrayList<>();
-            List<Wallet> wallets = currentUser.getWallets();
+            List<Wallet> updatedWalletList = new ArrayList<>();
+            List<TransAuthWallet> transAuthWallets = currentUser.getWallets();
 
-            // Load initial batch of bills
-            for (int i = 0; i < INITIAL_LOAD_COUNT && i < wallets.size(); i++) {
-                Wallet wallet = wallets.get(i);
+            // Load initial batch of wallets
+            for (int i = 0; i < INITIAL_LOAD_COUNT && i < transAuthWallets.size(); i++) {
+                TransAuthWallet transAuthWallet = transAuthWallets.get(i);
 
-                Bill bill = new Bill(
-                        getLogoResource(wallet.getCurrency()),
-                        wallet.getName(),
-                        wallet.getBalance() + " " + wallet.getCurrency(),
+                Wallet wallet = new Wallet(
+                        getLogoResource(transAuthWallet.getCurrency()),
+                        transAuthWallet.getName(),
+                        transAuthWallet.getBalance() + " " + transAuthWallet.getCurrency(),
                         "~ " + 100 + " USDT"
                 );
 
-                updatedBillList.add(bill);
+                updatedWalletList.add(wallet);
             }
 
             // Update the UI on the main thread
             new Handler(Looper.getMainLooper()).post(() -> {
-                billList.clear();
-                billList.addAll(updatedBillList);
-                billAdapter.notifyDataSetChanged();
+                walletList.clear();
+                walletList.addAll(updatedWalletList);
+                walletAdapter.notifyDataSetChanged();
             });
         }).start();
     }

@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.TransAuthUserDatabaseHelper;
-import com.example.transauth.Wallet;
+import com.example.transauth.TransAuthWallet;
 import com.nicorp.crypto_test.R;
 
 public class AddWalletFragment extends Fragment {
@@ -88,19 +88,19 @@ public class AddWalletFragment extends Fragment {
         if ((!TextUtils.isEmpty(address) || "Qrypt".equals(selectedPlatform)) &&
                 !TextUtils.isEmpty(name) && !TextUtils.isEmpty(currency)) {
 
-            Wallet wallet = new Wallet(address, selectedPlatform, name);
-            wallet.setBalance(0.0);
-            wallet.setCurrency(currency);
+            TransAuthWallet transAuthWallet = new TransAuthWallet(address, selectedPlatform, name);
+            transAuthWallet.setBalance(0.0);
+            transAuthWallet.setCurrency(currency);
 
-            currentUser.addWallet(wallet);
+            currentUser.addWallet(transAuthWallet);
             db.updateUser(currentUser);
             TransAuth.setUser(currentUser);
 
             Toast.makeText(getActivity(), "Wallet added successfully", Toast.LENGTH_SHORT).show();
 
-            // Navigate to BillsManagementFragment
+            // Navigate to WalletsManagementFragment
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, new BillsManagementFragment())
+                    .replace(R.id.fragmentContainerView, new WalletsManagementFragment())
                     .commit();
         } else {
             Toast.makeText(getActivity(), "Please fill in all fields", Toast.LENGTH_SHORT).show();

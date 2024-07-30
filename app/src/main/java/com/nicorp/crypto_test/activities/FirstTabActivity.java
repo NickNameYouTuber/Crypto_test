@@ -15,20 +15,20 @@ import android.view.View;
 
 import com.nicorp.crypto_test.AllHelpersSetup;
 import com.nicorp.crypto_test.R;
-import com.nicorp.crypto_test.adapters.BillsAdapter;
+import com.nicorp.crypto_test.adapters.WalletsAdapter;
 import com.nicorp.crypto_test.adapters.ExchangeRatesAdapter;
 import com.nicorp.crypto_test.adapters.TransactionsAdapter;
-import com.nicorp.crypto_test.objects.Bill;
+import com.nicorp.crypto_test.objects.Wallet;
 import com.nicorp.crypto_test.objects.ExchangeRate;
 import com.nicorp.crypto_test.objects.Transaction;
 
 public class FirstTabActivity extends AppCompatActivity {
 
-    private RecyclerView rvBills, rvTransactions, rvExchangeRates;
-    private BillsAdapter billsAdapter;
+    private RecyclerView rvWallets, rvTransactions, rvExchangeRates;
+    private WalletsAdapter walletsAdapter;
     private TransactionsAdapter transactionsAdapter;
     private ExchangeRatesAdapter exchangeRatesAdapter;
-    private ArrayList<Bill> billList = new ArrayList<>();
+    private ArrayList<Wallet> walletList = new ArrayList<>();
     private ArrayList<Transaction> transactionList = new ArrayList<>();
     private ArrayList<ExchangeRate> exchangeRateList = new ArrayList<>();
 
@@ -37,18 +37,18 @@ public class FirstTabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AllHelpersSetup.setup(this, R.layout.activity_first_tab);
 
-        rvBills = findViewById(R.id.rvBills);
+        rvWallets = findViewById(R.id.rvWallets);
         rvTransactions = findViewById(R.id.rvTransactions);
         rvExchangeRates = findViewById(R.id.rvExchangeRates);
 
         // Устанавливаем горизонтальный LinearLayoutManager
-        rvBills.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvWallets.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvTransactions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvExchangeRates.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         // Устанавливаем адаптеры
-        billsAdapter = new BillsAdapter(this, billList);
-        rvBills.setAdapter(billsAdapter);
+        walletsAdapter = new WalletsAdapter(this, walletList);
+        rvWallets.setAdapter(walletsAdapter);
 
         transactionsAdapter = new TransactionsAdapter(this, transactionList);
         rvTransactions.setAdapter(transactionsAdapter);
@@ -78,7 +78,7 @@ public class FirstTabActivity extends AppCompatActivity {
         exchangeRatesAdapter.notifyDataSetChanged();
 
         // Добавляем ItemDecoration для расстояний между элементами
-        rvBills.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvBills, 2), 20));
+        rvWallets.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvWallets, 2), 20));
         rvTransactions.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvTransactions, 2), 20));
         rvExchangeRates.addItemDecoration(new ItemOffsetDecoration(calculateItemWidth(rvExchangeRates, 3), 20));
 

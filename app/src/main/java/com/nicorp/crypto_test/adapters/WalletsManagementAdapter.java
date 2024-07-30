@@ -21,21 +21,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.TransAuthUserDatabaseHelper;
-import com.example.transauth.Wallet;
-import com.nicorp.crypto_test.objects.Bill;
+import com.example.transauth.TransAuthWallet;
+import com.nicorp.crypto_test.objects.Wallet;
 import com.nicorp.crypto_test.R;
 
 import java.util.List;
 
-public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagementAdapter.BillViewHolder> {
+public class WalletsManagementAdapter extends RecyclerView.Adapter<WalletsManagementAdapter.WalletViewHolder> {
 
-    private List<Bill> bills;
+    private List<Wallet> wallets;
     private Context context;
     private TransAuthUserDatabaseHelper db;
     private TransAuthUser currentUser;
 
-    public BillsManagementAdapter(List<Bill> bills, Context context, TransAuthUser currentUser) {
-        this.bills = bills;
+    public WalletsManagementAdapter(List<Wallet> wallets, Context context, TransAuthUser currentUser) {
+        this.wallets = wallets;
         this.context = context;
         this.currentUser = currentUser;
         this.db = new TransAuthUserDatabaseHelper(context);
@@ -43,19 +43,19 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
 
     @NonNull
     @Override
-    public BillViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bill_manage, parent, false);
-        return new BillViewHolder(view);
+    public WalletViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_wallet_manage, parent, false);
+        return new WalletViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BillViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Bill bill = bills.get(position);
-        holder.iconBill.setImageResource(bill.getLogo());
-        holder.titleBill.setText(bill.getTitle());
-        holder.amountBill.setText(bill.getAmount());
-        holder.equivalentBill.setText(bill.getUsdAmount());
-        setCardViewBackground(holder.cardView, holder.iconBill, holder.titleBill, holder.amountBill, holder.equivalentBill);
+    public void onBindViewHolder(@NonNull WalletViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        Wallet wallet = wallets.get(position);
+        holder.iconWallet.setImageResource(wallet.getLogo());
+        holder.titleWallet.setText(wallet.getTitle());
+        holder.amountWallet.setText(wallet.getAmount());
+        holder.equivalentWallet.setText(wallet.getUsdAmount());
+        setCardViewBackground(holder.cardView, holder.iconWallet, holder.titleWallet, holder.amountWallet, holder.equivalentWallet);
 
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,27 +67,27 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
 
     @Override
     public int getItemCount() {
-        return bills.size();
+        return wallets.size();
     }
 
-    static class BillViewHolder extends RecyclerView.ViewHolder {
-        ImageView iconBill;
-        TextView titleBill, amountBill, equivalentBill;
+    static class WalletViewHolder extends RecyclerView.ViewHolder {
+        ImageView iconWallet;
+        TextView titleWallet, amountWallet, equivalentWallet;
         CardView cardView;
         ImageView btnDelete;
 
-        BillViewHolder(View itemView) {
+        WalletViewHolder(View itemView) {
             super(itemView);
-            iconBill = itemView.findViewById(R.id.iconBill);
-            titleBill = itemView.findViewById(R.id.titleBill);
-            amountBill = itemView.findViewById(R.id.amountBill);
-            equivalentBill = itemView.findViewById(R.id.equivalentBill);
+            iconWallet = itemView.findViewById(R.id.iconWallet);
+            titleWallet = itemView.findViewById(R.id.titleWallet);
+            amountWallet = itemView.findViewById(R.id.amountWallet);
+            equivalentWallet = itemView.findViewById(R.id.equivalentWallet);
             cardView = itemView.findViewById(R.id.cardView);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 
-    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView titleBill, TextView amountBill, TextView equivalentBill) {
+    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView titleWallet, TextView amountWallet, TextView equivalentWallet) {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         Palette.from(bitmap).generate(palette -> {
             if (palette != null) {
@@ -95,9 +95,9 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
                 cardView.setCardBackgroundColor(dominantColor);
 
                 int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, R.color.text_color_dark) : ContextCompat.getColor(context, R.color.text_color_light);
-                titleBill.setTextColor(textColor);
-                amountBill.setTextColor(textColor);
-                equivalentBill.setTextColor(textColor);
+                titleWallet.setTextColor(textColor);
+                amountWallet.setTextColor(textColor);
+                equivalentWallet.setTextColor(textColor);
             }
         });
     }
@@ -109,10 +109,10 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
 
     private void showDeleteConfirmationDialog(int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Are you sure you want to delete this bill?")
+        builder.setMessage("Are you sure you want to delete this wallet?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        deleteBill(position);
+                        deleteWallet(position);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -123,24 +123,24 @@ public class BillsManagementAdapter extends RecyclerView.Adapter<BillsManagement
         builder.create().show();
     }
 
-    private void deleteBill(int position) {
-        Bill bill = bills.get(position);
-        Wallet walletToRemove = null;
+    private void deleteWallet(int position) {
+        Wallet wallet = wallets.get(position);
+        TransAuthWallet transAuthWalletToRemove = null;
 
-        for (Wallet wallet : currentUser.getWallets()) {
-            if (wallet.getName().equals(bill.getTitle())) {
-                walletToRemove = wallet;
+        for (TransAuthWallet transAuthWallet : currentUser.getWallets()) {
+            if (transAuthWallet.getName().equals(wallet.getTitle())) {
+                transAuthWalletToRemove = transAuthWallet;
                 break;
             }
         }
 
-        if (walletToRemove != null) {
-            currentUser.removeWallet(walletToRemove);
+        if (transAuthWalletToRemove != null) {
+            currentUser.removeWallet(transAuthWalletToRemove);
             db.updateUser(currentUser);
             TransAuth.setUser(currentUser);
-            bills.remove(position);
+            wallets.remove(position);
             notifyItemRemoved(position);
-            db.deleteWallet(walletToRemove.getId());
+            db.deleteWallet(transAuthWalletToRemove.getId());
         }
     }
 }

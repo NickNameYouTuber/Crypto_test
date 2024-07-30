@@ -13,10 +13,10 @@ public class TransAuthUser {
     private String email;
     private String phone;
     private HashMap<String, String> tokens;
-    private List<Wallet> wallets;
+    private List<TransAuthWallet> transAuthWallets;
 
     public TransAuthUser() {
-        this.wallets = new ArrayList<>();
+        this.transAuthWallets = new ArrayList<>();
         this.tokens = new HashMap<>();
     }
 
@@ -27,17 +27,17 @@ public class TransAuthUser {
         this.email = email;
         this.phone = phone;
         this.tokens = tokens;
-        this.wallets = new ArrayList<>();
+        this.transAuthWallets = new ArrayList<>();
     }
 
-    public TransAuthUser(String login, String username, String password, String email, String phone, HashMap<String, String> tokens, List<Wallet> updatedWallets) {
+    public TransAuthUser(String login, String username, String password, String email, String phone, HashMap<String, String> tokens, List<TransAuthWallet> updatedTransAuthWallets) {
         this.login = login;
         this.username = username;
         this.password = password;
         this.email = email;
         this.phone = phone;
         this.tokens = tokens;
-        this.wallets = updatedWallets;
+        this.transAuthWallets = updatedTransAuthWallets;
     }
 
     public String getUsername() {
@@ -88,20 +88,20 @@ public class TransAuthUser {
         this.login = login;
     }
 
-    public List<Wallet> getWallets() {
-        return wallets;
+    public List<TransAuthWallet> getWallets() {
+        return transAuthWallets;
     }
 
-    public void setWallets(List<Wallet> wallets) {
-        this.wallets = wallets;
+    public void setWallets(List<TransAuthWallet> transAuthWallets) {
+        this.transAuthWallets = transAuthWallets;
     }
 
-    public void addWallet(Wallet wallet) {
-        this.wallets.add(wallet);
+    public void addWallet(TransAuthWallet transAuthWallet) {
+        this.transAuthWallets.add(transAuthWallet);
     }
 
-    public void removeWallet(Wallet wallet) {
-        this.wallets.remove(wallet);
-        Log.d("Wallets", String.valueOf(this.wallets.size()));
+    public void removeWallet(TransAuthWallet transAuthWallet) {
+        this.transAuthWallets.remove(transAuthWallet);
+        Log.d("Wallets", String.valueOf(this.transAuthWallets.size()));
     }
 }

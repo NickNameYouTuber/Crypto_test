@@ -20,12 +20,12 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Обработчик нажатия на кнопку "Управление счетами"
-        ConstraintLayout billsManagementButton = view.findViewById(R.id.billsManagementButton);
-        billsManagementButton.setOnClickListener(new View.OnClickListener() {
+        ConstraintLayout walletsManagementButton = view.findViewById(R.id.walletsManagementButton);
+        walletsManagementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Navigate to BillsManagementFragment using NavigationHelper
-                NavigationHelper.navigateToFragment(getActivity(), new BillsManagementFragment());
+                // Navigate to WalletsManagementFragment using NavigationHelper
+                NavigationHelper.navigateToFragment(getActivity(), new WalletsManagementFragment());
             }
         });
 

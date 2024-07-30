@@ -1,6 +1,6 @@
 package com.example.transauth;
 
-public class Wallet {
+public class TransAuthWallet {
     private int id;
     private String address;
     private String platform;
@@ -8,7 +8,7 @@ public class Wallet {
     private double balance;
     private String currency;
 
-    public Wallet(String address, String platform, String name) {
+    public TransAuthWallet(String address, String platform, String name) {
         this.address = address;
         this.platform = platform;
         this.name = name;

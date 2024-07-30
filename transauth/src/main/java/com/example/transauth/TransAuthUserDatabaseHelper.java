@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,21 +79,21 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_USERS, null, values);
 
-        for (Wallet wallet : user.getWallets()) {
-            addWallet(db, wallet, user.getLogin());
+        for (TransAuthWallet transAuthWallet : user.getWallets()) {
+            addWallet(db, transAuthWallet, user.getLogin());
         }
 
         db.close();
     }
 
-    private void addWallet(SQLiteDatabase db, Wallet wallet, String userLogin) {
+    private void addWallet(SQLiteDatabase db, TransAuthWallet transAuthWallet, String userLogin) {
         ContentValues values = new ContentValues();
         values.put(KEY_USER_LOGIN, userLogin);
-        values.put(KEY_ADDRESS, wallet.getAddress());
-        values.put(KEY_PLATFORM, wallet.getPlatform());
-        values.put(KEY_NAME, wallet.getName());
-        values.put(KEY_BALANCE, wallet.getBalance());
-        values.put(KEY_CURRENCY, wallet.getCurrency());
+        values.put(KEY_ADDRESS, transAuthWallet.getAddress());
+        values.put(KEY_PLATFORM, transAuthWallet.getPlatform());
+        values.put(KEY_NAME, transAuthWallet.getName());
+        values.put(KEY_BALANCE, transAuthWallet.getBalance());
+        values.put(KEY_CURRENCY, transAuthWallet.getCurrency());
 
         db.insert(TABLE_WALLETS, null, values);
     }
@@ -117,30 +116,30 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
 
-        List<Wallet> wallets = getWalletsForUser(login);
-        user.setWallets(wallets);
+        List<TransAuthWallet> transAuthWallets = getWalletsForUser(login);
+        user.setWallets(transAuthWallets);
 
         return user;
     }
 
-    public List<Wallet> getWalletsForUser(String userLogin) {
-        List<Wallet> walletList = new ArrayList<>();
+    public List<TransAuthWallet> getWalletsForUser(String userLogin) {
+        List<TransAuthWallet> transAuthWalletList = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(TABLE_WALLETS, new String[]{KEY_ID, KEY_ADDRESS, KEY_PLATFORM, KEY_NAME, KEY_BALANCE, KEY_CURRENCY},
                 KEY_USER_LOGIN + "=?", new String[]{userLogin}, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
-                Wallet wallet = new Wallet(cursor.getString(1), cursor.getString(2), cursor.getString(3));
-                wallet.setId(cursor.getInt(0));
-                wallet.setBalance(cursor.getDouble(4));
-                wallet.setCurrency(cursor.getString(5));
-                walletList.add(wallet);
+                TransAuthWallet transAuthWallet = new TransAuthWallet(cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                transAuthWallet.setId(cursor.getInt(0));
+                transAuthWallet.setBalance(cursor.getDouble(4));
+                transAuthWallet.setCurrency(cursor.getString(5));
+                transAuthWalletList.add(transAuthWallet);
             } while (cursor.moveToNext());
         }
 
         cursor.close();
-        return walletList;
+        return transAuthWalletList;
     }
 
     public void deleteUser(String login) {
@@ -161,32 +160,32 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
 
         db.update(TABLE_USERS, values, KEY_LOGIN + " = ?", new String[]{user.getLogin()});
 
-        List<Wallet> existingWallets = getWalletsForUser(user.getLogin());
+        List<TransAuthWallet> existingTransAuthWallets = getWalletsForUser(user.getLogin());
         List<Integer> existingWalletIds = new ArrayList<>();
-        for (Wallet wallet : existingWallets) {
-            existingWalletIds.add(wallet.getId());
+        for (TransAuthWallet transAuthWallet : existingTransAuthWallets) {
+            existingWalletIds.add(transAuthWallet.getId());
         }
 
-        for (Wallet wallet : user.getWallets()) {
-            if (existingWalletIds.contains(wallet.getId())) {
-                updateWallet(db, wallet);
+        for (TransAuthWallet transAuthWallet : user.getWallets()) {
+            if (existingWalletIds.contains(transAuthWallet.getId())) {
+                updateWallet(db, transAuthWallet);
             } else {
-                addWallet(db, wallet, user.getLogin());
+                addWallet(db, transAuthWallet, user.getLogin());
             }
         }
 
         db.close();
     }
 
-    private void updateWallet(SQLiteDatabase db, Wallet wallet) {
+    private void updateWallet(SQLiteDatabase db, TransAuthWallet transAuthWallet) {
         ContentValues values = new ContentValues();
-        values.put(KEY_ADDRESS, wallet.getAddress());
-        values.put(KEY_PLATFORM, wallet.getPlatform());
-        values.put(KEY_NAME, wallet.getName());
-        values.put(KEY_BALANCE, wallet.getBalance());
-        values.put(KEY_CURRENCY, wallet.getCurrency());
+        values.put(KEY_ADDRESS, transAuthWallet.getAddress());
+        values.put(KEY_PLATFORM, transAuthWallet.getPlatform());
+        values.put(KEY_NAME, transAuthWallet.getName());
+        values.put(KEY_BALANCE, transAuthWallet.getBalance());
+        values.put(KEY_CURRENCY, transAuthWallet.getCurrency());
 
-        db.update(TABLE_WALLETS, values, KEY_ID + " = ?", new String[]{String.valueOf(wallet.getId())});
+        db.update(TABLE_WALLETS, values, KEY_ID + " = ?", new String[]{String.valueOf(transAuthWallet.getId())});
     }
 
     public void deleteWallet(int walletId) {
@@ -205,13 +204,13 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
         TransAuthUser user = TransAuth.getUser();
 
         if (user != null) {
-            List<Wallet> updatedWallets = new ArrayList<>(user.getWallets());
+            List<TransAuthWallet> updatedTransAuthWallets = new ArrayList<>(user.getWallets());
 
             // Find and remove wallet from updated wallets list
-            Iterator<Wallet> iterator = updatedWallets.iterator();
+            Iterator<TransAuthWallet> iterator = updatedTransAuthWallets.iterator();
             while (iterator.hasNext()) {
-                Wallet wallet = iterator.next();
-                if (wallet.getId() == walletId) {
+                TransAuthWallet transAuthWallet = iterator.next();
+                if (transAuthWallet.getId() == walletId) {
                     iterator.remove();
                     break; // Assuming wallet IDs are unique, we can break once found
                 }
@@ -219,7 +218,7 @@ public class TransAuthUserDatabaseHelper extends SQLiteOpenHelper {
 
             // Update user's wallets list in the database
             updateUser(new TransAuthUser(user.getLogin(), user.getUsername(), user.getPassword(),
-                    user.getEmail(), user.getPhone(), user.getTokens(), updatedWallets));
+                    user.getEmail(), user.getPhone(), user.getTokens(), updatedTransAuthWallets));
         }
 
         db.close();

@@ -23,7 +23,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Bill"
+            android:text="Add Wallet"
             android:textColor="@color/text_color_light"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -59,7 +59,7 @@
         android:textColor="?attr/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBillsManagement" />
+        app:layout_constraintTop_toBottomOf="@+id/tvWalletsManagement" />
 
     <TextView
         android:id="@+id/textView10"
@@ -119,11 +119,11 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
     <TextView
-        android:id="@+id/tvBillsManagement"
+        android:id="@+id/tvWalletsManagement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Bills Management"
+        android:text="Wallets Management"
         android:textColor="?attr/textColor"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -140,8 +140,8 @@
         android:contentDescription="Back"
         android:scaleType="fitXY"
         android:src="@drawable/arrow_left"
-        app:layout_constraintBottom_toBottomOf="@+id/tvBillsManagement"
+        app:layout_constraintBottom_toBottomOf="@+id/tvWalletsManagement"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvBillsManagement" />
+        app:layout_constraintTop_toTopOf="@+id/tvWalletsManagement" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

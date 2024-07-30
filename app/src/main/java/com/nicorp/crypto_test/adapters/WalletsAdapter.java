@@ -16,37 +16,37 @@ import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nicorp.crypto_test.R;
-import com.nicorp.crypto_test.objects.Bill;
+import com.nicorp.crypto_test.objects.Wallet;
 
 import java.util.List;
 
-public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHolder> {
+public class WalletsAdapter extends RecyclerView.Adapter<WalletsAdapter.WalletViewHolder> {
 
     private Context context;
-    private List<Bill> bills;
+    private List<Wallet> wallets;
     private int parentWidth;
 
-    public BillsAdapter(Context context, List<Bill> bills) {
+    public WalletsAdapter(Context context, List<Wallet> wallets) {
         this.context = context;
-        this.bills = bills;
+        this.wallets = wallets;
     }
 
     @NonNull
     @Override
-    public BillViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_bill, parent, false);
+    public WalletViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.item_wallet, parent, false);
         parentWidth = parent.getMeasuredWidth();
-        return new BillViewHolder(view);
+        return new WalletViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BillViewHolder holder, int position) {
-        Bill bill = bills.get(position);
-        holder.ivBillLogo.setImageResource(bill.getLogo());
-        setCardViewBackground(holder.cardView, holder.ivBillLogo, holder.tvBillTitle, holder.tvBillAmount, holder.tvBillUsdAmount);
-        holder.tvBillTitle.setText(bill.getTitle());
-        holder.tvBillAmount.setText(bill.getAmount());
-        holder.tvBillUsdAmount.setText(bill.getUsdAmount());
+    public void onBindViewHolder(@NonNull WalletViewHolder holder, int position) {
+        Wallet wallet = wallets.get(position);
+        holder.ivWalletLogo.setImageResource(wallet.getLogo());
+        setCardViewBackground(holder.cardView, holder.ivWalletLogo, holder.tvWalletTitle, holder.tvWalletAmount, holder.tvWalletUsdAmount);
+        holder.tvWalletTitle.setText(wallet.getTitle());
+        holder.tvWalletAmount.setText(wallet.getAmount());
+        holder.tvWalletUsdAmount.setText(wallet.getUsdAmount());
 
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
         layoutParams.width = (parentWidth - dpToPx(20) * (2 - 1)) / 2;
@@ -56,25 +56,25 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
 
     @Override
     public int getItemCount() {
-        return bills.size();
+        return wallets.size();
     }
 
-    public static class BillViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivBillLogo;
-        TextView tvBillTitle, tvBillAmount, tvBillUsdAmount;
+    public static class WalletViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivWalletLogo;
+        TextView tvWalletTitle, tvWalletAmount, tvWalletUsdAmount;
         CardView cardView;
 
-        public BillViewHolder(@NonNull View itemView) {
+        public WalletViewHolder(@NonNull View itemView) {
             super(itemView);
-            ivBillLogo = itemView.findViewById(R.id.ivBillLogo);
-            tvBillTitle = itemView.findViewById(R.id.tvBillTitle);
-            tvBillAmount = itemView.findViewById(R.id.tvBillAmount);
-            tvBillUsdAmount = itemView.findViewById(R.id.tvBillUsdAmount);
+            ivWalletLogo = itemView.findViewById(R.id.ivWalletLogo);
+            tvWalletTitle = itemView.findViewById(R.id.tvWalletTitle);
+            tvWalletAmount = itemView.findViewById(R.id.tvWalletAmount);
+            tvWalletUsdAmount = itemView.findViewById(R.id.tvWalletUsdAmount);
             cardView = itemView.findViewById(R.id.cardView);
         }
     }
 
-    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView titleBill, TextView amountBill, TextView equivalentBill) {
+    private void setCardViewBackground(CardView cardView, ImageView imageView, TextView titleWallet, TextView amountWallet, TextView equivalentWallet) {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         Palette.from(bitmap).generate(palette -> {
             if (palette != null) {
@@ -82,9 +82,9 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
                 cardView.setCardBackgroundColor(dominantColor);
 
                 int textColor = isDarkColor(dominantColor) ? ContextCompat.getColor(context, R.color.text_color_dark) : ContextCompat.getColor(context, R.color.text_color_light);
-                titleBill.setTextColor(textColor);
-                amountBill.setTextColor(textColor);
-                equivalentBill.setTextColor(textColor);
+                titleWallet.setTextColor(textColor);
+                amountWallet.setTextColor(textColor);
+                equivalentWallet.setTextColor(textColor);
             }
         });
     }

@@ -133,7 +133,7 @@ public class QRFragment extends Fragment {
         }
     }
 
-    static void stopScanning() {
+    public static void stopScanning() {
         if (barcodeView != null) {
             barcodeView.pause();
         }

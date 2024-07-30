@@ -46,12 +46,12 @@
         app:layout_constraintTop_toBottomOf="@id/tvBalance" />
 
     <TextView
-        android:id="@+id/tvMyBills"
+        android:id="@+id/tvMyWallets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:text="My bills"
+        android:text="My wallets"
         android:textColor="?attr/textColor"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -59,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvBalanceAmount" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvBills"
+        android:id="@+id/rvWallets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -67,7 +67,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvMyBills" />
+        app:layout_constraintTop_toBottomOf="@id/tvMyWallets" />
 
     <TextView
         android:id="@+id/tvMyTransactions"
@@ -80,7 +80,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rvBills" />
+        app:layout_constraintTop_toBottomOf="@id/rvWallets" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTransactions"
