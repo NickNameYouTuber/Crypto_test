@@ -9,7 +9,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.nicorp.crypto_test.R;
-import com.nicorp.crypto_test.objects.AccountItem;
+import com.nicorp.crypto_test.objects.Account;
 
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicCode;
@@ -79,12 +79,12 @@ public class ImportBTCWalletActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("CryptoPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        List<AccountItem> accountList = new ArrayList<>();
-        accountList.add(new AccountItem("Main Account", "USD", walletAddress));
+        List<Account> accountList = new ArrayList<>();
+        accountList.add(new Account("Main Account", "USD", walletAddress));
 
         editor.putInt("account_count", accountList.size());
         for (int i = 0; i < accountList.size(); i++) {
-            AccountItem account = accountList.get(i);
+            Account account = accountList.get(i);
             editor.putString("account_" + i + "_name", account.getName());
             editor.putString("account_" + i + "_address", account.getAddress());
             editor.putString("account_" + i + "_currency", account.getCurrency());

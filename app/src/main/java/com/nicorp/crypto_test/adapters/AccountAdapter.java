@@ -11,18 +11,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.nicorp.crypto_test.objects.AccountItem;
+import com.nicorp.crypto_test.objects.Account;
 import com.nicorp.crypto_test.R;
 
 import java.util.List;
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountViewHolder> {
 
-    private List<AccountItem> accountList;
+    private List<Account> accountList;
     private Context context;
     private int selectedPosition = -1;
 
-    public AccountAdapter(Context context, List<AccountItem> accountList) {
+    public AccountAdapter(Context context, List<Account> accountList) {
         this.context = context;
         this.accountList = accountList;
     }
@@ -36,18 +36,18 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
 
     @Override
     public void onBindViewHolder(@NonNull AccountViewHolder holder, int position) {
-        AccountItem accountItem = accountList.get(position);
-        holder.accountName.setText(accountItem.getName());
-//        holder.accountBalance.setText("Balance: " + accountItem.getBalance());
-        holder.accountCurrency.setText("Currency: " + accountItem.getCurrency());
+        Account account = accountList.get(position);
+        holder.accountName.setText(account.getName());
+//        holder.accountBalance.setText("Balance: " + account.getBalance());
+        holder.accountCurrency.setText("Currency: " + account.getCurrency());
 
         holder.itemView.setBackgroundColor(selectedPosition == position ? Color.LTGRAY : Color.WHITE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Selected account: " + accountItem.getAddress());
-                System.out.println("Selected account: " + accountItem.getAddress());
+                System.out.println("Selected account: " + account.getAddress());
+                System.out.println("Selected account: " + account.getAddress());
 
                 selectedPosition = holder.getAdapterPosition();
                 notifyDataSetChanged();
@@ -57,7 +57,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.AccountV
                 editor.putInt("selected_account", selectedPosition);
                 editor.apply();
                 // Обновление информации о счете
-//                ((Ьф) context).updateSelectedAccount(accountItem);
+//                ((Ьф) context).updateSelectedAccount(account);
             }
         });
     }

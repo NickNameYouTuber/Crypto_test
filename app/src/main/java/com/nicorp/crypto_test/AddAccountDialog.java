@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.nicorp.crypto_test.objects.AccountItem;
+import com.nicorp.crypto_test.objects.Account;
 
 public class AddAccountDialog extends DialogFragment {
 
@@ -40,9 +40,9 @@ public class AddAccountDialog extends DialogFragment {
                 String address = accountAddressEditText.getText().toString().trim(); // Получение адреса кошелька
 
                 if (!name.isEmpty() && !currency.isEmpty() && !address.isEmpty()) {
-                    AccountItem accountItem = new AccountItem(name, currency, address);
+                    Account account = new Account(name, currency, address);
                     if (listener != null) {
-                        listener.onAccountAdded(accountItem);
+                        listener.onAccountAdded(account);
                     }
                     dismiss();
                 }
@@ -57,6 +57,6 @@ public class AddAccountDialog extends DialogFragment {
     }
 
     public interface OnAccountAddedListener {
-        void onAccountAdded(AccountItem accountItem);
+        void onAccountAdded(Account account);
     }
 }
