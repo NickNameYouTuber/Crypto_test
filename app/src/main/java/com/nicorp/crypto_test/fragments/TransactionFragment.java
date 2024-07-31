@@ -1,66 +1,81 @@
 package com.nicorp.crypto_test.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
 import com.nicorp.crypto_test.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TransactionFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TransactionFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private View phoneNumberSection;
+    private View cardNumberSection;
+    private View walletAddressSection;
+    private EditText amount;
 
     public TransactionFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TransactionFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TransactionFragment newInstance(String param1, String param2) {
-        TransactionFragment fragment = new TransactionFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_transaction, container, false);
+
+        phoneNumberSection = view.findViewById(R.id.phone_number_section);
+        cardNumberSection = view.findViewById(R.id.card_number_section);
+        walletAddressSection = view.findViewById(R.id.wallet_address_section);
+        amount = view.findViewById(R.id.amount);
+
+        // Get the transaction type from arguments
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String transactionType = bundle.getString("transactionType");
+            updateVisibility(transactionType);
+        }
+
+        return view;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    private void updateVisibility(String transactionType) {
+        phoneNumberSection.setVisibility(View.GONE);
+        cardNumberSection.setVisibility(View.GONE);
+        walletAddressSection.setVisibility(View.GONE);
+
+        switch (transactionType) {
+            case "phone_number":
+                phoneNumberSection.setVisibility(View.VISIBLE);
+                amount.setLayoutParams(createLayoutParamsBelow(R.id.phone_number_section));
+                break;
+            case "card_number":
+                cardNumberSection.setVisibility(View.VISIBLE);
+                amount.setLayoutParams(createLayoutParamsBelow(R.id.card_number_section));
+                break;
+            case "wallet_address":
+                walletAddressSection.setVisibility(View.VISIBLE);
+                amount.setLayoutParams(createLayoutParamsBelow(R.id.wallet_address_section));
+                break;
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_transaction, container, false);
+    private ConstraintLayout.LayoutParams createLayoutParamsBelow(int id) {
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.topToBottom = id;
+        layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.topMargin = 50;
+//        layoutParams.marginStart = 30;
+//        layoutParams.marginEnd = 30;
+        return layoutParams;
     }
 }

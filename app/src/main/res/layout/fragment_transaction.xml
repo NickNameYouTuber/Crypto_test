@@ -7,7 +7,6 @@
     android:background="?attr/backgroundColor"
     tools:context=".activities.MainActivity">
 
-
     <TextView
         android:id="@+id/tvTransaction"
         android:layout_width="wrap_content"
@@ -58,111 +57,116 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTransaction" />
 
-    <!-- START By Phone number -->
-
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/amount_label_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:text="To:"
-        android:textColor="?attr/textColor"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/phone_number"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:visibility="gone"
-        android:id="@+id/phone_number"
+    <!-- Phone number section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/phone_number_section"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/et_background"
-        android:ems="10"
-        android:hint="Wallet Name"
-        android:inputType="text"
-        android:paddingStart="15dp"
-        android:textColor="?attr/textColor"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wallet_recycler_view" />
+        app:layout_constraintTop_toBottomOf="@+id/wallet_recycler_view">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
-        android:id="@+id/client_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone_number" />
+        <TextView
+            android:id="@+id/amount_label_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To:"
+            android:textColor="?attr/textColor"
+            android:textSize="16sp" />
 
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/et_background"
+            android:ems="10"
+            android:hint="Wallet Name"
+            android:inputType="text"
+            android:paddingStart="15dp"
+            android:textColor="?attr/textColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/amount_label_4" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/amount_label_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:text="To bank"
-        android:textColor="?attr/textColor"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/bank_recycler_view"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:visibility="gone"
-        android:id="@+id/bank_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/client_recycler_view" />
-
-    <!-- END By Phone number -->
-
-    <!-- START By Card number -->
-
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/amount_label_5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:text="To:"
-        android:textColor="?attr/textColor"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/card_number"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:visibility="gone"
-        android:id="@+id/card_number"
+    <!-- Card number section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_number_section"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_marginStart="30dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/et_background"
-        android:ems="10"
-        android:hint="Wallet Name"
-        android:inputType="text"
-        android:paddingStart="15dp"
-        android:textColor="?attr/textColor"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/wallet_recycler_view" />
+        app:layout_constraintTop_toBottomOf="@+id/wallet_recycler_view">
 
+        <TextView
+            android:id="@+id/amount_label_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To:"
+            android:textColor="?attr/textColor"
+            android:textSize="16sp" />
 
-    <!-- END By Card number -->
+        <EditText
+            android:id="@+id/card_number"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/et_background"
+            android:ems="10"
+            android:hint="Card Number"
+            android:inputType="text"
+            android:paddingStart="15dp"
+            android:textColor="?attr/textColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/amount_label_6" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Wallet address section -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/wallet_address_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wallet_recycler_view">
+
+        <TextView
+            android:id="@+id/amount_label_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To:"
+            android:textColor="?attr/textColor"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/wallet_address"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/et_background"
+            android:ems="10"
+            android:hint="Wallet Address"
+            android:inputType="text"
+            android:paddingStart="15dp"
+            android:textColor="?attr/textColor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/amount_label_5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/amount_label_3"
@@ -172,8 +176,9 @@
         android:text="To be paid"
         android:textColor="?attr/textColor"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/amount"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_number_section"
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/amount"
@@ -184,14 +189,12 @@
         android:layout_marginEnd="30dp"
         android:background="@drawable/et_background"
         android:ems="10"
-        android:hint="Wallet Name"
+        android:hint="Amount"
         android:inputType="text"
         android:paddingStart="15dp"
         android:textColor="?attr/textColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_number" />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/pay_button"

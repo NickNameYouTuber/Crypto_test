@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvTransaction" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPlatforms"
+        android:id="@+id/recyclerViewBy"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="50dp"
@@ -54,6 +54,8 @@
         android:layout_marginEnd="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
