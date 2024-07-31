@@ -67,15 +67,17 @@ public class TransactionFragment extends Fragment {
 
     private ConstraintLayout.LayoutParams createLayoutParamsBelow(int id) {
         ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                dpToPx(50)
         );
         layoutParams.topToBottom = id;
-        layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        layoutParams.topMargin = 50;
-//        layoutParams.marginStart = 30;
-//        layoutParams.marginEnd = 30;
+        layoutParams.topMargin = dpToPx(50);
+        layoutParams.leftMargin = dpToPx(30);
+        layoutParams.rightMargin = dpToPx(30);
         return layoutParams;
+    }
+
+    private int dpToPx(int dp) {
+        return (int) (dp * getContext().getResources().getDisplayMetrics().density);
     }
 }

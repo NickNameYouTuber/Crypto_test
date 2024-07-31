@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.transauth.TransAuth;
 import com.example.transauth.TransAuthUser;
 import com.example.transauth.TransAuthWallet;
+import com.nicorp.crypto_test.helpers.NavigationHelper;
 import com.nicorp.crypto_test.objects.Wallet;
 import com.nicorp.crypto_test.adapters.WalletsAdapter;
 import com.nicorp.crypto_test.objects.ExchangeRate;
@@ -41,6 +43,7 @@ public class BalanceFragment extends Fragment {
     private ArrayList<Transaction> transactionList = new ArrayList<>();
     private ArrayList<ExchangeRate> exchangeRateList = new ArrayList<>();
     private View loadingLayout;
+    private ConstraintLayout transferButton;
     private LruCache<String, Wallet> walletCache;
     private static final int INITIAL_LOAD_COUNT = 10;
 
@@ -69,6 +72,7 @@ public class BalanceFragment extends Fragment {
         rvTransactions = view.findViewById(R.id.rvTransactions);
         rvExchangeRates = view.findViewById(R.id.rvExchangeRates);
         loadingLayout = view.findViewById(R.id.loadingLayout);
+        transferButton = view.findViewById(R.id.transferButton);
 
         // Set LayoutManagers for RecyclerViews
         rvWallets.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -89,6 +93,11 @@ public class BalanceFragment extends Fragment {
         // Load wallets from user's wallets
         new Handler(Looper.getMainLooper()).postDelayed(this::updateWalletList, 500);
         addTestData(); // Загружаем тестовые данные
+
+        transferButton.setOnClickListener(v -> {
+            // Navigate to transfer fragment
+            NavigationHelper.navigateToFragment(getActivity(), new TransactionSelectFragment());
+        });
 
         return view;
     }

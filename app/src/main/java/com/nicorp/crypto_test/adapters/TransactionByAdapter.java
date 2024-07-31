@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nicorp.crypto_test.R;
 import com.nicorp.crypto_test.objects.TransactionItem;
 
 import java.util.List;

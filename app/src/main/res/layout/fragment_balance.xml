@@ -94,7 +94,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvMyTransactions" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/btnTransferTo"
+        android:id="@+id/transferButton"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@drawable/button_background"
@@ -129,7 +129,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnTransferTo" />
+        app:layout_constraintTop_toBottomOf="@id/transferButton" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvExchangeRates"
