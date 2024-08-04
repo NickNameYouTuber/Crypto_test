@@ -113,7 +113,7 @@ public class TransactionFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (PHONE_PATTERN.matcher(s).matches()) {
                     getBanksFromPhoneNumber(s.toString());
-                } else if (s.length() <= 0) {
+                } else if (s.length() < 11) {
                     hideBankRecyclerViewWithAnimation();
                 }
             }
