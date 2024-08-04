@@ -1,5 +1,6 @@
 package com.nicorp.crypto_test.fragments;
 
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,10 +15,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -48,7 +52,7 @@ public class TransactionFragment extends Fragment {
     private View cardNumberSection;
     private View walletAddressSection;
     private EditText amount;
-    private EditText phoneNumber;
+    private TextView phoneNumber;
     private ConstraintLayout transactButton;
     private RecyclerView bankRecyclerView;
     private BanksAdapter bankAdapter;
@@ -68,6 +72,22 @@ public class TransactionFragment extends Fragment {
         transactButton = view.findViewById(R.id.transact_button);
         bankRecyclerView = view.findViewById(R.id.bank_recycler_view);
         phoneNumber = view.findViewById(R.id.phone_number);
+
+        phoneNumber.setOnClickListener(v -> {
+            Log.d("TransactionFragment", "phone number clicked");
+            // Check if the READ_CONTACTS permission is granted
+            if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Request the READ_CONTACTS permission
+                ActivityCompat.requestPermissions(requireActivity(),
+                        new String[]{android.Manifest.permission.READ_CONTACTS},
+                        0);
+            } else {
+                // Permission already granted, open PhoneNumberListFragment
+                NavigationHelper.navigateToFragment(getActivity(), new PhoneNumberListFragment());
+            }
+
+        });
 
         transactButton.setOnClickListener(v -> {
             NavigationHelper.navigateToFragment(getActivity(), new PaymentSuccessFragment());
@@ -123,6 +143,10 @@ public class TransactionFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber.setText(phoneNumber);
     }
 
     private void hideBankRecyclerViewWithAnimation() {
