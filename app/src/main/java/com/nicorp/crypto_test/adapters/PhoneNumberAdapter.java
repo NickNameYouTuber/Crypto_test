@@ -9,59 +9,53 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nicorp.crypto_test.R;
+import com.nicorp.crypto_test.fragments.PhoneNumberListFragment;
 import com.nicorp.crypto_test.objects.Contact;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PhoneNumberAdapter extends RecyclerView.Adapter<PhoneNumberAdapter.ViewHolder> {
 
-    private List<Contact> contacts;
-    private OnPhoneNumberClickListener listener;
+    private final List<Contact> phoneNumberList;
+    private final OnPhoneNumberClickListener listener;
 
-    public PhoneNumberAdapter(List<Contact> contacts, OnPhoneNumberClickListener listener) {
-        this.contacts = contacts;
+    public PhoneNumberAdapter(List<Contact> phoneNumberList, OnPhoneNumberClickListener listener) {
+        this.phoneNumberList = phoneNumberList;
         this.listener = listener;
-    }
-
-    public void updateList(List<Contact> newContacts) {
-        contacts = new ArrayList<>(newContacts);
-        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_phone_number, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Contact contact = contacts.get(position);
-        holder.nameTextView.setText(contact.getName());
-        holder.phoneNumberTextView.setText(contact.getPhoneNumber());
-
-        holder.itemView.setOnClickListener(v -> listener.onPhoneNumberClick(contact.getPhoneNumber()));
+        Contact Contact = phoneNumberList.get(position);
+        holder.nameTextView.setText(Contact.getName());
+        holder.numberTextView.setText(Contact.getPhoneNumber());
+        holder.itemView.setOnClickListener(v -> listener.onPhoneNumberClick(Contact));
     }
 
     @Override
     public int getItemCount() {
-        return contacts.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        TextView phoneNumberTextView;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            nameTextView = itemView.findViewById(R.id.contact_name);
-            phoneNumberTextView = itemView.findViewById(R.id.contact_phone_number);
-        }
+        return phoneNumberList.size();
     }
 
     public interface OnPhoneNumberClickListener {
-        void onPhoneNumberClick(String phoneNumber);
+        void onPhoneNumberClick(Contact Contact);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView nameTextView;
+        private final TextView numberTextView;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            nameTextView = itemView.findViewById(R.id.name_text_view);
+            numberTextView = itemView.findViewById(R.id.number_text_view);
+        }
     }
 }
