@@ -93,6 +93,7 @@
             app:layout_constraintTop_toBottomOf="@id/amount_label_4" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
             android:id="@+id/bank_recycler_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

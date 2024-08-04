@@ -4,11 +4,15 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -32,6 +36,7 @@ import com.nicorp.crypto_test.objects.Bank;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class TransactionFragment extends Fragment {
 
@@ -43,6 +48,7 @@ public class TransactionFragment extends Fragment {
     private View cardNumberSection;
     private View walletAddressSection;
     private EditText amount;
+    private EditText phoneNumber;
     private ConstraintLayout transactButton;
     private RecyclerView bankRecyclerView;
     private BanksAdapter bankAdapter;
@@ -61,6 +67,7 @@ public class TransactionFragment extends Fragment {
         amount = view.findViewById(R.id.amount);
         transactButton = view.findViewById(R.id.transact_button);
         bankRecyclerView = view.findViewById(R.id.bank_recycler_view);
+        phoneNumber = view.findViewById(R.id.phone_number);
 
         transactButton.setOnClickListener(v -> {
             NavigationHelper.navigateToFragment(getActivity(), new PaymentSuccessFragment());
@@ -93,9 +100,73 @@ public class TransactionFragment extends Fragment {
         loadWallets();
 
         // Load banks and show loading indicator
-        loadBanks();
+//        loadBanks();
+
+        // Add TextWatcher to phoneNumber EditText
+        phoneNumber.addTextChangedListener(new TextWatcher() {
+            private final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[1-9]\\d{10,14}$");
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (PHONE_PATTERN.matcher(s).matches()) {
+                    getBanksFromPhoneNumber(s.toString());
+                } else if (s.length() <= 0) {
+                    hideBankRecyclerViewWithAnimation();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         return view;
+    }
+
+    private void hideBankRecyclerViewWithAnimation() {
+        if (bankRecyclerView.getVisibility() == View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
+            bankRecyclerView.startAnimation(animation);
+            // Hide bankRecyclerView after animation ends
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    bankRecyclerView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+        }
+    }
+
+    private void getBanksFromPhoneNumber(String phoneNumber) {
+        // Simulate fetching banks based on phone number
+        List<Bank> fetchedBanks = new ArrayList<>();
+        fetchedBanks.add(new Bank("T-Bank", R.drawable.t_bank));
+        fetchedBanks.add(new Bank("Alpha Bank", R.drawable.alpha));
+        fetchedBanks.add(new Bank("Sber", R.drawable.sber));
+
+        // Update bank list and notify adapter
+        bankList.clear();
+        bankList.addAll(fetchedBanks);
+        bankAdapter.notifyDataSetChanged();
+
+        // Show bankRecyclerView with animation
+        showBankRecyclerViewWithAnimation();
+    }
+
+    private void showBankRecyclerViewWithAnimation() {
+        if (bankRecyclerView.getVisibility() == View.GONE) {
+            bankRecyclerView.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down);
+            bankRecyclerView.startAnimation(animation);
+        }
     }
 
     private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
