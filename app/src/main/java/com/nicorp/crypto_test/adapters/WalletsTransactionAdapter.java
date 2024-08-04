@@ -3,6 +3,7 @@ package com.nicorp.crypto_test.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ public class WalletsTransactionAdapter extends RecyclerView.Adapter<WalletsTrans
         holder.walletTitleTextView.setText(wallet.getTitle());
         holder.walletAmountTextView.setText(wallet.getAmount());
         holder.walletUsdAmountTextView.setText(wallet.getUsdAmount());
+
+        Log.d("WalletsTransactionAdapter", "onBindViewHolder: " + wallet.getTitle() + " Logo: " + wallet.getLogo());
 
         setCardViewBackground(holder.cardView, holder.walletLogoImageView, holder.walletTitleTextView, holder.walletAmountTextView, holder.walletUsdAmountTextView);
     }

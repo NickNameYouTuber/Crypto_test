@@ -201,7 +201,7 @@ public class TransactionFragment extends Fragment {
     }
 
     private int getLogoResource(String currency) {
-        switch (currency) {
+        switch (currency.toUpperCase()) {
             case "BTC":
                 return R.drawable.bitcoin;
             case "ETH":
