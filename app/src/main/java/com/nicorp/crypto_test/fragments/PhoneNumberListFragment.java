@@ -80,14 +80,11 @@ public class PhoneNumberListFragment extends Fragment {
     private void onContactSelected(Contact contact) {
         Log.d("PhoneNumberListFragment", "Selected contact: " + contact.getPhoneNumber());
         if (transactionFragment != null) {
-            TransactionFragment fragment = new TransactionFragment();
-            fragment.setPhoneNumber(contact.getPhoneNumber());
+            transactionFragment.setPhoneNumber(contact.getPhoneNumber());
             Bundle bundle = new Bundle();
             bundle.putString("phone_number", contact.getPhoneNumber());
             bundle.putString("transactionType", "phone_number");
-            NavigationHelper.navigateToFragment(getActivity(), fragment, bundle);
-        } else {
-            Log.e("PhoneNumberListFragment", "TransactionFragment is null");
+            NavigationHelper.navigateToFragment(getActivity(), transactionFragment, bundle);
         }
     }
 }

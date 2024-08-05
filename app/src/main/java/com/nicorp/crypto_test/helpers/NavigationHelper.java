@@ -63,7 +63,7 @@ public class NavigationHelper {
         return null;
     }
 
-    private static void switchFragment(FragmentActivity activity, Fragment targetFragment, int newItemId) {
+    public static void switchFragment(FragmentActivity activity, Fragment targetFragment, int newItemId) {
         isNavigating = true;
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction()
@@ -87,7 +87,7 @@ public class NavigationHelper {
         } else {
             // Handle new fragment case
             if (currentFragment != null) {
-                transaction.remove(currentFragment);
+//                transaction.remove(currentFragment);
             }
 
             transaction.add(R.id.fragmentContainerView, targetFragment, targetFragment.getClass().getName());
@@ -114,10 +114,16 @@ public class NavigationHelper {
     }
 
     private static int getEnterAnimation(int newItemId) {
+        if (newItemId == -1) {
+            return R.anim.fade_in;
+        }
         return newItemId > previousItemId ? R.anim.slide_in_left : R.anim.slide_in_right;
     }
 
     private static int getExitAnimation(int newItemId) {
+        if (newItemId == -1) {
+            return R.anim.fade_out;
+        }
         return newItemId > previousItemId ? R.anim.slide_out_right : R.anim.slide_out_left;
     }
 
