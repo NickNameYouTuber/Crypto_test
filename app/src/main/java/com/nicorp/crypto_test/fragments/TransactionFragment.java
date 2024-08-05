@@ -78,6 +78,7 @@ public class TransactionFragment extends Fragment {
         if (bundle != null && bundle.containsKey("phone_number")) {
             phoneNumber.setHint(bundle.getString("phone_number"));
             Log.d("TransactionFragment", "phone number: " + bundle.getString("phone_number"));
+            getBanksFromPhoneNumber(bundle.getString("phone_number"));
         }
         phoneNumber.refreshDrawableState();
 
@@ -132,24 +133,24 @@ public class TransactionFragment extends Fragment {
         loadWallets();
 
         // Add TextWatcher to phoneNumber EditText
-        phoneNumber.addTextChangedListener(new TextWatcher() {
-            private final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[1-9]\\d{10,14}$");
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (PHONE_PATTERN.matcher(s).matches()) {
-                    getBanksFromPhoneNumber(s.toString());
-                } else if (s.length() < 11) {
-                    hideBankRecyclerViewWithAnimation();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+//        phoneNumber.addTextChangedListener(new TextWatcher() {
+//            private final Pattern PHONE_PATTERN = Pattern.compile("^\\+?[1-9]\\d{10,14}$");
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (PHONE_PATTERN.matcher(s).matches()) {
+//                    getBanksFromPhoneNumber(s.toString());
+//                } else if (s.length() < 11) {
+//                    hideBankRecyclerViewWithAnimation();
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//        });
 
         return view;
     }
@@ -186,16 +187,7 @@ public class TransactionFragment extends Fragment {
     }
 
     private void getBanksFromPhoneNumber(String phoneNumber) {
-        // Simulate fetching banks based on phone number
-        List<Bank> fetchedBanks = new ArrayList<>();
-        fetchedBanks.add(new Bank("T-Bank", R.drawable.t_bank));
-        fetchedBanks.add(new Bank("Alpha Bank", R.drawable.alpha));
-        fetchedBanks.add(new Bank("Sber", R.drawable.sber));
-
-        // Update bank list and notify adapter
-        bankList.clear();
-        bankList.addAll(fetchedBanks);
-        bankAdapter.notifyDataSetChanged();
+        loadBanks();
 
         // Show bankRecyclerView with animation
         showBankRecyclerViewWithAnimation();
