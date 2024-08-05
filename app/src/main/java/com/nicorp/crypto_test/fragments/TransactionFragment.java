@@ -94,10 +94,7 @@ public class TransactionFragment extends Fragment {
                 // Permission already granted, open PhoneNumberListFragment
                 PhoneNumberListFragment phoneNumberListFragment = new PhoneNumberListFragment();
                 phoneNumberListFragment.setTransactionFragment(this);
-                requireActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragmentContainerView, phoneNumberListFragment)
-                        .addToBackStack(null)
-                        .commit();
+                NavigationHelper.navigateToFragment(getActivity(), phoneNumberListFragment);
             }
         });
 
