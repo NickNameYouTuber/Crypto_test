@@ -1,27 +1,27 @@
 package com.nicorp.crypto_test.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.database.Cursor;
-import android.provider.ContactsContract;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nicorp.crypto_test.R;
 import com.nicorp.crypto_test.adapters.PhoneNumberAdapter;
+import com.nicorp.crypto_test.helpers.NavigationHelper;
 import com.nicorp.crypto_test.objects.Contact;
 
 import java.util.ArrayList;
@@ -29,99 +29,62 @@ import java.util.List;
 
 public class PhoneNumberListFragment extends Fragment {
 
-    private EditText searchEditText;
-    private RecyclerView phoneNumberRecyclerView;
-    private PhoneNumberAdapter phoneNumberAdapter;
-    private List<Contact> phoneNumberList = new ArrayList<>();
+    private RecyclerView contactRecyclerView;
+    private PhoneNumberAdapter contactAdapter;
+    private List<Contact> contactList = new ArrayList<>();
     private TransactionFragment transactionFragment;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_phone_number_list, container, false);
+        contactRecyclerView = view.findViewById(R.id.phone_number_recycler_view);
 
-        searchEditText = view.findViewById(R.id.search_edit_text);
-        phoneNumberRecyclerView = view.findViewById(R.id.phone_number_recycler_view);
+        // Set up contact RecyclerView
+        contactRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        contactAdapter = new PhoneNumberAdapter(contactList, this::onContactSelected);
+        contactRecyclerView.setAdapter(contactAdapter);
 
-        phoneNumberRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        phoneNumberAdapter = new PhoneNumberAdapter(phoneNumberList, this::onPhoneNumberSelected);
-        phoneNumberRecyclerView.setAdapter(phoneNumberAdapter);
-
-        searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchPhoneNumbers(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+        // Load contacts
+        loadContacts();
 
         return view;
     }
 
-    private void searchPhoneNumbers(String query) {
-        phoneNumberList.clear();
-        if (!query.isEmpty()) {
-            List<Contact> contacts = getContacts(query);
-            phoneNumberList.addAll(contacts);
-        }
-        phoneNumberAdapter.notifyDataSetChanged();
-    }
+    private void loadContacts() {
+        new Thread(() -> {
+            ContentResolver contentResolver = requireContext().getContentResolver();
+            Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null, null, null, null);
 
-    private List<Contact> getContacts(String query) {
-        List<Contact> contacts = new ArrayList<>();
-        Cursor cursor = requireContext().getContentResolver().query(
-                ContactsContract.Contacts.CONTENT_URI,
-                null,
-                ContactsContract.Contacts.HAS_PHONE_NUMBER + " = 1",
-                null,
-                null
-        );
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    @SuppressLint("Range") String phoneNumber = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                @SuppressLint("Range") String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                Cursor phones = requireContext().getContentResolver().query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null,
-                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                        new String[]{id},
-                        null
-                );
-
-                if (phones != null) {
-                    while (phones.moveToNext()) {
-                        @SuppressLint("Range") String Contact = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        if (Contact.contains(query)) {
-                            contacts.add(new Contact(name, Contact));
-                        }
-                    }
-                    phones.close();
+                    Contact contact = new Contact(name, phoneNumber);
+                    contactList.add(contact);
                 }
+                cursor.close();
             }
-            cursor.close();
-        }
 
-        if (contacts.isEmpty()) {
-            contacts.add(new Contact("Неизвестный номер", query));
-        }
-
-        return contacts;
-    }
-
-    private void onPhoneNumberSelected(Contact Contact) {
-        if (transactionFragment != null) {
-            transactionFragment.setPhoneNumber(Contact.getPhoneNumber());
-        }
-        requireActivity().getSupportFragmentManager().popBackStack();
+            // Update the UI on the main thread
+            new Handler(Looper.getMainLooper()).post(() -> contactAdapter.notifyDataSetChanged());
+        }).start();
     }
 
     public void setTransactionFragment(TransactionFragment transactionFragment) {
         this.transactionFragment = transactionFragment;
+    }
+
+    private void onContactSelected(Contact contact) {
+        Log.d("PhoneNumberListFragment", "Selected contact: " + contact.getPhoneNumber());
+        if (transactionFragment != null) {
+            transactionFragment.setPhoneNumber(contact.getPhoneNumber());
+            Bundle bundle = new Bundle();
+            bundle.putString("phone_number", contact.getPhoneNumber());
+            bundle.putString("transactionType", "phone_number");
+            NavigationHelper.navigateToFragment(getActivity(), transactionFragment, bundle);
+        }
     }
 }

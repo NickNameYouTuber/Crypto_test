@@ -52,18 +52,16 @@ public class TransactionFragment extends Fragment {
     private View cardNumberSection;
     private View walletAddressSection;
     private EditText amount;
-    private TextView phoneNumber;
+    private EditText phoneNumber;
     private ConstraintLayout transactButton;
     private RecyclerView bankRecyclerView;
     private BanksAdapter bankAdapter;
     private List<Bank> bankList = new ArrayList<>();
-    private String phoneNumberText = "aaa";
-    private View view;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_transaction, container, false);
+        View view = inflater.inflate(R.layout.fragment_transaction, container, false);
         Log.d("TransactionFragment", "onCreateView");
 
         walletRecyclerView = view.findViewById(R.id.wallet_recycler_view);
@@ -73,8 +71,15 @@ public class TransactionFragment extends Fragment {
         amount = view.findViewById(R.id.amount);
         transactButton = view.findViewById(R.id.transact_button);
         bankRecyclerView = view.findViewById(R.id.bank_recycler_view);
-        phoneNumber = view.findViewById(R.id.tvTransaction);
-        phoneNumber.setText(phoneNumberText);
+        phoneNumber = (EditText) view.findViewById(R.id.phone_number);
+
+        // get phone number from bundle
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("phone_number")) {
+            phoneNumber.setHint(bundle.getString("phone_number"));
+            Log.d("TransactionFragment", "phone number: " + bundle.getString("phone_number"));
+        }
+        phoneNumber.refreshDrawableState();
 
         phoneNumber.setOnClickListener(v -> {
             Log.d("TransactionFragment", "phone number clicked");
@@ -87,17 +92,13 @@ public class TransactionFragment extends Fragment {
                         0);
             } else {
                 // Permission already granted, open PhoneNumberListFragment
-//                NavigationHelper.navigateToFragment(getActivity(), new PhoneNumberListFragment());
-                // Initialize and set up the fragment
                 PhoneNumberListFragment phoneNumberListFragment = new PhoneNumberListFragment();
                 phoneNumberListFragment.setTransactionFragment(this);
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainerView, phoneNumberListFragment)
                         .addToBackStack(null)
                         .commit();
-
             }
-
         });
 
         transactButton.setOnClickListener(v -> {
@@ -115,7 +116,7 @@ public class TransactionFragment extends Fragment {
         snapHelper.attachToRecyclerView(walletRecyclerView);
 
         // Get the transaction type from arguments
-        Bundle bundle = getArguments();
+        bundle = getArguments();
         if (bundle != null) {
             String transactionType = bundle.getString("transactionType");
             updateVisibility(transactionType);
@@ -129,9 +130,6 @@ public class TransactionFragment extends Fragment {
 
         // Load wallets and show loading indicator
         loadWallets();
-
-        // Load banks and show loading indicator
-//        loadBanks();
 
         // Add TextWatcher to phoneNumber EditText
         phoneNumber.addTextChangedListener(new TextWatcher() {
@@ -156,14 +154,15 @@ public class TransactionFragment extends Fragment {
         return view;
     }
 
-    public void setPhoneNumber(String phoneNumberText) {
-        // Убедитесь, что phoneNumber не равен null
-        phoneNumber = view.findViewById(R.id.tvTransaction);
-        if (phoneNumber != null) {
-            phoneNumber.setText(phoneNumberText);
-        } else {
-            Log.e("TransactionFragment", "phoneNumber is null");
-        }
+    public void setPhoneNumber(String PhoneNumber) {
+        Log.d("TransactionFragment", "setPhoneNumber: " + PhoneNumber);
+
+        // Ensure that the method is called on the main thread
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Log.d("TransactionFragment", "getPhoneNumber: " + phoneNumber.getText().toString());
+            phoneNumber.setText(PhoneNumber);
+            Log.d("TransactionFragment", "getPhoneNumber: " + phoneNumber.getText().toString());
+        });
     }
 
     private void hideBankRecyclerViewWithAnimation() {
